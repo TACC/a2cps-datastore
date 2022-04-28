@@ -34,7 +34,7 @@ def check_available_data(available_data):
         if isinstance(available_data, list) and type(available_data[-1]) is dict and 'date' in available_data[-1].keys() and 'data' in available_data[-1].keys():
             latest_date = available_data[-1]['date']
             if isinstance(pd.to_datetime(latest_date), datetime):
-                if check_data_current(latest_date):
+                if check_data_current(pd.to_datetime(latest_date)):
                     return True
                 else:
                     return False
