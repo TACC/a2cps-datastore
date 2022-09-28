@@ -1,0 +1,30 @@
+# This compose file is useful for testing https.
+# The .env file sets ENVVARS for the Docker CLI used by this compose file.
+---
+version: "3"
+services:
+  datastore:
+    build: .
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    stdin_open: true
+    tty: true
+    command: ["gunicorn", "--reload", "-b :8050",  "-t 90", "app:app"]
+    container_name: a2cps_datastore
+    hostname: a2cps_datastore
+    volumes:
+      - ./src:/app
+    env_file:
+      - .env
+    networks:
+      - a2cps_datastore_net
+
+networks:
+  a2cps_datastore_net:
+    name: a2cps_datastore_net
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+          - subnet: 172.16.238.0/24
