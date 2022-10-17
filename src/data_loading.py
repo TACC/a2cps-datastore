@@ -76,35 +76,48 @@ def move_column_inplace(df, col, pos):
 # ----------------------------------------------------------------------------
 # DATA DISPLAY DICTIONARIES
 # ----------------------------------------------------------------------------
+
 def load_display_terms(ASSETS_PATH, display_terms_file):
     '''Load the data file that explains how to translate the data columns and controlled terms into the English language
     terms to be displayed to the user'''
-    display_terms = pd.read_csv(os.path.join(ASSETS_PATH, display_terms_file))
+    try:
+        if ASSETS_PATH:
+            display_terms = pd.read_csv(os.path.join(ASSETS_PATH, display_terms_file))
+        else:
+            display_terms = pd.read_csv(display_terms_file)
 
-    # Get display terms dictionary for one-to-one records
-    display_terms_uni = display_terms[display_terms.multi == 0]
-    display_terms_dict = get_display_dictionary(display_terms_uni, 'api_field', 'api_value', 'display_text')
+        # Get display terms dictionary for one-to-one records
+        display_terms_uni = display_terms[display_terms.multi == 0]
+        display_terms_dict = get_display_dictionary(display_terms_uni, 'api_field', 'api_value', 'display_text')
 
-    # Get display terms dictionary for one-to-many records
-    display_terms_multi = display_terms[display_terms.multi == 1]
-    display_terms_dict_multi = get_display_dictionary(display_terms_multi, 'api_field', 'api_value', 'display_text')
+        # Get display terms dictionary for one-to-many records
+        display_terms_multi = display_terms[display_terms.multi == 1]
+        display_terms_dict_multi = get_display_dictionary(display_terms_multi, 'api_field', 'api_value', 'display_text')
 
-    return display_terms, display_terms_dict, display_terms_dict_multi
+        return display_terms, display_terms_dict, display_terms_dict_multi
+    except Exception as e:
+        traceback.print_exc()
+        return None
 
 def get_display_dictionary(display_terms, api_field, api_value, display_col):
     '''from a dataframe with the table display information, create a dictionary by field to match the database
     value to a value for use in the UI '''
-    display_terms_list = display_terms[api_field].unique() # List of fields with matching display terms
+    try:
+        display_terms_list = display_terms[api_field].unique() # List of fields with matching display terms
 
-    # Create a dictionary using the field as the key, and the dataframe to map database values to display text as the value
-    display_terms_dict = {}
-    for i in display_terms_list:
-        term_df = display_terms[display_terms.api_field == i]
-        term_df = term_df[[api_value,display_col]]
-        term_df = term_df.rename(columns={api_value: i, display_col: i + '_display'})
-        term_df = term_df.apply(pd.to_numeric, errors='ignore')
-        display_terms_dict[i] = term_df
-    return display_terms_dict
+        # Create a dictionary using the field as the key, and the dataframe to map database values to display text as the value
+        display_terms_dict = {}
+        for i in display_terms_list:
+            term_df = display_terms[display_terms.api_field == i]
+            term_df = term_df[[api_value,display_col]]
+            term_df = term_df.rename(columns={api_value: i, display_col: i + '_display'})
+            term_df = term_df.apply(pd.to_numeric, errors='ignore')
+            display_terms_dict[i] = term_df
+        return display_terms_dict
+
+    except Exception as e:
+        traceback.print_exc()
+        return None
 
 # ----------------------------------------------------------------------------
 # LOAD DATA FROM LOCAL FILES, Return *JSON*
@@ -182,6 +195,46 @@ def get_local_subjects_raw(data_directory):
 # ----------------------------------------------------------------------------
 # LOAD DATA FROM API
 # ----------------------------------------------------------------------------
+
+def get_api_consort_data(api_root = 'https://api.a2cps.org/files/v2/download/public/system/a2cps.storage.community/reports', report='consort', report_suffix = 'consort-data-[mcc]-latest.csv'):
+    '''Load data for a specified file. Handle 500 server errors'''
+    cosort_columns = ['source','target','value', 'mcc']
+    consort_df = pd.DataFrame(columns=cosort_columns)
+
+    # # get list of mcc files
+    # filename1 = report_suffix.replace('[mcc]',str(1))
+    # filename2 = report_suffix.replace('[mcc]',str(2))
+    # files_list = [filename1, filename2]
+
+    try:
+        current_datetime = datetime.now()
+        mcc_list = [1,2]
+        for mcc in mcc_list:
+            filename = report_suffix.replace('[mcc]',str(mcc))
+            csv_url = '/'.join([api_root, report, filename])
+            csv_request = requests.get(csv_url)
+            csv_content = csv_request.content
+            try:
+                csv_df = pd.read_csv(io.StringIO(csv_content.decode('utf-8')), usecols=[0,1,2], header=None)
+                csv_df['mcc'] = mcc
+                csv_df.columns = cosort_columns
+            except:
+                csv_df = pd.DataFrame(columns=cosort_columns)
+            consort_df = pd.concat([consort_df,csv_df])
+
+        consort_dict = consort_df.to_dict('records')
+        if not consort_dict:
+            consort_dict = ['No data found']
+        # IF DATA LOADS SUCCESSFULLY:
+        consort_data_json = {
+            'consort' : consort_df.to_dict('records')
+        }
+        return consort_data_json
+
+    except Exception as e:
+        traceback.print_exc()
+        return None
+
 
 ## Function to rebuild dataset from apis
 
@@ -423,6 +476,10 @@ def create_clean_subjects(subjects_raw, screening_sites, display_terms_dict, dis
         # Add screening sites
         subjects = add_screening_site(screening_sites, subjects, 'record_id')
 
+        # Convert datetime columns
+        datetime_cols_list = ['date_of_contact','date_and_time','obtain_date','ewdateterm','sp_surg_date','sp_v1_preop_date','sp_v2_6wk_date','sp_v3_3mo_date'] #erep_local_dtime also dates, but currently an array
+        subjects[datetime_cols_list] = subjects[datetime_cols_list].apply(pd.to_datetime, errors='coerce')
+
         return subjects
 
     except Exception as e:
@@ -458,6 +515,44 @@ def clean_adverse_events(adverse_events, consented, display_terms_dict_multi):
     except Exception as e:
         traceback.print_exc()
         return None
+
+def convert_datetime_to_isoformat(df, datetime_cols_list):
+    # Convert Datetime to isoformat for API
+    for col in datetime_cols_list:
+        df[col] = df[col].apply(lambda x: x.isoformat())
+    return df
+
+def process_subjects_data(subjects_raw_json, subjects_raw_cols_for_reports,screening_sites, display_terms_dict, display_terms_dict_multi):
+    ''' Take the raw subjects json and process it into separate, cleaned dataframes for subjects, consented subjects and adverse events'''
+    # 1. Combine separate jsons for each MCC into a single data frame
+    subjects_raw = combine_mcc_json(subjects_raw_json)#.reset_index(drop=True, inplace=True)
+
+    # 3. extract nested 1-to-many adverse events data
+    adverse_effects_raw = extract_adverse_effects_data(subjects_raw)
+
+    # 4. Limit subjects to columns needed for reports
+    subjects = subjects_raw[subjects_raw_cols_for_reports].copy()
+
+    # 5. Clean subjects dataframe
+    subjects = create_clean_subjects(subjects_raw, screening_sites, display_terms_dict, display_terms_dict_multi)
+
+    # 6. Extract data for only those patients who ultimately consented
+    consented = get_consented_subjects(subjects)
+
+    # 7. restrict Adverse Events data to those subjects identified as 'consented' in step 5
+    adverse_events = clean_adverse_events(adverse_effects_raw, consented, display_terms_dict_multi)
+
+    # 8. Convert datetime cols to isoformat for API
+    datetime_cols_list = ['date_of_contact','date_and_time','obtain_date','ewdateterm','sp_surg_date','sp_v1_preop_date','sp_v2_6wk_date','sp_v3_3mo_date']
+    subjects = convert_datetime_to_isoformat(subjects, datetime_cols_list)
+    consented = convert_datetime_to_isoformat(consented, datetime_cols_list)
+
+    subjects_api_data ={
+            'subjects_cleaned': subjects.to_dict('records'),
+            'consented': consented.to_dict('records'),
+            'adverse_events': adverse_events.to_dict('records')
+    }
+    return subjects_api_data
 
 # ----------------------------------------------------------------------------
 # PROCESS BLOOD DATA
@@ -553,21 +648,3 @@ def clean_blooddata(blood_df):
 # ----------------------------------------------------------------------------
 # GENERATE DICTIONARIES FOR API OUTPUTS (using functions above)
 # ----------------------------------------------------------------------------
-
-def process_subjects(subjects_raw,screening_sites, display_terms_dict, display_terms_dict_multi):
-            subjects_raw_df = combine_mcc_json(subjects_raw)
-
-            # Get and Clean Subjects data
-            subjects_cleaned = create_clean_subjects(subjects_raw_df, screening_sites, display_terms_dict, display_terms_dict_multi)
-            consented = get_consented_subjects(subjects_cleaned)
-
-            # Extract adverse events data
-            adverse_effects_raw = extract_adverse_effects_data(subjects_raw_df)
-            adverse_events = clean_adverse_events(adverse_effects_raw, consented, display_terms_dict_multi)
-
-            subjects_api_data ={
-                    'subjects_cleaned': subjects_cleaned.to_dict('records'),
-                    'consented': consented.to_dict('records'),
-                    'adverse_events': adverse_events.to_dict('records')
-            }
-            return subjects_api_data
