@@ -1,0 +1,1513 @@
+site,sub,ses,scan,rating,source,date,notes
+NS,10042,V1,CUFF1,green,auto,,
+NS,10042,V1,CUFF2,green,auto,,
+NS,10042,V1,REST1,green,auto,,
+NS,10042,V1,REST2,green,auto,,
+NS,10042,V1,T1w,green,auto,2022-03-01,
+NS,10047,V1,CUFF1,green,auto,,
+NS,10047,V1,CUFF2,green,auto,,
+NS,10047,V1,REST1,green,auto,,
+NS,10047,V1,REST2,green,auto,,
+NS,10047,V1,T1w,green,auto,2022-03-01,
+NS,10047,V3,CUFF1,green,auto,,
+NS,10047,V3,CUFF2,green,auto,,
+NS,10047,V3,REST1,green,auto,,
+NS,10047,V3,REST2,green,psadil,2022-03-02,"head-motion, inu"
+NS,10047,V3,T1w,yellow,psadil,2022-03-02,"head-motion, eye-spillover"
+NS,10050,V1,CUFF1,green,auto,,
+NS,10050,V1,CUFF2,green,auto,,
+NS,10050,V1,REST1,green,auto,,
+NS,10050,V1,REST2,green,psadil,2022-03-02,"head-motion, inu"
+NS,10050,V1,T1w,green,auto,2022-03-01,
+NS,10053,V1,CUFF1,green,auto,,
+NS,10053,V1,CUFF2,green,auto,,
+NS,10053,V1,REST1,green,auto,,
+NS,10053,V1,REST2,yellow,psadil,2022-03-18,"head-motion, wrap-around"
+NS,10053,V1,T1w,green,auto,2022-03-01,
+NS,10054,V1,CUFF1,green,auto,,
+NS,10054,V1,CUFF2,yellow,psadil,2022-03-18,"head-motion, wrap-around, uncategorized"
+NS,10054,V1,REST1,yellow,psadil,2022-03-18,"head-motion, wrap-around, uncategorized"
+NS,10054,V1,REST2,yellow,psadil,2022-03-18,"head-motion, wrap-around, uncategorized"
+NS,10054,V1,T1w,green,auto,2022-03-01,
+NS,10054,V3,CUFF1,yellow,psadil,2022-03-18,"head-motion, uncategorized"
+NS,10054,V3,CUFF2,yellow,psadil,2022-03-18,"head-motion, uncategorized"
+NS,10054,V3,REST1,yellow,psadil,2022-03-18,"head-motion, uncategorized"
+NS,10054,V3,REST2,yellow,psadil,2022-03-18,"head-motion, uncategorized"
+NS,10054,V3,T1w,green,auto,2022-03-01,
+NS,10059,V1,CUFF1,green,psadil,2022-03-02,"wrap-around, uncategorized"
+NS,10059,V1,CUFF2,green,auto,,
+NS,10059,V1,DWI,green,psadil,2022-03-02,
+NS,10059,V1,REST1,green,psadil,2022-03-02,inu
+NS,10059,V1,REST2,green,psadil,2022-03-02,"wrap-around, inu"
+NS,10059,V1,T1w,green,auto,2022-03-01,
+NS,10059,V3,CUFF1,green,auto,,
+NS,10059,V3,CUFF2,green,auto,,
+NS,10059,V3,REST1,green,auto,,
+NS,10059,V3,REST2,green,auto,,
+NS,10059,V3,T1w,green,auto,2022-03-01,
+NS,10060,V1,CUFF1,red,psadil,2022-01-05,"head-motion, inu"
+NS,10060,V1,CUFF2,green,auto,,
+NS,10060,V1,REST1,yellow,psadil,2022-03-18,"head-motion, uncategorized"
+NS,10060,V1,REST2,yellow,psadil,2022-03-18,"head-motion, uncategorized"
+NS,10060,V1,T1w,green,auto,2022-03-01,
+NS,10060,V3,CUFF1,yellow,psadil,2022-03-02,"head-motion, inu"
+NS,10060,V3,CUFF2,yellow,psadil,2022-03-18,"head-motion, uncategorized"
+NS,10060,V3,DWI,green,psadil,2022-03-02,
+NS,10060,V3,REST1,yellow,psadil,2022-03-18,"head-motion, uncategorized"
+NS,10060,V3,REST2,yellow,psadil,2022-03-18,"head-motion, uncategorized"
+NS,10060,V3,T1w,green,auto,2022-03-01,
+NS,10061,V1,CUFF1,green,auto,,
+NS,10061,V1,CUFF2,green,auto,,
+NS,10061,V1,REST1,green,auto,,
+NS,10061,V1,REST2,green,auto,,
+NS,10061,V1,T1w,green,auto,2022-03-01,
+NS,10061,V3,CUFF1,green,auto,,
+NS,10061,V3,CUFF2,green,auto,,
+NS,10061,V3,REST1,green,auto,,
+NS,10061,V3,REST2,green,auto,,
+NS,10061,V3,T1w,green,auto,2022-03-01,
+NS,10070,V1,CUFF1,green,auto,,
+NS,10070,V1,CUFF2,green,auto,,
+NS,10070,V1,REST1,green,auto,,
+NS,10070,V1,REST2,green,auto,,
+NS,10070,V1,T1w,green,auto,2022-03-01,
+NS,10070,V3,CUFF1,green,auto,,
+NS,10070,V3,CUFF2,green,auto,,
+NS,10070,V3,REST1,green,auto,,
+NS,10070,V3,REST2,green,auto,,
+NS,10070,V3,T1w,green,auto,2022-03-01,
+NS,10071,V1,CUFF1,green,auto,,
+NS,10071,V1,CUFF2,green,auto,,
+NS,10071,V1,DWI,green,psadil,2022-03-02,
+NS,10071,V1,REST1,yellow,psadil,2022-03-18,"head-motion, uncategorized"
+NS,10071,V1,REST2,yellow,psadil,2022-03-18,"head-motion, uncategorized"
+NS,10071,V1,T1w,green,psadil,2022-01-05,"eye-spillover, inu, postprocessing"
+NS,10071,V3,CUFF1,green,auto,,
+NS,10071,V3,CUFF2,green,auto,,
+NS,10071,V3,REST1,yellow,psadil,2022-03-18,"head-motion, wrap-around, uncategorized"
+NS,10071,V3,REST2,yellow,psadil,2022-03-18,"head-motion, wrap-around, uncategorized"
+NS,10071,V3,T1w,green,auto,2022-03-01,
+NS,10073,V1,CUFF1,green,auto,,
+NS,10073,V1,CUFF2,green,auto,,
+NS,10073,V1,REST1,green,auto,,
+NS,10073,V1,REST2,green,auto,,
+NS,10073,V1,T1w,yellow,psadil,2022-03-02,head-motion
+NS,10073,V3,REST1,green,psadil,2022-03-02,"wrap-around, inu"
+NS,10073,V3,REST2,green,auto,,
+NS,10073,V3,T1w,green,auto,2022-03-01,
+NS,10074,V1,REST1,green,auto,,
+NS,10074,V1,REST2,green,auto,,
+NS,10074,V1,T1w,green,auto,2022-03-01,
+NS,10075,V1,CUFF1,green,auto,,
+NS,10075,V1,CUFF2,yellow,psadil,2022-03-18,"head-motion, wrap-around, uncategorized"
+NS,10075,V1,REST1,yellow,psadil,2022-03-18,"head-motion, wrap-around, uncategorized"
+NS,10075,V1,REST2,yellow,psadil,2022-03-18,"head-motion, wrap-around, uncategorized"
+NS,10075,V1,T1w,green,auto,2022-03-01,
+NS,10075,V3,CUFF1,green,auto,,
+NS,10075,V3,CUFF2,green,auto,,
+NS,10075,V3,REST1,yellow,psadil,2022-03-21,"head-motion, wrap-around, uncategorized"
+NS,10075,V3,REST2,yellow,psadil,2022-03-21,"head-motion, wrap-around, uncategorized"
+NS,10075,V3,T1w,yellow,psadil,2022-01-05,"head-motion, eye-spillover"
+NS,10076,V1,CUFF1,yellow,psadil,2022-03-21,"head-motion, wrap-around, uncategorized"
+NS,10076,V1,CUFF2,yellow,psadil,2022-03-21,"head-motion, wrap-around, uncategorized"
+NS,10076,V1,REST1,yellow,psadil,2022-03-21,"head-motion, wrap-around, uncategorized"
+NS,10076,V1,REST2,yellow,psadil,2022-03-21,"head-motion, wrap-around, uncategorized"
+NS,10076,V1,T1w,yellow,psadil,2022-03-02,head-motion
+NS,10076,V3,CUFF1,yellow,psadil,2022-03-21,"head-motion, eye-spillover, wrap-around, uncategorized"
+NS,10076,V3,CUFF2,yellow,psadil,2022-03-21,"head-motion, eye-spillover, wrap-around, uncategorized"
+NS,10076,V3,REST1,yellow,psadil,2022-03-21,"head-motion, eye-spillover, wrap-around, uncategorized"
+NS,10076,V3,REST2,yellow,psadil,2022-03-21,"head-motion, eye-spillover, wrap-around, uncategorized"
+NS,10076,V3,T1w,yellow,psadil,2022-03-02,head-motion
+NS,10077,V1,CUFF1,green,psadil,2022-01-05,"head-motion, inu"
+NS,10077,V1,CUFF2,green,psadil,2022-01-05,inu
+NS,10077,V1,REST1,green,psadil,2022-03-02,inu
+NS,10077,V1,REST2,green,psadil,2022-03-02,"head-motion, inu"
+NS,10077,V1,T1w,green,auto,2022-03-01,
+NS,10077,V3,CUFF1,green,psadil,2022-01-05,
+NS,10077,V3,CUFF2,green,auto,,
+NS,10077,V3,REST1,green,psadil,2022-03-02,inu
+NS,10077,V3,REST2,green,auto,,
+NS,10077,V3,T1w,green,auto,2022-03-01,
+NS,10080,V1,CUFF1,green,auto,,
+NS,10080,V1,CUFF2,green,auto,,
+NS,10080,V1,DWI,green,psadil,2022-03-02,
+NS,10080,V1,REST1,green,auto,,
+NS,10080,V1,REST2,green,auto,,
+NS,10080,V1,T1w,green,auto,2022-03-01,
+NS,10080,V3,CUFF1,green,auto,,
+NS,10080,V3,CUFF2,green,auto,,
+NS,10080,V3,REST1,green,auto,,
+NS,10080,V3,REST2,green,auto,,
+NS,10080,V3,T1w,green,psadil,2022-03-02,postprocessing
+NS,10085,V1,CUFF1,green,psadil,2022-01-05,"head-motion, inu"
+NS,10085,V1,CUFF2,green,psadil,2022-03-02,"head-motion, inu"
+NS,10085,V1,REST1,green,psadil,2022-03-02,inu
+NS,10085,V1,REST2,yellow,psadil,2022-01-05,"head-motion, field-variation"
+NS,10085,V1,T1w,green,auto,2022-03-01,
+NS,10085,V3,CUFF1,green,psadil,2022-03-14,"head-motion, uncategorized"
+NS,10085,V3,CUFF2,green,psadil,2022-03-15,"head-motion, wrap-around, uncategorized"
+NS,10085,V3,REST1,green,psadil,2022-03-14,"head-motion, uncategorized"
+NS,10085,V3,REST2,green,psadil,2022-03-02,head-motion
+NS,10085,V3,T1w,yellow,psadil,2022-03-02,"inu, postprocessing, head-motion"
+NS,10086,V1,REST1,green,auto,,
+NS,10086,V1,REST2,green,auto,,
+NS,10086,V1,T1w,green,auto,2022-03-01,
+NS,10092,V1,CUFF1,green,psadil,2022-01-31,wrap-around
+NS,10092,V1,CUFF2,green,psadil,2022-01-31,wrap-around
+NS,10092,V1,REST1,green,auto,,
+NS,10092,V1,REST2,red,auto,,
+NS,10092,V1,T1w,green,auto,2022-03-01,
+NS,10092,V3,CUFF1,green,auto,,
+NS,10092,V3,CUFF2,green,auto,,
+NS,10092,V3,REST1,green,auto,,
+NS,10092,V3,REST2,green,psadil,2022-03-02,"head-motion, inu"
+NS,10092,V3,T1w,green,psadil,2022-03-02,
+NS,10093,V1,CUFF1,yellow,psadil,2022-01-05,"head-motion, wrap-around, inu"
+NS,10093,V1,CUFF2,yellow,psadil,2022-01-05,"head-motion, wrap-around, inu"
+NS,10093,V1,REST1,yellow,psadil,2022-01-05,"head-motion, wrap-around, inu"
+NS,10093,V1,REST2,yellow,psadil,2022-01-05,"head-motion, wrap-around, inu"
+NS,10093,V1,T1w,yellow,psadil,2022-03-02,postprocessing
+NS,10093,V3,CUFF1,yellow,psadil,2022-01-05,"wrap-around, inu"
+NS,10093,V3,CUFF2,yellow,psadil,2022-01-05,"head-motion, wrap-around, inu"
+NS,10093,V3,REST1,yellow,psadil,2022-01-05,"head-motion, wrap-around, inu"
+NS,10093,V3,REST2,yellow,psadil,2022-01-05,"head-motion, wrap-around, inu"
+NS,10093,V3,T1w,yellow,psadil,2022-03-02,head-motion
+NS,10094,V1,REST1,green,auto,,
+NS,10094,V1,REST2,green,auto,,
+NS,10094,V1,T1w,yellow,psadil,2022-03-02,head-motion
+NS,10095,V1,CUFF1,red,auto,,
+NS,10095,V1,CUFF2,green,auto,,
+NS,10095,V1,REST1,green,auto,,
+NS,10095,V1,REST2,red,auto,,
+NS,10095,V1,T1w,green,auto,2022-03-01,
+NS,10095,V3,CUFF1,green,auto,,
+NS,10095,V3,CUFF2,green,auto,,
+NS,10095,V3,REST1,green,auto,,
+NS,10095,V3,REST2,green,auto,,
+NS,10095,V3,T1w,green,auto,2022-03-01,
+NS,10100,V1,DWI,green,psadil,2022-03-02,
+NS,10100,V1,REST1,yellow,psadil,2022-03-21,"head-motion, wrap-around, uncategorized"
+NS,10100,V1,REST2,yellow,psadil,2022-03-21,"head-motion, wrap-around, uncategorized"
+NS,10100,V1,T1w,green,auto,2022-03-01,
+NS,10101,V1,CUFF1,green,auto,,
+NS,10101,V1,CUFF2,green,auto,,
+NS,10101,V1,DWI,green,psadil,2022-03-02,
+NS,10101,V1,REST1,green,auto,,
+NS,10101,V1,REST2,green,auto,,
+NS,10101,V1,T1w,green,auto,2022-03-01,
+NS,10101,V3,REST1,green,auto,,
+NS,10101,V3,REST2,green,auto,,
+NS,10101,V3,T1w,green,auto,2022-03-01,
+NS,10104,V1,REST1,yellow,psadil,2022-03-21,"head-motion, uncategorized"
+NS,10104,V1,REST2,green,auto,,
+NS,10104,V1,T1w,green,auto,2022-03-01,
+NS,10104,V3,REST1,green,auto,,
+NS,10104,V3,REST2,green,auto,,
+NS,10104,V3,T1w,green,auto,2022-03-01,
+NS,10105,V1,REST1,green,auto,,
+NS,10105,V1,REST2,green,auto,,
+NS,10105,V1,T1w,green,auto,2022-03-01,
+NS,10105,V3,REST1,green,auto,,
+NS,10105,V3,REST2,green,auto,,
+NS,10105,V3,T1w,green,auto,2022-03-01,
+NS,10111,V1,CUFF1,yellow,psadil,2022-03-21,"head-motion, uncategorized"
+NS,10111,V1,CUFF2,yellow,psadil,2022-03-21,"head-motion, uncategorized"
+NS,10111,V1,REST1,yellow,auto,,
+NS,10111,V1,REST2,yellow,psadil,2022-03-21,"head-motion, uncategorized"
+NS,10111,V1,T1w,yellow,psadil,2022-03-02,head-motion
+NS,10112,V1,CUFF1,yellow,psadil,2022-03-21,"head-motion, uncategorized"
+NS,10112,V1,CUFF2,yellow,psadil,2022-03-21,"head-motion, wrap-around, uncategorized"
+NS,10112,V1,REST1,yellow,psadil,2022-03-21,"head-motion, uncategorized"
+NS,10112,V1,REST2,yellow,psadil,2022-03-21,"head-motion, wrap-around, uncategorized"
+NS,10112,V1,T1w,green,auto,2022-03-01,
+NS,10112,V3,REST1,yellow,auto,,
+NS,10112,V3,REST2,yellow,auto,,
+NS,10112,V3,T1w,green,psadil,2022-03-02,
+NS,10113,V1,CUFF1,yellow,auto,,
+NS,10113,V1,CUFF2,green,auto,,
+NS,10113,V1,REST1,yellow,auto,,
+NS,10113,V1,REST2,yellow,auto,,
+NS,10113,V1,T1w,yellow,psadil,2022-03-02,"head-motion, eye-spillover, postprocessing"
+NS,10113,V3,REST1,green,auto,,
+NS,10113,V3,REST2,green,auto,,
+NS,10113,V3,T1w,green,psadil,2022-03-02,postprocessing
+NS,10117,V1,CUFF1,green,auto,,
+NS,10117,V1,CUFF2,green,auto,,
+NS,10117,V1,REST1,green,auto,,
+NS,10117,V1,REST2,green,auto,,
+NS,10117,V1,T1w,yellow,psadil,2022-03-03,inu
+NS,10117,V3,CUFF1,green,auto,,
+NS,10117,V3,CUFF2,green,auto,,
+NS,10117,V3,REST1,green,auto,,
+NS,10117,V3,REST2,green,auto,,
+NS,10117,V3,T1w,yellow,psadil,2022-03-03,"inu, postprocessing"
+NS,10118,V1,CUFF1,green,auto,,
+NS,10118,V1,CUFF2,green,auto,,
+NS,10118,V1,REST1,green,auto,,
+NS,10118,V1,REST2,green,auto,,
+NS,10118,V1,T1w,yellow,psadil,2022-03-16,"head-motion, inu"
+NS,10122,V1,CUFF1,green,auto,,
+NS,10122,V1,CUFF2,green,auto,,
+NS,10122,V1,REST1,yellow,auto,,
+NS,10122,V1,REST2,green,auto,,
+NS,10122,V1,T1w,green,auto,2022-03-01,
+NS,10122,V3,CUFF1,green,auto,,
+NS,10122,V3,CUFF2,green,auto,,
+NS,10122,V3,REST1,green,auto,,
+NS,10122,V3,REST2,yellow,auto,,
+NS,10122,V3,T1w,yellow,psadil,2022-03-02,postprocessing
+NS,10128,V1,CUFF1,green,auto,,
+NS,10128,V1,CUFF2,green,auto,,
+NS,10128,V1,REST1,yellow,psadil,2022-01-05,"head-motion, wrap-around, inu"
+NS,10128,V1,REST2,green,auto,,
+NS,10128,V1,T1w,green,psadil,2022-03-15,inu
+NS,10137,V1,DWI,green,psadil,2022-03-02,
+NS,10137,V1,REST1,yellow,auto,,
+NS,10137,V1,REST2,yellow,auto,,
+NS,10137,V1,T1w,green,auto,2022-03-01,
+NS,10138,V1,REST1,yellow,auto,,
+NS,10138,V1,REST2,yellow,auto,,
+NS,10138,V1,T1w,green,auto,2022-03-01,
+NS,10139,V1,CUFF1,yellow,auto,,
+NS,10139,V1,CUFF2,yellow,auto,,
+NS,10139,V1,DWI,green,psadil,2022-03-02,
+NS,10139,V1,REST1,green,auto,,
+NS,10139,V1,REST2,yellow,auto,,
+NS,10139,V1,T1w,green,auto,2022-03-01,
+NS,10141,V1,REST1,yellow,auto,,
+NS,10141,V1,REST2,yellow,auto,,
+NS,10141,V1,T1w,green,auto,2022-03-01,
+NS,10145,V1,REST1,yellow,psadil,2022-03-02,"head-motion, inu"
+NS,10145,V1,REST2,yellow,psadil,2022-01-05,"head-motion, inu"
+NS,10145,V1,T1w,yellow,psadil,2022-03-02,head-motion
+NS,10151,V1,CUFF1,green,auto,,
+NS,10151,V1,CUFF2,green,auto,,
+NS,10151,V1,REST1,green,auto,,
+NS,10151,V1,REST2,green,auto,,
+NS,10151,V1,T1w,green,auto,2022-03-01,
+NS,10157,V1,CUFF1,yellow,auto,,
+NS,10157,V1,CUFF2,yellow,auto,,
+NS,10157,V1,REST1,yellow,auto,,
+NS,10157,V1,REST2,yellow,auto,,
+NS,10157,V1,T1w,yellow,psadil,2022-03-02,"head-motion, eye-spillover"
+NS,10158,V1,REST1,green,psadil,2022-01-05,inu
+NS,10158,V1,REST2,green,psadil,2022-03-02,"inu, uncategorized"
+NS,10158,V1,T1w,green,auto,2022-03-01,
+NS,10160,V1,CUFF1,green,auto,,
+NS,10160,V1,CUFF2,green,auto,,
+NS,10160,V1,REST1,green,auto,,
+NS,10160,V1,REST2,yellow,auto,,
+NS,10160,V1,T1w,green,auto,2022-03-01,
+NS,10161,V1,REST1,yellow,auto,,
+NS,10161,V1,REST2,yellow,auto,,
+NS,10161,V1,T1w,yellow,psadil,2022-03-02,"head-motion, eye-spillover, inu, postprocessing"
+NS,10162,V1,CUFF1,green,auto,,
+NS,10162,V1,CUFF2,green,auto,,
+NS,10162,V1,DWI,green,psadil,2022-03-02,
+NS,10162,V1,REST1,yellow,auto,,
+NS,10162,V1,REST2,green,auto,,
+NS,10162,V1,T1w,green,auto,2022-03-01,
+NS,10163,V1,REST1,green,psadil,2022-03-02,"inu, uncategorized"
+NS,10163,V1,REST2,green,psadil,2022-03-02,"em-perturbation, wrap-around, inu"
+NS,10163,V1,T1w,green,auto,2022-03-01,
+NS,10165,V1,REST1,yellow,auto,,
+NS,10165,V1,REST2,yellow,auto,,
+NS,10165,V1,T1w,green,auto,2022-03-01,
+NS,10166,V1,CUFF1,red,psadil,2022-03-02,"head-motion, inu"
+NS,10166,V1,CUFF2,red,psadil,2022-03-02,"head-motion, wrap-around, inu"
+NS,10166,V1,REST1,yellow,psadil,2022-01-05,"head-motion, inu"
+NS,10166,V1,REST2,red,psadil,2022-03-02,"head-motion, inu"
+NS,10166,V1,T1w,yellow,psadil,2022-03-02,"head-motion, eye-spillover, inu"
+NS,10167,V1,CUFF1,green,auto,,
+NS,10167,V1,CUFF2,green,auto,,
+NS,10167,V1,REST1,yellow,auto,,
+NS,10167,V1,REST2,yellow,auto,,
+NS,10167,V1,T1w,yellow,psadil,2022-03-02,"head-motion, eye-spillover, inu"
+NS,10168,V1,CUFF1,yellow,auto,,
+NS,10168,V1,CUFF2,yellow,auto,,
+NS,10168,V1,REST1,yellow,auto,,
+NS,10168,V1,REST2,yellow,auto,,
+NS,10168,V1,T1w,green,auto,2022-03-01,
+NS,10170,V1,CUFF1,green,psadil,2022-01-05,"head-motion, inu"
+NS,10170,V1,CUFF2,green,auto,,
+NS,10170,V1,REST1,yellow,auto,,
+NS,10170,V1,REST2,yellow,auto,,
+NS,10170,V1,T1w,yellow,psadil,2022-03-02,"head-motion, postprocessing"
+NS,10171,V1,REST1,yellow,psadil,2022-01-05,"head-motion, wrap-around"
+NS,10171,V1,REST2,yellow,psadil,2022-01-05,"head-motion, wrap-around, inu"
+NS,10171,V1,T1w,yellow,psadil,2022-03-02,"eye-spillover, inu"
+NS,10175,V1,CUFF1,yellow,auto,,
+NS,10175,V1,CUFF2,yellow,auto,,
+NS,10175,V1,REST1,yellow,auto,,
+NS,10175,V1,REST2,yellow,auto,,
+NS,10175,V1,T1w,yellow,psadil,2022-03-02,postprocessing
+NS,10177,V1,CUFF1,green,auto,,
+NS,10177,V1,CUFF2,green,auto,,
+NS,10177,V1,REST1,green,auto,,
+NS,10177,V1,REST2,green,auto,,
+NS,10177,V1,T1w,green,auto,2022-03-01,
+NS,10179,V1,CUFF1,yellow,psadil,2022-01-05,"head-motion, inu"
+NS,10179,V1,CUFF2,green,auto,,
+NS,10179,V1,REST1,green,psadil,2022-03-02,"head-motion, inu"
+NS,10179,V1,REST2,green,psadil,2022-03-02,head-motion
+NS,10179,V1,T1w,green,auto,2022-03-01,
+NS,10180,V1,REST1,green,auto,,
+NS,10180,V1,REST2,green,auto,,
+NS,10180,V1,T1w,green,auto,2022-03-01,
+NS,10182,V1,CUFF1,red,psadil,2022-01-05,
+NS,10182,V1,CUFF2,green,auto,,
+NS,10182,V1,REST1,green,auto,,
+NS,10182,V1,REST2,green,auto,,
+NS,10182,V1,T1w,green,auto,2022-03-01,
+NS,10182,V3,CUFF1,red,auto,,
+NS,10182,V3,CUFF2,green,psadil,2022-03-22,uncategorized
+NS,10182,V3,REST1,green,auto,,
+NS,10182,V3,REST2,green,auto,,
+NS,10182,V3,T1w,green,technologist,,
+NS,10185,V1,CUFF1,green,psadil,2022-03-02,"head-motion, inu"
+NS,10185,V1,CUFF2,green,auto,,
+NS,10185,V1,REST1,green,psadil,2022-03-02,"head-motion, inu"
+NS,10185,V1,REST2,green,auto,,
+NS,10185,V1,T1w,green,auto,2022-03-01,
+NS,10185,V3,CUFF1,yellow,auto,,
+NS,10185,V3,CUFF2,green,auto,,
+NS,10185,V3,REST1,green,auto,,
+NS,10185,V3,REST2,green,auto,,
+NS,10185,V3,T1w,yellow,psadil,2022-03-11,"head-motion, noise-local, inu, postprocessing"
+NS,10190,V1,REST1,green,psadil,2022-03-02,inu
+NS,10190,V1,REST2,green,psadil,2022-03-02,"head-motion, inu"
+NS,10190,V1,T1w,green,auto,2022-03-01,
+NS,10191,V1,CUFF1,green,auto,,
+NS,10191,V1,CUFF2,green,auto,,
+NS,10191,V1,DWI,green,psadil,2022-03-02,postprocessing
+NS,10191,V1,REST1,green,auto,,
+NS,10191,V1,REST2,green,auto,,
+NS,10191,V1,T1w,green,auto,2022-03-01,
+NS,10192,V1,CUFF1,green,psadil,2021-11-16,"wrap-around, ghosts-other"
+NS,10192,V1,CUFF2,green,psadil,2022-03-02,"head-motion, ghosts-other"
+NS,10192,V1,REST1,green,psadil,2022-03-02,"ghosts-other, uncategorized"
+NS,10192,V1,REST2,green,psadil,2022-03-02,"noise-local, ghosts-other"
+NS,10192,V1,T1w,green,psadil,2021-11-16,"ghosts-other, inu, postprocessing"
+NS,10192,V3,T1w,green,technologist,,
+NS,10194,V1,CUFF1,green,auto,,
+NS,10194,V1,CUFF2,green,auto,,
+NS,10194,V1,REST1,green,auto,,
+NS,10194,V1,REST2,green,auto,,
+NS,10194,V1,T1w,green,auto,2022-03-01,
+NS,10197,V1,REST1,yellow,psadil,2022-01-05,"head-motion, wrap-around, inu"
+NS,10197,V1,REST2,yellow,auto,,
+NS,10197,V1,T1w,yellow,psadil,2022-03-02,"head-motion, eye-spillover, postprocessing"
+NS,10198,V1,REST1,yellow,psadil,2022-03-02,"wrap-around, inu"
+NS,10198,V1,REST2,yellow,psadil,2022-01-05,"head-motion, inu"
+NS,10198,V1,T1w,green,auto,2022-03-01,
+NS,10202,V1,CUFF1,red,psadil,2022-03-02,ghosts-other
+NS,10202,V1,CUFF2,red,psadil,2022-03-02,ghosts-other
+NS,10202,V1,DWI,green,psadil,2022-03-02,
+NS,10202,V1,REST1,green,psadil,2022-03-02,
+NS,10202,V1,T1w,green,psadil,2021-11-16,"eye-spillover, noneye-spillover, ghosts-other, postprocessing"
+NS,10203,V1,CUFF1,green,auto,,
+NS,10203,V1,CUFF2,green,auto,,
+NS,10203,V1,REST1,green,auto,,
+NS,10203,V1,REST2,green,auto,,
+NS,10203,V1,T1w,green,auto,2022-03-01,
+NS,10205,V3,REST1,yellow,auto,,
+NS,10205,V3,REST2,yellow,auto,,
+NS,10205,V3,T1w,green,technologist,,
+NS,10206,V1,CUFF1,green,auto,,
+NS,10206,V1,CUFF2,yellow,psadil,2022-01-05,"head-motion, inu"
+NS,10206,V1,REST1,yellow,psadil,2022-01-05,"head-motion, inu"
+NS,10206,V1,REST2,yellow,auto,,
+NS,10206,V1,T1w,yellow,psadil,2022-03-02,"head-motion, eye-spillover, inu, postprocessing"
+NS,10207,V1,CUFF1,green,auto,,
+NS,10207,V1,CUFF2,green,auto,,
+NS,10207,V1,REST1,green,auto,,
+NS,10207,V1,REST2,green,psadil,2022-03-02,"head-motion, inu"
+NS,10207,V1,T1w,green,auto,2022-03-01,
+NS,10211,V1,CUFF1,green,psadil,2021-11-16,"noise-local, ghosts-other"
+NS,10211,V1,CUFF2,green,psadil,2021-11-16,"ghosts-other, uncategorized"
+NS,10211,V1,REST1,green,psadil,2022-03-02,noise-global
+NS,10211,V1,REST2,green,auto,,
+NS,10211,V1,T1w,yellow,psadil,2022-03-02,"eye-spillover, inu, postprocessing"
+NS,10211,V3,CUFF1,green,auto,,
+NS,10211,V3,CUFF2,green,auto,,
+NS,10211,V3,REST1,yellow,auto,,
+NS,10211,V3,REST2,yellow,auto,,
+NS,10211,V3,T1w,green,technologist,,
+NS,10212,V1,REST1,green,auto,,
+NS,10212,V1,REST2,green,auto,,
+NS,10212,V1,T1w,green,psadil,2021-11-29,"eye-spillover, ghosts-other, inu, postprocessing"
+NS,10215,V1,CUFF1,green,auto,,
+NS,10215,V1,CUFF2,green,auto,,
+NS,10215,V1,REST1,green,auto,,
+NS,10215,V1,REST2,green,auto,,
+NS,10215,V1,T1w,green,auto,2022-03-01,
+NS,10220,V1,REST1,green,auto,,
+NS,10220,V1,REST2,green,auto,,
+NS,10220,V1,T1w,yellow,psadil,2022-03-02,postprocessing
+NS,10220,V3,CUFF1,green,auto,,
+NS,10220,V3,CUFF2,green,auto,,
+NS,10220,V3,REST1,green,auto,,
+NS,10220,V3,REST2,green,auto,,
+NS,10220,V3,T1w,green,technologist,,
+NS,10221,V1,CUFF1,green,auto,,
+NS,10221,V1,CUFF2,green,auto,,
+NS,10221,V1,REST1,green,auto,,
+NS,10221,V1,REST2,green,auto,,
+NS,10221,V1,T1w,green,psadil,2021-11-23,inu
+NS,10223,V1,CUFF1,yellow,auto,,
+NS,10223,V1,CUFF2,yellow,auto,,
+NS,10223,V1,REST1,green,auto,,
+NS,10223,V1,REST2,yellow,auto,,
+NS,10223,V1,T1w,yellow,psadil,2022-03-02,"eye-spillover, inu"
+NS,10231,V1,CUFF1,yellow,auto,,
+NS,10231,V1,CUFF2,yellow,auto,,
+NS,10231,V1,REST1,yellow,auto,,
+NS,10231,V1,REST2,yellow,auto,,
+NS,10231,V1,T1w,yellow,psadil,2022-03-03,"inu, postprocessing"
+NS,10234,V1,CUFF1,green,auto,,
+NS,10234,V1,CUFF2,green,auto,,
+NS,10234,V1,REST1,green,auto,,
+NS,10234,V1,REST2,green,auto,,
+NS,10234,V1,T1w,yellow,psadil,2022-03-02,"head-motion, eye-spillover"
+NS,10238,V1,REST1,green,auto,,
+NS,10238,V1,REST2,green,auto,,
+NS,10238,V1,T1w,green,auto,2022-03-01,
+NS,10246,V1,CUFF1,green,auto,,
+NS,10246,V1,CUFF2,green,auto,,
+NS,10246,V1,REST1,green,auto,,
+NS,10246,V1,REST2,yellow,auto,,
+NS,10246,V1,T1w,green,auto,2022-03-01,
+NS,10250,V1,CUFF1,green,auto,,
+NS,10250,V1,CUFF2,green,auto,,
+NS,10250,V1,DWI,green,psadil,2022-03-02,
+NS,10250,V1,REST1,green,auto,,
+NS,10250,V1,REST2,green,auto,,
+NS,10250,V1,T1w,yellow,psadil,2022-03-03,"inu, postprocessing"
+NS,10257,V1,REST1,green,auto,,
+NS,10257,V1,REST2,green,psadil,2022-03-02,head-motion
+NS,10257,V1,T1w,green,psadil,2022-03-02,postprocessing
+NS,10258,V1,CUFF1,red,psadil,2022-03-02,"head-motion, wrap-around"
+NS,10258,V1,CUFF2,red,psadil,2022-03-02,"head-motion, wrap-around"
+NS,10258,V1,REST1,red,psadil,2022-03-02,"head-motion, wrap-around"
+NS,10258,V1,REST2,red,psadil,2022-03-02,"head-motion, wrap-around"
+NS,10258,V1,T1w,red,psadil,2022-03-02,"head-motion, postprocessing"
+NS,10285,V1,REST1,green,auto,,
+NS,10285,V1,REST2,green,auto,,
+NS,10285,V1,T1w,green,auto,2022-03-02,
+NS,10296,V1,CUFF1,green,auto,,
+NS,10296,V1,CUFF2,green,psadil,2022-03-11,"head-motion, uncategorized"
+NS,10296,V1,REST1,yellow,auto,,
+NS,10296,V1,REST2,yellow,auto,,
+NS,10296,V1,T1w,yellow,psadil,2022-03-03,postprocessing
+NS,10298,V1,CUFF1,yellow,psadil,2022-03-14,"head-motion, wrap-around, uncategorized"
+NS,10298,V1,CUFF2,yellow,psadil,2022-03-15,"head-motion, wrap-around, uncategorized"
+NS,10298,V1,REST1,yellow,auto,,
+NS,10298,V1,REST2,yellow,auto,,
+NS,10298,V1,T1w,green,technologist,,
+NS,10305,V1,CUFF1,green,auto,,
+NS,10305,V1,CUFF2,red,auto,,
+NS,10305,V1,REST1,yellow,auto,,
+NS,10305,V1,REST2,green,auto,,
+NS,10305,V1,T1w,green,technologist,,
+NS,10312,V1,CUFF1,green,auto,,
+NS,10312,V1,CUFF2,green,psadil,2022-03-22,"head-motion, uncategorized"
+NS,10312,V1,REST1,green,auto,,
+NS,10312,V1,REST2,green,auto,,
+NS,10312,V1,T1w,green,technologist,,
+NS,10314,V1,CUFF1,green,auto,,
+NS,10314,V1,CUFF2,green,auto,,
+NS,10314,V1,REST1,green,auto,,
+NS,10314,V1,REST2,green,auto,,
+NS,10314,V1,T1w,green,technologist,,
+UC,10036,V1,CUFF1,yellow,auto,,
+UC,10036,V1,CUFF2,yellow,auto,,
+UC,10036,V1,REST1,yellow,psadil,2022-03-11,"head-motion, uncategorized"
+UC,10036,V1,REST2,yellow,auto,,
+UC,10036,V1,T1w,green,auto,2022-03-01,
+UC,10036,V3,CUFF1,yellow,psadil,2022-03-02,head-motion
+UC,10036,V3,CUFF2,yellow,psadil,2022-03-02,head-motion
+UC,10036,V3,REST1,yellow,psadil,2022-03-02,head-motion
+UC,10036,V3,REST2,yellow,psadil,2022-01-26,"head-motion, uncategorized"
+UC,10036,V3,T1w,green,psadil,2022-03-15,postprocessing
+UC,10040,V1,CUFF1,yellow,psadil,2022-03-15,"head-motion, uncategorized"
+UC,10040,V1,CUFF2,green,auto,,
+UC,10040,V1,REST1,yellow,auto,,
+UC,10040,V1,REST2,yellow,auto,,
+UC,10040,V1,T1w,green,auto,2022-03-01,
+UC,10049,V1,CUFF1,red,auto,,
+UC,10049,V1,CUFF2,yellow,auto,,
+UC,10049,V1,REST1,yellow,auto,,
+UC,10049,V1,REST2,yellow,auto,,
+UC,10049,V1,T1w,yellow,psadil,2022-03-03,
+UC,10049,V3,CUFF1,yellow,auto,,
+UC,10049,V3,CUFF2,yellow,auto,,
+UC,10049,V3,REST1,yellow,auto,,
+UC,10049,V3,REST2,yellow,psadil,2022-03-02,head-motion
+UC,10049,V3,T1w,green,psadil,2022-03-14,postprocessing
+UC,10055,V1,CUFF1,green,auto,,
+UC,10055,V1,CUFF2,green,auto,,
+UC,10055,V1,REST1,green,auto,,
+UC,10055,V1,REST2,green,auto,,
+UC,10055,V1,T1w,green,auto,2022-03-01,
+UC,10058,V1,CUFF1,red,psadil,2022-03-02,head-motion
+UC,10058,V1,CUFF2,red,psadil,2022-03-02,head-motion
+UC,10058,V1,REST1,red,psadil,2022-03-02,head-motion
+UC,10058,V1,REST2,red,psadil,2022-03-02,"head-motion, eye-spillover, noneye-spillover"
+UC,10058,V1,T1w,green,auto,2022-03-01,
+UC,10058,V3,CUFF1,red,psadil,2022-03-02,head-motion
+UC,10058,V3,CUFF2,red,psadil,2022-03-02,head-motion
+UC,10058,V3,REST1,red,psadil,2022-03-02,head-motion
+UC,10058,V3,REST2,yellow,auto,,
+UC,10058,V3,T1w,green,auto,2022-03-01,
+UC,10064,V1,CUFF1,yellow,auto,,
+UC,10064,V1,CUFF2,yellow,auto,,
+UC,10064,V1,REST1,yellow,auto,,
+UC,10064,V1,REST2,yellow,auto,,
+UC,10064,V1,T1w,green,auto,2022-03-01,
+UC,10064,V3,CUFF1,yellow,psadil,2022-03-02,head-motion
+UC,10064,V3,CUFF2,yellow,psadil,2022-03-02,"head-motion, field-variation, uncategorized"
+UC,10064,V3,REST1,yellow,auto,,
+UC,10064,V3,REST2,yellow,auto,,
+UC,10064,V3,T1w,green,psadil,2021-11-16,
+UC,10066,V1,CUFF1,yellow,psadil,2022-03-02,head-motion
+UC,10066,V1,CUFF2,red,psadil,2022-03-02,head-motion
+UC,10066,V1,REST1,yellow,psadil,2022-03-02,head-motion
+UC,10066,V1,T1w,green,psadil,2022-03-14,
+UC,10067,V1,REST1,yellow,auto,,
+UC,10067,V1,T1w,green,auto,2022-03-01,
+UC,10067,V3,CUFF1,red,psadil,2022-03-02,head-motion
+UC,10067,V3,CUFF2,red,psadil,2022-03-02,head-motion
+UC,10067,V3,REST1,red,psadil,2022-03-02,head-motion
+UC,10067,V3,REST2,red,psadil,2022-03-02,"head-motion, uncategorized"
+UC,10067,V3,T1w,green,auto,2022-03-01,
+UC,10068,V3,CUFF1,red,psadil,2022-03-02,
+UC,10068,V3,CUFF2,red,psadil,2022-03-02,
+UC,10068,V3,REST1,red,psadil,2022-03-02,uncategorized
+UC,10068,V3,REST2,red,psadil,2022-03-02,
+UC,10068,V3,T1w,green,psadil,2021-11-16,
+UC,10102,V1,CUFF1,green,auto,,
+UC,10102,V1,CUFF2,green,auto,,
+UC,10102,V1,REST1,yellow,auto,,
+UC,10102,V1,REST2,yellow,auto,,
+UC,10102,V1,T1w,green,auto,2022-03-01,
+UC,10102,V3,CUFF1,green,auto,,
+UC,10102,V3,CUFF2,green,auto,,
+UC,10102,V3,REST1,yellow,auto,,
+UC,10102,V3,REST2,yellow,auto,,
+UC,10102,V3,T1w,green,auto,2022-03-01,
+UC,10103,V1,CUFF1,yellow,auto,,
+UC,10103,V1,CUFF2,yellow,auto,,
+UC,10103,V1,REST1,yellow,auto,,
+UC,10103,V1,REST2,yellow,auto,,
+UC,10103,V1,T1w,green,auto,2022-03-01,
+UC,10119,V1,CUFF1,yellow,auto,,
+UC,10119,V1,CUFF2,yellow,auto,,
+UC,10119,V1,REST1,yellow,psadil,2022-03-02,
+UC,10119,V1,REST2,yellow,auto,,
+UC,10119,V1,T1w,green,auto,2022-03-01,
+UC,10120,V1,CUFF1,yellow,auto,,
+UC,10120,V1,CUFF2,yellow,auto,,
+UC,10120,V1,REST1,yellow,auto,,
+UC,10120,V1,REST2,yellow,auto,,
+UC,10120,V1,T1w,green,auto,2022-03-01,
+UC,10120,V3,CUFF1,yellow,auto,,
+UC,10120,V3,CUFF2,yellow,auto,,
+UC,10120,V3,REST1,yellow,auto,,
+UC,10120,V3,REST2,yellow,auto,,
+UC,10120,V3,T1w,green,technologist,,
+UC,10132,V1,CUFF1,green,auto,,
+UC,10132,V1,CUFF2,green,auto,,
+UC,10132,V1,REST1,yellow,auto,,
+UC,10132,V1,REST2,yellow,auto,,
+UC,10132,V1,T1w,green,auto,2022-03-01,
+UC,10133,V1,CUFF1,yellow,auto,,
+UC,10133,V1,CUFF2,yellow,psadil,2022-03-02,head-motion
+UC,10133,V1,REST1,yellow,psadil,2022-03-02,"head-motion, eye-spillover"
+UC,10133,V1,REST2,yellow,psadil,2022-03-02,"head-motion, eye-spillover"
+UC,10133,V1,T1w,yellow,psadil,2022-03-03,noise-local
+UC,10135,V1,CUFF1,yellow,psadil,2022-03-02,"head-motion, eye-spillover"
+UC,10135,V1,T1w,green,psadil,2022-03-02,
+UC,10147,V1,T1w,yellow,psadil,2022-03-03,
+UC,10153,V1,CUFF1,yellow,auto,,
+UC,10153,V1,CUFF2,yellow,auto,,
+UC,10153,V1,REST1,yellow,auto,,
+UC,10153,V1,REST2,yellow,auto,,
+UC,10153,V1,T1w,green,auto,2022-03-01,
+UC,10201,V1,CUFF1,yellow,auto,,
+UC,10201,V1,CUFF2,yellow,auto,,
+UC,10201,V1,REST1,red,psadil,2022-03-02,head-motion
+UC,10201,V1,REST2,yellow,auto,,
+UC,10201,V1,T1w,green,psadil,2022-03-02,
+UC,10235,V1,CUFF1,yellow,auto,,
+UC,10235,V1,CUFF2,yellow,auto,,
+UC,10235,V1,REST1,yellow,auto,,
+UC,10235,V1,T1w,green,auto,2022-03-01,
+UC,10237,V1,CUFF1,yellow,psadil,2022-03-02,head-motion
+UC,10237,V1,CUFF2,red,psadil,2022-03-02,
+UC,10237,V1,REST1,yellow,auto,,
+UC,10237,V1,REST2,yellow,auto,,
+UC,10237,V1,T1w,green,auto,2022-03-01,
+UC,10243,V1,CUFF1,green,psadil,2022-01-31,
+UC,10243,V1,CUFF2,green,psadil,2022-01-31,
+UC,10243,V1,REST1,green,psadil,2022-03-02,"head-motion, uncategorized"
+UC,10243,V1,REST2,green,psadil,2022-03-02,
+UC,10243,V1,T1w,green,auto,2022-03-01,
+UC,10244,V1,CUFF1,red,psadil,2022-03-02,"head-motion, wrap-around"
+UC,10244,V1,CUFF2,red,psadil,2022-03-02,head-motion
+UC,10244,V1,REST1,red,psadil,2022-03-02,"head-motion, wrap-around"
+UC,10244,V1,REST2,red,psadil,2022-03-02,head-motion
+UC,10244,V1,T1w,green,auto,2022-03-02,
+UC,10307,V1,CUFF1,yellow,auto,,
+UC,10307,V1,CUFF2,yellow,auto,,
+UC,10307,V1,REST1,yellow,auto,,
+UC,10307,V1,REST2,yellow,auto,,
+UC,10307,V1,T1w,green,technologist,,
+UI,10003,V1,CUFF1,green,auto,,
+UI,10003,V1,REST1,green,auto,,
+UI,10003,V1,REST2,green,auto,,
+UI,10003,V1,T1w,green,auto,2022-03-01,
+UI,10003,V3,CUFF1,green,auto,,
+UI,10003,V3,REST1,green,auto,,
+UI,10003,V3,REST2,green,auto,,
+UI,10003,V3,T1w,green,auto,2022-03-01,
+UI,10005,V1,T1w,yellow,psadil,2022-03-02,head-motion
+UI,10008,V1,CUFF1,green,auto,,
+UI,10008,V1,REST1,yellow,auto,,
+UI,10008,V1,REST2,yellow,psadil,2022-03-02,head-motion
+UI,10008,V1,T1w,green,auto,2022-03-01,
+UI,10008,V3,CUFF1,yellow,psadil,2022-03-02,"head-motion, field-variation"
+UI,10008,V3,REST1,yellow,auto,,
+UI,10008,V3,REST2,yellow,psadil,2022-03-02,head-motion
+UI,10008,V3,T1w,green,psadil,2022-03-02,postprocessing
+UI,10009,V1,T1w,green,auto,2022-03-01,
+UI,10010,V1,CUFF1,yellow,auto,,
+UI,10010,V1,CUFF2,yellow,auto,,
+UI,10010,V1,REST1,red,psadil,2022-03-02,"head-motion, wrap-around, uncategorized"
+UI,10010,V1,REST2,yellow,auto,,
+UI,10010,V1,T1w,yellow,psadil,2022-03-02,head-motion
+UI,10010,V3,CUFF1,red,psadil,2022-03-02,head-motion
+UI,10010,V3,REST1,red,psadil,2022-03-02,"head-motion, uncategorized"
+UI,10010,V3,REST2,red,psadil,2022-03-02,head-motion
+UI,10010,V3,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global"
+UI,10011,V1,CUFF1,yellow,auto,,
+UI,10011,V1,CUFF2,yellow,auto,,
+UI,10011,V1,REST1,yellow,auto,,
+UI,10011,V1,REST2,red,psadil,2022-03-02,"head-motion, uncategorized"
+UI,10011,V1,T1w,yellow,psadil,2022-03-02,head-motion
+UI,10011,V3,CUFF1,yellow,auto,,
+UI,10011,V3,CUFF2,yellow,auto,,
+UI,10011,V3,REST1,yellow,auto,,
+UI,10011,V3,REST2,yellow,auto,,
+UI,10011,V3,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global"
+UI,10013,V1,CUFF1,yellow,auto,,
+UI,10013,V1,REST1,yellow,auto,,
+UI,10013,V1,REST2,yellow,auto,,
+UI,10013,V1,T1w,yellow,psadil,2022-03-02,"head-motion, postprocessing"
+UI,10013,V3,CUFF1,yellow,auto,,
+UI,10013,V3,REST1,yellow,auto,,
+UI,10013,V3,REST2,yellow,auto,,
+UI,10013,V3,T1w,yellow,psadil,2022-03-02,"head-motion, postprocessing"
+UI,10014,V1,CUFF1,yellow,auto,,
+UI,10014,V1,REST1,yellow,auto,,
+UI,10014,V1,REST2,yellow,auto,,
+UI,10014,V1,T1w,green,auto,2022-03-01,
+UI,10014,V3,T1w,green,auto,2022-03-01,
+UI,10015,V1,CUFF1,yellow,auto,,
+UI,10015,V1,REST1,yellow,auto,,
+UI,10015,V1,REST2,yellow,auto,,
+UI,10015,V1,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global, postprocessing"
+UI,10015,V3,CUFF1,yellow,auto,,
+UI,10015,V3,REST1,yellow,auto,,
+UI,10015,V3,REST2,red,psadil,2022-03-02,head-motion
+UI,10015,V3,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global"
+UI,10017,V1,CUFF1,yellow,auto,,
+UI,10017,V1,REST1,yellow,auto,,
+UI,10017,V1,REST2,yellow,psadil,2022-03-02,head-motion
+UI,10017,V1,T1w,green,auto,2022-03-01,
+UI,10020,V1,CUFF1,green,auto,,
+UI,10020,V1,REST1,green,auto,,
+UI,10020,V1,REST2,green,auto,,
+UI,10020,V1,T1w,green,auto,2022-03-01,
+UI,10023,V1,CUFF1,yellow,auto,,
+UI,10023,V1,CUFF2,yellow,auto,,
+UI,10023,V1,REST1,yellow,auto,,
+UI,10023,V1,REST2,yellow,auto,,
+UI,10023,V1,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global"
+UI,10023,V3,CUFF1,yellow,auto,,
+UI,10023,V3,REST1,green,auto,,
+UI,10023,V3,REST2,yellow,auto,,
+UI,10023,V3,T1w,yellow,psadil,2022-03-02,"head-motion, postprocessing"
+UI,10024,V1,CUFF1,green,auto,,
+UI,10024,V1,REST1,green,auto,,
+UI,10024,V1,REST2,green,auto,,
+UI,10024,V1,T1w,yellow,psadil,2022-03-02,head-motion
+UI,10024,V3,REST1,green,auto,,
+UI,10024,V3,REST2,green,auto,,
+UI,10024,V3,T1w,green,auto,2022-03-01,
+UI,10026,V1,CUFF1,yellow,auto,,
+UI,10026,V1,REST1,yellow,auto,,
+UI,10026,V1,REST2,yellow,auto,,
+UI,10026,V1,T1w,green,psadil,2022-03-02,
+UI,10028,V1,CUFF1,green,auto,,
+UI,10028,V1,REST1,green,auto,,
+UI,10028,V1,REST2,green,auto,,
+UI,10028,V1,T1w,green,auto,2022-03-01,
+UI,10028,V3,CUFF1,green,auto,,
+UI,10028,V3,REST1,green,auto,,
+UI,10028,V3,REST2,green,auto,,
+UI,10028,V3,T1w,green,auto,2022-03-01,
+UI,10029,V1,CUFF1,yellow,psadil,2022-03-02,"head-motion, em-perturbation"
+UI,10029,V1,REST1,yellow,psadil,2022-03-02,"head-motion, em-perturbation"
+UI,10029,V1,REST2,yellow,psadil,2022-03-02,"head-motion, noise-global"
+UI,10029,V1,T1w,green,psadil,2022-03-02,postprocessing
+UI,10030,V1,CUFF1,green,auto,,
+UI,10030,V1,CUFF2,green,auto,,
+UI,10030,V1,REST1,green,auto,,
+UI,10030,V1,REST2,yellow,auto,,
+UI,10030,V1,T1w,yellow,psadil,2022-03-02,"head-motion, postprocessing"
+UI,10030,V3,CUFF1,green,auto,,
+UI,10030,V3,REST1,green,auto,,
+UI,10030,V3,REST2,green,auto,,
+UI,10030,V3,T1w,yellow,psadil,2022-03-02,"head-motion, postprocessing"
+UI,10031,V1,CUFF1,yellow,auto,,
+UI,10031,V1,REST1,yellow,auto,,
+UI,10031,V1,REST2,yellow,auto,,
+UI,10031,V1,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global, postprocessing"
+UI,10031,V3,CUFF1,green,auto,,
+UI,10031,V3,CUFF2,green,auto,,
+UI,10031,V3,REST1,green,auto,,
+UI,10031,V3,REST2,yellow,auto,,
+UI,10031,V3,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global"
+UI,10032,V1,CUFF1,yellow,auto,,
+UI,10032,V1,REST1,yellow,auto,,
+UI,10032,V1,T1w,yellow,psadil,2022-03-02,head-motion
+UI,10032,V3,CUFF1,yellow,auto,,
+UI,10032,V3,CUFF2,green,auto,,
+UI,10032,V3,REST1,green,auto,,
+UI,10032,V3,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global, postprocessing"
+UI,10033,V1,CUFF1,yellow,auto,,
+UI,10033,V1,REST1,yellow,auto,,
+UI,10033,V1,REST2,yellow,auto,,
+UI,10033,V1,T1w,green,psadil,2022-03-02,
+UI,10033,V3,CUFF1,green,auto,,
+UI,10033,V3,REST1,green,auto,,
+UI,10033,V3,REST2,green,auto,,
+UI,10033,V3,T1w,green,psadil,2022-03-02,
+UI,10034,V1,CUFF1,red,psadil,2022-03-02,"head-motion, em-perturbation"
+UI,10034,V1,REST1,red,psadil,2022-03-02,head-motion
+UI,10034,V1,REST2,red,psadil,2022-03-02,"head-motion, noise-local, uncategorized"
+UI,10034,V1,T1w,yellow,psadil,2022-03-02,head-motion
+UI,10034,V3,CUFF1,yellow,auto,,
+UI,10034,V3,REST1,yellow,auto,,
+UI,10034,V3,REST2,yellow,auto,,
+UI,10034,V3,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global, postprocessing"
+UI,10035,V1,CUFF1,green,auto,,
+UI,10035,V1,REST1,green,auto,,
+UI,10035,V1,REST2,yellow,auto,,
+UI,10035,V1,T1w,green,auto,2022-03-01,
+UI,10035,V3,CUFF1,green,auto,,
+UI,10035,V3,CUFF2,green,auto,,
+UI,10035,V3,REST1,green,auto,,
+UI,10035,V3,REST2,yellow,psadil,2022-03-02,head-motion
+UI,10035,V3,T1w,green,auto,2022-03-01,
+UI,10037,V1,CUFF1,green,auto,,
+UI,10037,V1,REST1,green,auto,,
+UI,10037,V1,REST2,green,auto,,
+UI,10037,V1,T1w,green,auto,2022-03-01,
+UI,10037,V3,CUFF1,green,psadil,2022-03-02,em-perturbation
+UI,10037,V3,CUFF2,green,psadil,2022-03-02,"head-motion, em-perturbation"
+UI,10037,V3,REST1,green,psadil,2022-03-02,"head-motion, em-perturbation"
+UI,10037,V3,REST2,green,psadil,2022-03-02,"head-motion, em-perturbation"
+UI,10037,V3,T1w,yellow,psadil,2022-03-02,head-motion
+UI,10038,V1,CUFF1,yellow,psadil,2022-01-31,"head-motion, wrap-around"
+UI,10038,V1,REST1,yellow,auto,,
+UI,10038,V1,REST2,yellow,auto,,
+UI,10038,V1,T1w,green,auto,2022-03-01,
+UI,10038,V3,CUFF1,yellow,auto,,
+UI,10038,V3,REST1,yellow,auto,,
+UI,10038,V3,REST2,yellow,auto,,
+UI,10038,V3,T1w,green,auto,2022-03-01,
+UI,10041,V1,CUFF1,green,auto,,
+UI,10041,V1,CUFF2,green,auto,,
+UI,10041,V1,REST1,green,auto,,
+UI,10041,V1,REST2,green,auto,,
+UI,10041,V1,T1w,green,auto,2022-03-01,
+UI,10041,V3,CUFF1,green,auto,,
+UI,10041,V3,CUFF2,green,auto,,
+UI,10041,V3,REST1,green,auto,,
+UI,10041,V3,REST2,green,auto,,
+UI,10041,V3,T1w,green,auto,2022-03-01,
+UI,10044,V1,CUFF1,green,auto,,
+UI,10044,V1,CUFF2,green,auto,,
+UI,10044,V1,REST1,green,auto,,
+UI,10044,V1,REST2,green,auto,,
+UI,10044,V1,T1w,green,auto,2022-03-01,
+UI,10044,V3,CUFF1,green,auto,,
+UI,10044,V3,REST1,green,auto,,
+UI,10044,V3,REST2,green,auto,,
+UI,10044,V3,T1w,green,psadil,2022-03-02,head-motion
+UI,10045,V1,CUFF1,green,auto,,
+UI,10045,V1,CUFF2,green,auto,,
+UI,10045,V1,REST1,green,auto,,
+UI,10045,V1,REST2,green,auto,,
+UI,10045,V1,T1w,green,psadil,2022-03-02,
+UI,10045,V3,CUFF1,green,auto,,
+UI,10045,V3,CUFF2,green,auto,,
+UI,10045,V3,REST1,green,auto,,
+UI,10045,V3,REST2,green,auto,,
+UI,10045,V3,T1w,green,psadil,2022-03-02,
+UI,10052,V1,CUFF1,yellow,auto,,
+UI,10052,V1,CUFF2,yellow,auto,,
+UI,10052,V1,REST1,yellow,auto,,
+UI,10052,V1,REST2,yellow,auto,,
+UI,10052,V1,T1w,yellow,psadil,2022-03-02,"head-motion, postprocessing"
+UI,10052,V3,CUFF1,yellow,auto,,
+UI,10052,V3,CUFF2,yellow,auto,,
+UI,10052,V3,REST1,yellow,auto,,
+UI,10052,V3,REST2,yellow,auto,,
+UI,10052,V3,T1w,yellow,psadil,2022-03-02,"head-motion, inu, postprocessing"
+UI,10056,V1,CUFF1,green,auto,,
+UI,10056,V1,CUFF2,green,psadil,2022-03-02,head-motion
+UI,10056,V1,REST1,green,auto,,
+UI,10056,V1,REST2,green,auto,,
+UI,10056,V1,T1w,green,auto,2022-03-01,
+UI,10056,V3,CUFF1,yellow,auto,,
+UI,10056,V3,REST1,yellow,auto,,
+UI,10056,V3,REST2,yellow,auto,,
+UI,10056,V3,T1w,yellow,psadil,2022-03-02,"head-motion, postprocessing"
+UI,10057,V1,CUFF1,green,auto,,
+UI,10057,V1,CUFF2,green,auto,,
+UI,10057,V1,REST1,green,auto,,
+UI,10057,V1,REST2,green,auto,,
+UI,10057,V1,T1w,yellow,psadil,2022-03-02,"head-motion, postprocessing"
+UI,10062,V1,CUFF1,yellow,auto,,
+UI,10062,V1,CUFF2,yellow,auto,,
+UI,10062,V1,REST1,yellow,auto,,
+UI,10062,V1,REST2,yellow,auto,,
+UI,10062,V1,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global"
+UI,10062,V3,CUFF1,yellow,auto,,
+UI,10062,V3,CUFF2,yellow,auto,,
+UI,10062,V3,REST1,yellow,auto,,
+UI,10062,V3,REST2,yellow,auto,,
+UI,10062,V3,T1w,yellow,psadil,2022-03-02,head-motion
+UI,10063,V1,CUFF1,yellow,auto,,
+UI,10063,V1,REST1,yellow,auto,,
+UI,10063,V1,REST2,yellow,psadil,2022-03-02,head-motion
+UI,10063,V1,T1w,yellow,psadil,2022-03-02,"head-motion, postprocessing"
+UI,10063,V3,CUFF1,green,auto,,
+UI,10063,V3,REST1,yellow,auto,,
+UI,10063,V3,T1w,yellow,psadil,2022-03-02,"head-motion, inu, postprocessing"
+UI,10072,V1,CUFF1,green,psadil,2022-01-31,head-motion
+UI,10072,V1,CUFF2,green,psadil,2022-01-05,head-motion
+UI,10072,V1,REST1,green,psadil,2022-03-02,head-motion
+UI,10072,V1,REST2,green,psadil,2022-03-02,"head-motion, eye-spillover"
+UI,10072,V1,T1w,green,auto,2022-03-01,
+UI,10072,V3,CUFF1,yellow,psadil,2022-03-02,"noise-global, uncategorized"
+UI,10072,V3,CUFF2,yellow,psadil,2022-03-02,"head-motion, noise-global, uncategorized"
+UI,10072,V3,REST1,yellow,psadil,2022-03-02,head-motion
+UI,10072,V3,REST2,yellow,psadil,2022-03-02,"head-motion, eye-spillover"
+UI,10072,V3,T1w,green,psadil,2021-11-16,"ghosts-other, inu"
+UI,10082,V1,CUFF1,green,psadil,2022-03-02,"head-motion, em-perturbation, uncategorized"
+UI,10082,V1,CUFF2,yellow,psadil,2022-01-05,"head-motion, em-perturbation, uncategorized"
+UI,10082,V1,REST1,yellow,psadil,2022-03-02,"head-motion, em-perturbation, uncategorized"
+UI,10082,V1,REST2,yellow,psadil,2022-01-05,"head-motion, eye-spillover, em-perturbation, uncategorized"
+UI,10082,V1,T1w,yellow,psadil,2022-03-02,head-motion
+UI,10082,V3,REST1,green,auto,,
+UI,10082,V3,REST2,green,psadil,2022-03-02,"head-motion, em-perturbation, uncategorized"
+UI,10082,V3,T1w,yellow,psadil,2022-03-02,head-motion
+UI,10087,V1,CUFF1,yellow,auto,,
+UI,10087,V1,REST1,yellow,psadil,2022-03-02,head-motion
+UI,10087,V1,REST2,yellow,psadil,2022-03-02,head-motion
+UI,10087,V1,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global"
+UI,10087,V3,CUFF1,red,psadil,2022-03-02,"head-motion, eye-spillover"
+UI,10087,V3,CUFF2,red,psadil,2022-03-02,"head-motion, eye-spillover"
+UI,10087,V3,REST1,red,psadil,2022-03-02,"head-motion, eye-spillover, wrap-around"
+UI,10087,V3,REST2,red,psadil,2022-03-02,"head-motion, eye-spillover, wrap-around"
+UI,10087,V3,T1w,yellow,psadil,2022-03-02,head-motion
+UI,10088,V1,CUFF1,green,auto,,
+UI,10088,V1,REST1,yellow,auto,,
+UI,10088,V1,REST2,yellow,auto,,
+UI,10088,V1,T1w,green,psadil,2022-03-02,
+UI,10088,V3,REST1,green,auto,,
+UI,10088,V3,REST2,green,auto,,
+UI,10088,V3,T1w,yellow,psadil,2022-03-02,"inu, postprocessing"
+UI,10089,V1,REST1,green,auto,,
+UI,10089,V1,T1w,green,auto,2022-03-01,
+UI,10089,V3,REST1,yellow,auto,,
+UI,10089,V3,REST2,yellow,auto,,
+UI,10089,V3,T1w,yellow,psadil,2022-03-02,"head-motion, inu"
+UI,10090,V1,CUFF1,yellow,auto,,
+UI,10090,V1,REST1,yellow,auto,,
+UI,10090,V1,REST2,yellow,auto,,
+UI,10090,V1,T1w,green,auto,2022-03-01,
+UI,10090,V3,CUFF1,yellow,auto,,
+UI,10090,V3,CUFF2,yellow,auto,,
+UI,10090,V3,REST1,yellow,auto,,
+UI,10090,V3,REST2,yellow,auto,,
+UI,10090,V3,T1w,yellow,psadil,2022-03-02,"head-motion, inu, postprocessing"
+UI,10097,V1,CUFF1,red,psadil,2022-01-05,eye-spillover
+UI,10097,V1,REST1,green,auto,,
+UI,10097,V1,REST2,green,auto,,
+UI,10097,V1,T1w,green,auto,2022-03-01,
+UI,10106,V1,CUFF1,green,auto,,
+UI,10106,V1,CUFF2,green,auto,,
+UI,10106,V1,REST1,green,psadil,2022-03-02,"head-motion, eye-spillover, uncategorized"
+UI,10106,V1,T1w,green,auto,2022-03-01,
+UI,10106,V3,CUFF1,green,auto,,
+UI,10106,V3,CUFF2,green,auto,,
+UI,10106,V3,REST1,green,auto,,
+UI,10106,V3,REST2,green,auto,,
+UI,10106,V3,T1w,yellow,psadil,2022-03-02,"head-motion, inu"
+UI,10107,V1,CUFF1,green,auto,,
+UI,10107,V1,REST1,yellow,auto,,
+UI,10107,V1,REST2,yellow,auto,,
+UI,10107,V1,T1w,green,auto,2022-03-01,
+UI,10107,V3,CUFF1,green,auto,,
+UI,10107,V3,REST1,green,auto,,
+UI,10107,V3,REST2,green,auto,,
+UI,10107,V3,T1w,green,psadil,2022-03-02,postprocessing
+UI,10108,V1,CUFF1,yellow,auto,,
+UI,10108,V1,REST1,yellow,auto,,
+UI,10108,V1,REST2,yellow,auto,,
+UI,10108,V1,T1w,green,auto,2022-03-01,
+UI,10108,V3,CUFF1,green,auto,,
+UI,10108,V3,CUFF2,green,auto,,
+UI,10108,V3,REST1,green,auto,,
+UI,10108,V3,REST2,green,auto,,
+UI,10108,V3,T1w,green,technologist,,
+UI,10109,V1,CUFF1,green,auto,,
+UI,10109,V1,REST1,green,auto,,
+UI,10109,V1,REST2,green,auto,,
+UI,10109,V1,T1w,green,auto,2022-03-01,
+UI,10109,V3,CUFF1,green,auto,,
+UI,10109,V3,REST1,green,auto,,
+UI,10109,V3,REST2,green,auto,,
+UI,10109,V3,T1w,green,auto,2022-03-01,
+UI,10110,V1,CUFF1,green,auto,,
+UI,10110,V1,CUFF2,green,auto,,
+UI,10110,V1,REST1,green,auto,,
+UI,10110,V1,REST2,green,auto,,
+UI,10110,V1,T1w,green,auto,2022-03-01,
+UI,10121,V1,CUFF1,green,auto,,
+UI,10121,V1,REST1,yellow,auto,,
+UI,10121,V1,REST2,yellow,auto,,
+UI,10121,V1,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global, postprocessing"
+UI,10123,V1,CUFF1,green,auto,,
+UI,10123,V1,REST1,green,auto,,
+UI,10123,V1,REST2,green,auto,,
+UI,10123,V1,T1w,green,auto,2022-03-01,
+UI,10123,V3,CUFF1,green,auto,,
+UI,10123,V3,CUFF2,green,auto,,
+UI,10123,V3,REST1,green,auto,,
+UI,10123,V3,REST2,green,auto,,
+UI,10123,V3,T1w,green,auto,2022-03-01,
+UI,10125,V1,CUFF1,green,auto,,
+UI,10125,V1,REST1,green,auto,,
+UI,10125,V1,REST2,green,auto,,
+UI,10125,V1,T1w,yellow,psadil,2022-03-02,"head-motion, postprocessing"
+UI,10125,V3,CUFF1,green,auto,,
+UI,10125,V3,CUFF2,green,auto,,
+UI,10125,V3,REST1,yellow,auto,,
+UI,10125,V3,REST2,yellow,auto,,
+UI,10125,V3,T1w,yellow,psadil,2022-03-02,"head-motion, postprocessing"
+UI,10126,V1,CUFF1,green,auto,,
+UI,10126,V1,REST1,green,auto,,
+UI,10126,V1,REST2,green,auto,,
+UI,10126,V1,T1w,green,auto,2022-03-01,
+UI,10127,V1,CUFF1,yellow,auto,,
+UI,10127,V1,REST1,yellow,auto,,
+UI,10127,V1,REST2,yellow,auto,,
+UI,10127,V1,T1w,green,auto,2022-03-01,
+UI,10129,V1,CUFF1,yellow,auto,,
+UI,10129,V1,CUFF2,yellow,auto,,
+UI,10129,V1,REST1,yellow,auto,,
+UI,10129,V1,T1w,green,psadil,2022-03-02,"noise-global, postprocessing"
+UI,10129,V3,CUFF1,green,auto,,
+UI,10129,V3,CUFF2,green,auto,,
+UI,10129,V3,REST1,green,auto,,
+UI,10129,V3,REST2,green,auto,,
+UI,10129,V3,T1w,green,psadil,2022-03-02,
+UI,10130,V1,CUFF1,red,psadil,2022-03-02,"head-motion, uncategorized"
+UI,10130,V1,REST1,red,psadil,2022-03-02,"head-motion, uncategorized"
+UI,10130,V1,REST2,red,psadil,2022-03-02,"head-motion, wrap-around, uncategorized"
+UI,10130,V1,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global"
+UI,10130,V3,CUFF1,red,psadil,2022-03-02,"head-motion, uncategorized"
+UI,10130,V3,REST1,yellow,auto,,
+UI,10130,V3,REST2,red,psadil,2022-03-02,head-motion
+UI,10130,V3,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global, postprocessing"
+UI,10134,V1,REST1,yellow,psadil,2022-03-02,"head-motion, eye-spillover, em-perturbation"
+UI,10134,V1,REST2,green,auto,,
+UI,10134,V1,T1w,yellow,psadil,2022-03-02,"head-motion, inu, postprocessing"
+UI,10134,V3,REST1,green,auto,,
+UI,10134,V3,REST2,green,auto,,
+UI,10134,V3,T1w,yellow,psadil,2022-03-02,"head-motion, inu, postprocessing"
+UI,10144,V1,CUFF1,green,auto,,
+UI,10144,V1,CUFF2,green,auto,,
+UI,10144,V1,REST1,yellow,auto,,
+UI,10144,V1,REST2,yellow,auto,,
+UI,10144,V1,T1w,red,psadil,2022-03-02,"head-motion, postprocessing"
+UI,10144,V3,CUFF1,green,auto,,
+UI,10144,V3,CUFF2,green,auto,,
+UI,10144,V3,REST1,green,auto,,
+UI,10144,V3,REST2,green,auto,,
+UI,10144,V3,T1w,green,auto,2022-03-02,
+UI,10149,V1,CUFF1,green,auto,,
+UI,10149,V1,CUFF2,green,psadil,2022-03-02,uncategorized
+UI,10149,V1,REST1,green,auto,,
+UI,10149,V1,REST2,green,auto,,
+UI,10149,V1,T1w,yellow,psadil,2022-03-02,head-motion
+UI,10150,V1,CUFF1,yellow,auto,,
+UI,10150,V1,REST1,yellow,auto,,
+UI,10150,V1,REST2,yellow,auto,,
+UI,10150,V1,T1w,green,auto,2022-03-01,
+UI,10154,V1,CUFF1,yellow,auto,,
+UI,10154,V1,CUFF2,yellow,auto,,
+UI,10154,V1,REST1,yellow,auto,,
+UI,10154,V1,REST2,yellow,auto,,
+UI,10154,V1,T1w,green,auto,2022-03-01,
+UI,10155,V1,CUFF1,yellow,auto,,
+UI,10155,V1,REST1,yellow,auto,,
+UI,10155,V1,T1w,yellow,psadil,2022-03-02,head-motion
+UI,10156,V1,CUFF1,yellow,psadil,2022-03-02,ghosts-other
+UI,10156,V1,REST1,yellow,psadil,2022-03-02,ghosts-other
+UI,10156,V1,REST2,yellow,psadil,2022-03-02,ghosts-other
+UI,10156,V1,T1w,green,auto,2022-03-01,
+UI,10156,V3,CUFF1,yellow,auto,,
+UI,10156,V3,REST1,yellow,auto,,
+UI,10156,V3,REST2,yellow,auto,,
+UI,10156,V3,T1w,green,auto,2022-03-02,
+UI,10159,V1,CUFF1,green,psadil,2022-01-31,head-motion
+UI,10159,V1,CUFF2,green,psadil,2022-01-05,"head-motion, eye-spillover, noneye-spillover, noise-global"
+UI,10159,V1,REST1,green,psadil,2022-03-02,"head-motion, eye-spillover, noneye-spillover"
+UI,10159,V1,REST2,green,psadil,2022-03-02,"head-motion, eye-spillover, noneye-spillover, em-perturbation"
+UI,10159,V1,T1w,green,auto,2022-03-01,
+UI,10159,V3,CUFF1,green,auto,,
+UI,10159,V3,CUFF2,green,auto,,
+UI,10159,V3,REST1,green,auto,,
+UI,10159,V3,REST2,green,auto,,
+UI,10159,V3,T1w,yellow,psadil,2022-03-02,head-motion
+UI,10169,V3,REST1,green,psadil,2022-03-15,"eye-spillover, uncategorized"
+UI,10169,V3,REST2,green,auto,,
+UI,10169,V3,T1w,green,technologist,,
+UI,10173,V1,CUFF1,yellow,auto,,
+UI,10173,V1,REST1,yellow,psadil,2022-03-02,eye-spillover
+UI,10173,V1,REST2,yellow,auto,,
+UI,10173,V1,T1w,yellow,psadil,2022-03-02,"head-motion, postprocessing"
+UI,10173,V3,CUFF1,green,auto,,
+UI,10173,V3,REST1,yellow,auto,,
+UI,10173,V3,REST2,yellow,auto,,
+UI,10173,V3,T1w,yellow,psadil,2022-03-02,"head-motion, noise-local, postprocessing"
+UI,10174,V1,CUFF1,yellow,auto,,
+UI,10174,V1,CUFF2,yellow,auto,,
+UI,10174,V1,REST1,yellow,auto,,
+UI,10174,V1,REST2,yellow,auto,,
+UI,10174,V1,T1w,green,auto,2022-03-01,
+UI,10174,V3,CUFF1,green,auto,,
+UI,10174,V3,CUFF2,yellow,auto,,
+UI,10174,V3,REST1,yellow,auto,,
+UI,10174,V3,REST2,green,auto,,
+UI,10174,V3,T1w,yellow,psadil,2022-03-02,"head-motion, inu"
+UI,10188,V1,CUFF1,yellow,psadil,2022-03-02,"head-motion, eye-spillover"
+UI,10188,V1,REST1,yellow,psadil,2022-03-02,head-motion
+UI,10188,V1,T1w,green,psadil,2022-03-02,
+UI,10189,V1,REST1,green,auto,,
+UI,10189,V1,REST2,yellow,auto,,
+UI,10189,V1,T1w,yellow,psadil,2022-03-02,"head-motion, postprocessing"
+UI,10195,V1,REST1,yellow,auto,,
+UI,10195,V1,T1w,red,psadil,2022-03-02,"head-motion, noise-global"
+UI,10196,V1,REST1,green,auto,,
+UI,10196,V1,REST2,green,auto,,
+UI,10196,V1,T1w,green,auto,2022-03-01,
+UI,10196,V3,REST1,green,auto,,
+UI,10196,V3,REST2,green,auto,,
+UI,10196,V3,T1w,yellow,psadil,2022-03-16,"head-motion, inu"
+UI,10200,V1,CUFF1,green,auto,,
+UI,10200,V1,CUFF2,green,auto,,
+UI,10200,V1,REST1,green,auto,,
+UI,10200,V1,REST2,green,auto,,
+UI,10200,V1,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global, postprocessing"
+UI,10200,V3,T1w,yellow,technologist,,
+UI,10209,V1,CUFF1,green,auto,,
+UI,10209,V1,REST1,green,auto,,
+UI,10209,V1,REST2,green,auto,,
+UI,10209,V1,T1w,green,psadil,2022-03-02,
+UI,10213,V1,CUFF1,green,auto,,
+UI,10213,V1,CUFF2,green,auto,,
+UI,10213,V1,REST1,green,auto,,
+UI,10213,V1,REST2,green,auto,,
+UI,10213,V1,T1w,yellow,psadil,2022-03-02,head-motion
+UI,10214,V1,CUFF1,yellow,auto,,
+UI,10214,V1,REST1,yellow,psadil,2022-03-02,head-motion
+UI,10214,V1,REST2,yellow,psadil,2022-03-02,head-motion
+UI,10214,V1,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global, postprocessing"
+UI,10216,V1,REST1,red,psadil,2022-03-02,head-motion
+UI,10216,V1,T1w,red,psadil,2022-03-02,"head-motion, noise-global"
+UI,10218,V1,CUFF1,red,psadil,2022-03-02,head-motion
+UI,10218,V1,REST1,red,psadil,2022-03-02,head-motion
+UI,10218,V1,REST2,red,psadil,2022-03-02,head-motion
+UI,10218,V1,T1w,yellow,psadil,2022-03-02,head-motion
+UI,10218,V3,REST1,yellow,auto,,
+UI,10218,V3,REST2,yellow,auto,,
+UI,10218,V3,T1w,green,technologist,,
+UI,10219,V1,CUFF1,green,auto,,
+UI,10219,V1,CUFF2,green,auto,,
+UI,10219,V1,REST1,green,auto,,
+UI,10219,V1,REST2,green,auto,,
+UI,10219,V1,T1w,yellow,psadil,2022-03-02,"head-motion, noise-local"
+UI,10219,V3,CUFF1,green,auto,,
+UI,10219,V3,CUFF2,green,auto,,
+UI,10219,V3,REST1,green,auto,,
+UI,10219,V3,REST2,green,auto,,
+UI,10219,V3,T1w,green,technologist,,
+UI,10222,V1,REST1,yellow,psadil,2022-03-02,"head-motion, eye-spillover"
+UI,10222,V1,REST2,yellow,psadil,2022-03-02,"head-motion, em-perturbation"
+UI,10222,V1,T1w,yellow,psadil,2022-03-02,"head-motion, postprocessing"
+UI,10224,V1,CUFF1,green,auto,,
+UI,10224,V1,CUFF2,green,auto,,
+UI,10224,V1,REST1,green,auto,,
+UI,10224,V1,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global, inu, postprocessing"
+UI,10232,V1,CUFF1,green,auto,,
+UI,10232,V1,REST1,green,psadil,2022-03-02,"head-motion, em-perturbation"
+UI,10232,V1,REST2,green,auto,,
+UI,10232,V1,T1w,green,auto,2022-03-01,
+UI,10233,V1,CUFF1,yellow,auto,,
+UI,10233,V1,REST1,yellow,auto,,
+UI,10233,V1,REST2,yellow,auto,,
+UI,10233,V1,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global, postprocessing"
+UI,10233,V3,CUFF1,yellow,auto,,
+UI,10233,V3,REST1,yellow,auto,,
+UI,10233,V3,REST2,yellow,auto,,
+UI,10233,V3,T1w,yellow,psadil,2022-03-22,"head-motion, noise-global, postprocessing"
+UI,10236,V1,CUFF1,green,auto,,
+UI,10236,V1,CUFF2,green,auto,,
+UI,10236,V1,REST1,green,auto,,
+UI,10236,V1,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global"
+UI,10247,V1,CUFF1,yellow,auto,,
+UI,10247,V1,REST1,yellow,auto,,
+UI,10247,V1,REST2,yellow,auto,,
+UI,10247,V1,T1w,green,auto,2022-03-01,
+UI,10255,V1,CUFF1,green,auto,,
+UI,10255,V1,CUFF2,green,auto,,
+UI,10255,V1,REST1,green,auto,,
+UI,10255,V1,REST2,green,auto,,
+UI,10255,V1,T1w,green,auto,2022-03-01,
+UI,10261,V1,CUFF1,green,psadil,2022-01-31,head-motion
+UI,10261,V1,CUFF2,green,auto,,
+UI,10261,V1,REST1,green,auto,,
+UI,10261,V1,REST2,green,auto,,
+UI,10261,V1,T1w,green,auto,2022-03-01,
+UI,10262,V1,REST1,red,psadil,2022-03-02,"head-motion, uncategorized"
+UI,10262,V1,REST2,red,psadil,2022-03-02,"head-motion, uncategorized"
+UI,10262,V1,T1w,red,psadil,2022-03-02,"head-motion, postprocessing"
+UI,10266,V1,T1w,yellow,psadil,2022-03-02,"head-motion, inu, postprocessing"
+UI,10267,V1,CUFF1,red,psadil,2022-03-02,"head-motion, uncategorized"
+UI,10267,V1,CUFF2,red,psadil,2022-03-02,"head-motion, uncategorized"
+UI,10267,V1,REST1,red,psadil,2022-03-02,"head-motion, uncategorized"
+UI,10267,V1,T1w,red,psadil,2022-03-02,head-motion
+UI,10269,V1,CUFF1,green,auto,,
+UI,10269,V1,CUFF2,green,auto,,
+UI,10269,V1,REST1,green,auto,,
+UI,10269,V1,REST2,green,auto,,
+UI,10269,V1,T1w,yellow,psadil,2022-03-02,"head-motion, inu, postprocessing"
+UI,10270,V1,REST1,yellow,auto,,
+UI,10270,V1,REST2,yellow,auto,,
+UI,10270,V1,T1w,green,auto,2022-03-01,
+UI,10272,V1,CUFF1,green,auto,,
+UI,10272,V1,REST1,green,auto,,
+UI,10272,V1,REST2,green,auto,,
+UI,10272,V1,T1w,green,psadil,2022-03-02,postprocessing
+UI,10275,V1,CUFF1,green,auto,,
+UI,10275,V1,CUFF2,yellow,psadil,2022-03-02,"head-motion, uncategorized"
+UI,10275,V1,REST1,green,auto,,
+UI,10275,V1,REST2,red,psadil,2022-03-02,"head-motion, inu, uncategorized"
+UI,10275,V1,T1w,green,auto,2022-03-02,
+UI,10277,V1,CUFF1,yellow,psadil,2022-03-03,"head-motion, inu, uncategorized"
+UI,10277,V1,CUFF2,green,psadil,2022-03-02,"head-motion, inu"
+UI,10277,V1,REST1,yellow,psadil,2022-03-02,"head-motion, uncategorized"
+UI,10277,V1,T1w,yellow,psadil,2022-03-02,"head-motion, postprocessing"
+UI,10280,V1,REST1,yellow,auto,,
+UI,10280,V1,REST2,yellow,auto,,
+UI,10280,V1,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global, inu, postprocessing"
+UI,10281,V1,CUFF1,green,auto,,
+UI,10281,V1,REST1,green,auto,,
+UI,10281,V1,REST2,green,auto,,
+UI,10281,V1,T1w,green,auto,2022-03-02,
+UI,10282,V1,REST1,yellow,auto,,
+UI,10282,V1,REST2,yellow,psadil,2022-03-02,"head-motion, uncategorized"
+UI,10282,V1,T1w,green,auto,2022-03-02,
+UI,10284,V1,REST1,yellow,auto,,
+UI,10284,V1,T1w,yellow,psadil,2022-03-02,"head-motion, postprocessing"
+UI,10287,V1,CUFF1,yellow,auto,,
+UI,10287,V1,CUFF2,yellow,auto,,
+UI,10287,V1,REST1,yellow,auto,,
+UI,10287,V1,REST2,yellow,auto,,
+UI,10287,V1,T1w,yellow,psadil,2022-03-02,"head-motion, postprocessing"
+UI,10295,V1,CUFF1,green,psadil,2022-03-02,"head-motion, uncategorized"
+UI,10295,V1,CUFF2,green,psadil,2022-03-02,"inu, uncategorized"
+UI,10295,V1,REST1,green,psadil,2022-03-02,"head-motion, field-variation, uncategorized"
+UI,10295,V1,REST2,green,psadil,2022-03-02,"field-variation, uncategorized"
+UI,10295,V1,T1w,yellow,psadil,2022-03-02,"head-motion, inu, postprocessing"
+UI,10299,V1,T1w,green,technologist,,
+UI,10301,V1,T1w,yellow,technologist,,
+UI,10311,V1,CUFF1,yellow,auto,,
+UI,10311,V1,REST1,yellow,auto,,
+UI,10311,V1,REST2,yellow,auto,,
+UI,10311,V1,T1w,green,technologist,,
+UI,10313,V1,CUFF1,green,auto,,
+UI,10313,V1,CUFF2,green,auto,,
+UI,10313,V1,REST1,green,auto,,
+UI,10313,V1,REST2,green,auto,,
+UI,10313,V1,T1w,yellow,psadil,2022-03-22,"head-motion, inu, postprocessing"
+UM,20004,V1,CUFF1,red,psadil,2022-03-02,"head-motion, eye-spillover"
+UM,20004,V1,CUFF2,red,psadil,2022-03-02,"head-motion, eye-spillover"
+UM,20004,V1,REST1,yellow,psadil,2022-03-02,head-motion
+UM,20004,V1,REST2,red,psadil,2022-03-02,"head-motion, eye-spillover"
+UM,20004,V1,T1w,green,auto,2022-03-01,
+UM,20004,V3,CUFF1,yellow,psadil,2022-03-02,"head-motion, eye-spillover"
+UM,20004,V3,CUFF2,red,psadil,2022-03-02,"head-motion, eye-spillover"
+UM,20004,V3,REST1,yellow,psadil,2022-03-02,"head-motion, field-variation, uncategorized"
+UM,20004,V3,REST2,yellow,psadil,2022-03-02,"head-motion, inu, uncategorized"
+UM,20004,V3,T1w,green,auto,2022-03-01,
+UM,20007,V1,CUFF1,yellow,psadil,2022-02-02,head-motion
+UM,20007,V1,CUFF2,green,auto,,
+UM,20007,V1,REST1,green,auto,,
+UM,20007,V1,REST2,green,auto,,
+UM,20007,V1,T1w,green,auto,2022-03-01,
+UM,20007,V3,CUFF1,green,auto,,
+UM,20007,V3,CUFF2,green,auto,,
+UM,20007,V3,REST1,yellow,auto,,
+UM,20007,V3,REST2,green,auto,,
+UM,20007,V3,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global"
+UM,20009,V1,CUFF1,green,auto,,
+UM,20009,V1,CUFF2,yellow,auto,,
+UM,20009,V1,REST1,yellow,auto,,
+UM,20009,V1,REST2,yellow,auto,,
+UM,20009,V1,T1w,yellow,psadil,2022-03-02,"head-motion, postprocessing"
+UM,20012,V1,CUFF1,red,psadil,2022-03-02,"head-motion, wrap-around, uncategorized"
+UM,20012,V1,REST1,yellow,auto,,
+UM,20012,V1,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global, postprocessing"
+UM,20013,V1,REST1,yellow,auto,,
+UM,20013,V1,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global, postprocessing"
+UM,20013,V3,REST1,yellow,auto,,
+UM,20013,V3,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global, postprocessing"
+UM,20016,V1,CUFF1,green,auto,,
+UM,20016,V1,CUFF1,green,auto,,
+UM,20016,V1,CUFF2,red,auto,,
+UM,20016,V1,CUFF2,red,auto,,
+UM,20016,V1,REST1,green,auto,,
+UM,20016,V1,REST1,green,auto,,
+UM,20016,V1,REST2,green,psadil,2022-03-02,"head-motion, eye-spillover"
+UM,20016,V1,T1w,green,auto,2022-03-01,
+UM,20017,V1,CUFF1,green,auto,,
+UM,20017,V1,CUFF2,green,auto,,
+UM,20017,V1,REST1,green,auto,,
+UM,20017,V1,REST2,green,auto,,
+UM,20017,V1,T1w,green,auto,2022-03-01,
+UM,20017,V3,CUFF1,red,auto,,
+UM,20017,V3,CUFF2,green,auto,,
+UM,20017,V3,REST1,green,auto,,
+UM,20017,V3,REST2,green,auto,,
+UM,20017,V3,T1w,green,auto,2022-03-02,
+UM,20018,V1,CUFF1,red,psadil,2022-01-05,
+UM,20018,V1,REST1,yellow,auto,,
+UM,20018,V1,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global"
+UM,20018,V3,CUFF1,red,auto,,
+UM,20018,V3,CUFF2,yellow,auto,,
+UM,20018,V3,REST1,yellow,auto,,
+UM,20018,V3,REST2,green,auto,,
+UM,20018,V3,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global"
+UM,20019,V1,CUFF1,green,auto,,
+UM,20019,V1,CUFF2,red,auto,,
+UM,20019,V1,REST1,green,auto,,
+UM,20019,V1,REST2,green,auto,,
+UM,20019,V1,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global"
+UM,20019,V3,CUFF1,red,auto,,
+UM,20019,V3,CUFF2,yellow,auto,,
+UM,20019,V3,REST1,green,auto,,
+UM,20019,V3,REST2,green,auto,,
+UM,20019,V3,T1w,green,auto,2022-03-02,
+UM,20020,V1,CUFF1,green,auto,,
+UM,20020,V1,CUFF2,green,auto,,
+UM,20020,V1,REST1,green,auto,,
+UM,20020,V1,REST2,green,auto,,
+UM,20020,V1,T1w,green,auto,2022-03-01,
+UM,20021,V1,CUFF1,green,auto,,
+UM,20021,V1,CUFF2,green,auto,,
+UM,20021,V1,REST1,green,auto,,
+UM,20021,V1,REST2,green,auto,,
+UM,20021,V1,T1w,yellow,psadil,2022-03-02,head-motion
+UM,20022,V1,REST1,red,psadil,2022-03-02,head-motion
+UM,20022,V1,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global, postprocessing"
+UM,20023,V1,REST1,green,auto,,
+UM,20023,V1,REST2,green,auto,,
+UM,20023,V1,T1w,yellow,psadil,2022-03-02,"head-motion, postprocessing"
+UM,20023,V3,REST1,green,auto,,
+UM,20023,V3,T1w,yellow,psadil,2022-03-02,"head-motion, postprocessing"
+UM,20024,V1,REST1,yellow,auto,,
+UM,20024,V1,REST2,yellow,auto,,
+UM,20024,V1,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global, postprocessing"
+UM,20025,V1,CUFF1,yellow,psadil,2022-03-02,head-motion
+UM,20025,V1,CUFF2,green,psadil,2022-01-05,head-motion
+UM,20025,V1,REST1,green,psadil,2022-03-02,head-motion
+UM,20025,V1,REST2,green,psadil,2022-03-02,"head-motion, em-perturbation"
+UM,20025,V1,T1w,yellow,psadil,2022-03-02,head-motion
+UM,20026,V1,CUFF1,green,auto,,
+UM,20026,V1,CUFF2,green,auto,,
+UM,20026,V1,REST1,green,auto,,
+UM,20026,V1,REST2,green,auto,,
+UM,20026,V1,T1w,green,auto,2022-03-01,
+UM,20027,V1,CUFF1,green,auto,,
+UM,20027,V1,CUFF2,green,auto,,
+UM,20027,V1,REST1,green,auto,,
+UM,20027,V1,REST2,green,auto,,
+UM,20027,V1,T1w,green,auto,2022-03-01,
+UM,20027,V3,CUFF1,green,psadil,2022-03-02,"head-motion, uncategorized"
+UM,20027,V3,CUFF2,green,auto,,
+UM,20027,V3,REST1,green,auto,,
+UM,20027,V3,REST2,green,auto,,
+UM,20027,V3,T1w,green,auto,2022-03-02,
+UM,20028,V1,REST1,yellow,psadil,2022-03-02,"inu, uncategorized"
+UM,20028,V1,T1w,yellow,psadil,2022-03-02,"head-motion, postprocessing"
+UM,20029,V1,CUFF1,yellow,auto,,
+UM,20029,V1,CUFF2,yellow,auto,,
+UM,20029,V1,REST1,yellow,auto,,
+UM,20029,V1,REST2,yellow,auto,,
+UM,20029,V1,T1w,yellow,psadil,2022-03-02,head-motion
+UM,20029,V3,CUFF1,yellow,auto,,
+UM,20029,V3,CUFF2,yellow,auto,,
+UM,20029,V3,T1w,yellow,psadil,2022-03-02,"head-motion, field-variation"
+UM,20030,V1,CUFF1,red,psadil,2022-03-02,"head-motion, uncategorized"
+UM,20030,V1,CUFF2,red,psadil,2022-03-02,"head-motion, uncategorized"
+UM,20030,V1,REST1,yellow,psadil,2022-01-05,"head-motion, inu"
+UM,20030,V1,REST2,yellow,psadil,2022-01-05,"head-motion, eye-spillover"
+UM,20030,V1,T1w,green,auto,2022-03-01,
+UM,20030,V3,T1w,yellow,technologist,,
+UM,20031,V1,CUFF1,green,auto,,
+UM,20031,V1,CUFF2,green,auto,,
+UM,20031,V1,REST1,green,auto,,
+UM,20031,V1,REST2,green,auto,,
+UM,20031,V1,T1w,green,auto,2022-03-01,
+UM,20033,V1,CUFF1,yellow,auto,,
+UM,20033,V1,CUFF2,red,psadil,2022-03-02,"head-motion, uncategorized"
+UM,20033,V1,REST1,yellow,auto,,
+UM,20033,V1,REST2,yellow,auto,,
+UM,20033,V1,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global, inu"
+UM,20034,V1,CUFF1,green,auto,,
+UM,20034,V1,CUFF2,green,auto,,
+UM,20034,V1,REST1,green,auto,,
+UM,20034,V1,REST2,green,auto,,
+UM,20034,V1,T1w,green,auto,2022-03-01,
+UM,20035,V1,CUFF1,red,auto,,
+UM,20035,V1,REST1,yellow,auto,,
+UM,20035,V1,REST2,yellow,psadil,2022-03-02,"head-motion, eye-spillover, em-perturbation"
+UM,20035,V1,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global, postprocessing"
+UM,20036,V1,CUFF1,green,auto,,
+UM,20036,V1,CUFF2,green,auto,,
+UM,20036,V1,REST1,green,auto,,
+UM,20036,V1,REST2,green,auto,,
+UM,20036,V1,T1w,green,auto,2022-03-01,
+UM,20036,V3,CUFF1,green,auto,,
+UM,20036,V3,CUFF2,green,auto,,
+UM,20036,V3,REST1,green,auto,,
+UM,20036,V3,REST2,green,auto,,
+UM,20036,V3,T1w,green,technologist,,
+UM,20037,V1,REST1,green,auto,,
+UM,20037,V1,T1w,green,auto,2022-03-01,
+UM,20038,V1,CUFF1,green,auto,,
+UM,20038,V1,CUFF2,green,auto,,
+UM,20038,V1,REST1,green,auto,,
+UM,20038,V1,REST2,green,auto,,
+UM,20038,V1,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global"
+UM,20038,V3,CUFF1,yellow,auto,,
+UM,20038,V3,CUFF2,yellow,auto,,
+UM,20038,V3,REST1,yellow,auto,,
+UM,20038,V3,REST2,yellow,auto,,
+UM,20038,V3,T1w,yellow,psadil,2022-03-16,head-motion
+UM,20040,V1,REST1,red,psadil,2022-03-02,head-motion
+UM,20040,V1,T1w,red,psadil,2022-03-02,"head-motion, noise-global, postprocessing"
+UM,20041,V1,CUFF1,green,auto,,
+UM,20041,V1,CUFF2,green,auto,,
+UM,20041,V1,REST1,green,auto,,
+UM,20041,V1,REST2,green,auto,,
+UM,20041,V1,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global, postprocessing"
+UM,20042,V1,CUFF1,green,auto,,
+UM,20042,V1,CUFF2,green,auto,,
+UM,20042,V1,T1w,yellow,psadil,2022-03-02,"head-motion, postprocessing"
+UM,20043,V1,CUFF1,green,psadil,2022-01-31,head-motion
+UM,20043,V1,CUFF2,green,auto,,
+UM,20043,V1,REST1,green,auto,,
+UM,20043,V1,REST2,green,auto,,
+UM,20043,V1,T1w,green,auto,2022-03-01,
+UM,20045,V1,CUFF1,yellow,auto,,
+UM,20045,V1,CUFF2,yellow,auto,,
+UM,20045,V1,REST1,yellow,psadil,2022-03-15,"head-motion, uncategorized"
+UM,20045,V1,REST2,yellow,auto,,
+UM,20045,V1,T1w,yellow,psadil,2022-02-07,head-motion
+UM,20046,V1,CUFF1,green,psadil,2022-03-02,"head-motion, uncategorized"
+UM,20046,V1,CUFF2,red,psadil,2022-03-02,
+UM,20046,V1,REST1,yellow,auto,,
+UM,20046,V1,REST2,green,auto,,
+UM,20046,V1,T1w,green,auto,2022-03-02,
+UM,20047,V1,CUFF1,green,auto,,
+UM,20047,V1,CUFF2,green,auto,,
+UM,20047,V1,REST1,green,psadil,2022-03-02,"head-motion, uncategorized"
+UM,20047,V1,REST2,green,psadil,2022-03-15,"wrap-around, uncategorized"
+UM,20047,V1,T1w,yellow,psadil,2022-03-16,"head-motion, postprocessing"
+UM,20049,V1,CUFF1,yellow,auto,,
+UM,20049,V1,CUFF2,yellow,auto,,
+UM,20049,V1,REST1,yellow,auto,,
+UM,20049,V1,REST2,yellow,auto,,
+UM,20049,V1,T1w,yellow,psadil,2022-03-02,"head-motion, noise-global"
+UM,20050,V1,REST1,yellow,psadil,2022-03-02,"head-motion, uncategorized"
+UM,20050,V1,T1w,green,auto,2022-03-02,
+UM,20051,V1,CUFF1,green,auto,,
+UM,20051,V1,CUFF2,green,auto,,
+UM,20051,V1,REST1,green,auto,,
+UM,20051,V1,REST2,green,auto,,
+UM,20051,V1,T1w,green,auto,2022-03-02,
+UM,20052,V1,CUFF1,green,psadil,2022-03-02,"head-motion, wrap-around"
+UM,20052,V1,CUFF2,green,auto,,
+UM,20052,V1,REST1,green,auto,,
+UM,20052,V1,REST2,green,auto,,
+UM,20052,V1,T1w,yellow,psadil,2022-03-02,"noise-global, inu, postprocessing"
+UM,20056,V1,CUFF1,green,auto,,
+UM,20056,V1,CUFF2,green,auto,,
+UM,20056,V1,REST1,yellow,auto,,
+UM,20056,V1,REST2,yellow,auto,,
+UM,20056,V1,T1w,green,auto,2022-03-02,
+UM,20057,V1,CUFF1,red,psadil,2022-03-02,"head-motion, uncategorized"
+UM,20057,V1,CUFF2,red,psadil,2022-03-02,"head-motion, uncategorized"
+UM,20057,V1,REST1,yellow,psadil,2022-01-31,"head-motion, uncategorized"
+UM,20057,V1,REST2,yellow,psadil,2022-01-31,"head-motion, uncategorized"
+UM,20057,V1,T1w,yellow,psadil,2022-02-07,head-motion
+UM,20058,V1,CUFF1,green,auto,,
+UM,20058,V1,CUFF2,green,auto,,
+UM,20058,V1,REST1,yellow,auto,,
+UM,20058,V1,REST2,green,auto,,
+UM,20058,V1,T1w,green,auto,2022-03-02,
+UM,20059,V1,T1w,yellow,auto,2022-03-02,
+UM,20061,V1,CUFF1,red,auto,,
+UM,20061,V1,REST1,yellow,auto,,
+UM,20061,V1,REST2,yellow,auto,,
+UM,20061,V1,T1w,green,technologist,,
+UM,20062,V1,CUFF1,green,auto,,
+UM,20062,V1,CUFF2,green,auto,,
+UM,20062,V1,REST1,green,auto,,
+UM,20062,V1,REST2,green,auto,,
+UM,20062,V1,T1w,yellow,psadil,2022-03-02,head-motion
+UM,20066,V1,CUFF1,yellow,auto,,
+UM,20066,V1,REST1,yellow,auto,,
+UM,20066,V1,T1w,green,auto,2022-03-02,
+UM,20067,V1,CUFF1,green,psadil,2022-03-02,"head-motion, field-variation"
+UM,20067,V1,CUFF2,green,psadil,2022-03-02,"head-motion, uncategorized"
+UM,20067,V1,REST1,green,psadil,2022-03-02,"head-motion, field-variation, uncategorized"
+UM,20067,V1,REST2,green,psadil,2022-03-02,"head-motion, uncategorized"
+UM,20067,V1,T1w,green,auto,2022-03-02,
+UM,20071,V1,T1w,green,technologist,,
+UM,20075,V1,T1w,green,technologist,,
+UM,20076,V1,CUFF1,yellow,auto,,
+UM,20076,V1,CUFF2,yellow,auto,,
+UM,20076,V1,REST1,yellow,auto,,
+UM,20076,V1,REST2,yellow,auto,,
+UM,20076,V1,T1w,yellow,psadil,2022-03-16,"head-motion, postprocessing"
+WS,20064,V1,T1w,green,technologist,,
