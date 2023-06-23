@@ -361,7 +361,18 @@ def get_api_subjects_json(api_root = 'https://api.a2cps.org/files/v2/download/pu
     except Exception as e:
         traceback.print_exc()
         return None
+    
+def get_api_data(api_root = os.environ.get('API_ROOT'), tapis_token):
+    ''' This is the function that will hit the actual Life Science API'''
 
+    try:
+        response = requests.get(api_root + '/status/auth', tapis_token)
+        if response.json()['status'] == 'OK':
+            print('yay!') #pass the data to the report that requested it
+        else:
+            print('this user is bad') #log the unsuccessful attempt to access PHI
+    except Exception as e:
+        return('api error: {}'.format(e))
 
 # ----------------------------------------------------------------------------
 # PROCESS SUBJECTS DATA
