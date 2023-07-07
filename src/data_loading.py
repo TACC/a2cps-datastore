@@ -332,45 +332,51 @@ def get_api_blood_data(api_root = 'https://api.a2cps.org/files/v2/download/publi
         traceback.print_exc()
         return None
 
-def get_api_subjects_json(api_root = 'https://api.a2cps.org/files/v2/download/public/system/a2cps.storage.community/reports'):
+def get_api_subjects_json(api_root = os.environ.get('API_ROOT'), tapis_token = None):
     ''' Load subjects data from api. Note data needs to be cleaned, etc. to create properly formatted data product'''
+    auth_status = get_auth_status(api_root, tapis_token)
 
-    try:
-        # Load Json Data
-        subjects1_filepath = '/'.join([api_root,'subjects','subjects-1-latest.json'])
-        subjects1_request = requests.get(subjects1_filepath)
-        if subjects1_request.status_code == 200:
-            subjects1 = subjects1_request.json()
-        else:
+    if auth_status == True:
+        try:
+            # Load Json Data
+            subjects1_filepath = '/'.join([api_root,'subjects','subjects-1-latest.json'])
+            subjects1_request = requests.get(subjects1_filepath)
+            if subjects1_request.status_code == 200:
+                subjects1 = subjects1_request.json()
+            else:
+                return None
+                # return {'status':'500', 'source': api_dict['subjects']['subjects1']}
+
+            subjects2_filepath = '/'.join([api_root,'subjects','subjects-2-latest.json'])
+            subjects2_request = requests.get(subjects2_filepath)
+            if subjects2_request.status_code == 200:
+                subjects2 = subjects2_request.json()
+            else:
+                return None
+                # return {'status':'500', 'source': api_dict['subjects']['subjects2']}
+
+            # Create combined json
+            subjects_json = {'1': subjects1, '2': subjects2}
+
+            return subjects_json
+
+        except Exception as e:
+            traceback.print_exc()
             return None
-            # return {'status':'500', 'source': api_dict['subjects']['subjects1']}
-
-        subjects2_filepath = '/'.join([api_root,'subjects','subjects-2-latest.json'])
-        subjects2_request = requests.get(subjects2_filepath)
-        if subjects2_request.status_code == 200:
-            subjects2 = subjects2_request.json()
-        else:
-            return None
-            # return {'status':'500', 'source': api_dict['subjects']['subjects2']}
-
-        # Create combined json
-        subjects_json = {'1': subjects1, '2': subjects2}
-
-        return subjects_json
-
-    except Exception as e:
-        traceback.print_exc()
+    else:
+        print("Unauthorized attempt to access Subjects data")
         return None
     
-def get_api_data(api_root = os.environ.get('API_ROOT'), tapis_token):
-    ''' This is the function that will hit the actual Life Science API'''
+def get_auth_status(api_root, tapis_token = None):
+    ''' This is the function that will hit the auth check for Life Science API'''
 
     try:
         response = requests.get(api_root + '/status/auth', tapis_token)
         if response.json()['status'] == 'OK':
-            print('yay!') #pass the data to the report that requested it
+            return True
         else:
-            print('this user is bad') #log the unsuccessful attempt to access PHI
+            print("Unauthorized to access data")
+            raise Exception
     except Exception as e:
         return('api error: {}'.format(e))
 
