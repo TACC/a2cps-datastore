@@ -332,9 +332,10 @@ def get_api_blood_data(api_root = 'https://api.a2cps.org/files/v2/download/publi
         traceback.print_exc()
         return None
 
-def get_api_subjects_json(api_root = os.environ.get('API_ROOT'), tapis_token = None):
+def get_api_subjects_json(api_root = os.environ.get('API_ROOT'), cookie = None):
     ''' Load subjects data from api. Note data needs to be cleaned, etc. to create properly formatted data product'''
-    auth_status = get_auth_status(api_root, tapis_token)
+    print(cookie.__dir__())
+    auth_status = get_auth_status(api_root, cookie)
 
     if auth_status == True:
         try:
