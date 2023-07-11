@@ -10,7 +10,7 @@ from data_loading import *
 
 ## Demonstrate that app is accessing the env variables properly
 SECRET_KEY = environ.get("SECRET_KEY")
-print("SECRET KEY", SECRET_KEY)
+#print("SECRET KEY", SECRET_KEY)
 
 # ----------------------------------------------------------------------------
 # DATA PARAMETERS
@@ -201,6 +201,7 @@ def api_subjects():
     global api_data_cache
     global subjects_raw_cols_for_reports
 
+    print('api_subjects')
     try:
         if not api_data_index['subjects'] or not check_data_current(datetime.strptime(api_data_index['subjects'], datetime_format)):
             api_date = datetime.now().strftime(datetime_format)

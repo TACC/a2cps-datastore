@@ -19,6 +19,7 @@ from datetime import datetime, timedelta
 # ----------------------------------------------------------------------------
 def check_data_current(data_date):
     '''test to see if the date in a data dictionary is from after 10am on the same day as checking.'''
+    print('check_data_current')
     now = datetime.now()
 
     if data_date.date() == now.date():
@@ -30,6 +31,7 @@ def check_data_current(data_date):
         return False
 
 def check_available_data(available_data):
+    print('check_available_data')
     if available_data:
         if isinstance(available_data, list) and type(available_data[-1]) is dict and 'date' in available_data[-1].keys() and 'data' in available_data[-1].keys():
             latest_date = available_data[-1]['date']
@@ -173,6 +175,7 @@ def get_local_blood_data(data_directory):
         return {'Stats': 'Blood data not available'}
 
 def get_local_subjects_raw(data_directory):
+    print('local_subjects')
     ''' Load subjects data from local files'''
     try:
         subjects1_filepath = os.path.join(data_directory,'subjects','subjects-1-latest.json')
@@ -332,10 +335,10 @@ def get_api_blood_data(api_root = 'https://api.a2cps.org/files/v2/download/publi
         traceback.print_exc()
         return None
 
-def get_api_subjects_json(api_root = os.environ.get('API_ROOT'), cookie = None):
+def get_api_subjects_json(api_root = os.environ.get('API_ROOT'), tapis_token = None):
     ''' Load subjects data from api. Note data needs to be cleaned, etc. to create properly formatted data product'''
-    print(cookie.__dir__())
-    auth_status = get_auth_status(api_root, cookie)
+    print(tapis_token)
+    auth_status = get_auth_status(api_root, tapis_token)
 
     if auth_status == True:
         try:
@@ -370,7 +373,7 @@ def get_api_subjects_json(api_root = os.environ.get('API_ROOT'), cookie = None):
     
 def get_auth_status(api_root, tapis_token = None):
     ''' This is the function that will hit the auth check for Life Science API'''
-
+    print(tapis_token)
     try:
         response = requests.get(api_root + '/status/auth', tapis_token)
         if response.json()['status'] == 'OK':
