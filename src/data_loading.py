@@ -7,7 +7,7 @@ import pathlib
 import json
 
 import numpy as np
-import pandas as p
+import pandas as pd
 import sqlite3
 
 import datetime
