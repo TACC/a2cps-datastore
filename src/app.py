@@ -91,6 +91,7 @@ local_data = {
 # ----------------------------------------------------------------------------
 # APIS
 # ----------------------------------------------------------------------------
+print('apis')
 datetime_format = "%m/%d/%Y, %H:%M:%S"
 
 apis_imaging_index = {}
@@ -119,6 +120,7 @@ api_data_cache = {
 # ----------------------------------------------------------------------------
 # SIMPLE APIS
 # ----------------------------------------------------------------------------
+print('simple apis')
 api_data_simple = {
     'blood':None,
     'imaging':None,
@@ -131,6 +133,7 @@ app = Flask(__name__)
 # APIS: try to load new data, if doesn't work, get most recent
 @app.route("/api/apis")
 def api_apis():
+    print('api_apis')
     print(api_data_index)
     return jsonify(api_data_index)
 
@@ -196,12 +199,12 @@ def api_blood():
 
 @app.route("/api/subjects")
 def api_subjects():
+    print('api_subjects')
     global datetime_format
     global api_data_index
     global api_data_cache
     global subjects_raw_cols_for_reports
 
-    print('api_subjects')
     try:
         if not api_data_index['subjects'] or not check_data_current(datetime.strptime(api_data_index['subjects'], datetime_format)):
             api_date = datetime.now().strftime(datetime_format)
@@ -232,6 +235,7 @@ def api_tester():
 
 @app.route("/api/full")
 def api_full():
+    print('api_full')
     datafeeds = {}
     for data_category in api_data_cache:
         if api_data_cache[data_category]['data']:
