@@ -578,7 +578,7 @@ def process_subjects_data(subjects_raw_json, subjects_raw_cols_for_reports,scree
             'consented': consented.to_dict('records'),
             'adverse_events': adverse_events.to_dict('records')
     }
-    print(subjects_api_data)
+    #print(subjects_api_data)
     return subjects_api_data
 
 # ----------------------------------------------------------------------------
