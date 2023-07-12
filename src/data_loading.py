@@ -491,7 +491,11 @@ def create_clean_subjects(subjects_raw, screening_sites, display_terms_dict, dis
                 if subjects[i].dtype == np.float64:
                     # for display columns where data is numeric, merge on display dictionary, treating cols as floats to handle nas
                     display_terms[i] = display_terms[i].astype('float64')
-                subjects = subjects.merge(display_terms, how='left', on=i)
+                try:
+                    subjects = subjects.merge(display_terms, how='left', on=i)
+                except Exception as e:
+                    print(display_terms)
+                    print('error: {}'.format(e))
         #------
 
         # Add screening sites
@@ -544,6 +548,7 @@ def convert_datetime_to_isoformat(df, datetime_cols_list):
     return df
 
 def process_subjects_data(subjects_raw_json, subjects_raw_cols_for_reports,screening_sites, display_terms_dict, display_terms_dict_multi):
+    print('process_subjects_data')
     ''' Take the raw subjects json and process it into separate, cleaned dataframes for subjects, consented subjects and adverse events'''
     # 1. Combine separate jsons for each MCC into a single data frame
     subjects_raw = combine_mcc_json(subjects_raw_json)#.reset_index(drop=True, inplace=True)
@@ -573,6 +578,7 @@ def process_subjects_data(subjects_raw_json, subjects_raw_cols_for_reports,scree
             'consented': consented.to_dict('records'),
             'adverse_events': adverse_events.to_dict('records')
     }
+    print(subjects_api_data)
     return subjects_api_data
 
 # ----------------------------------------------------------------------------
