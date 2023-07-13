@@ -528,8 +528,11 @@ def clean_adverse_events(adverse_events, consented, display_terms_dict_multi):
         # Convert numeric values to display values using dictionary
         for i in display_terms_dict_multi.keys():
             if i in multi_data.columns:
-                multi_data = multi_data.merge(display_terms_dict_multi[i], how='left', on=i)
-
+                try:
+                    multi_data = multi_data.merge(display_terms_dict_multi[i], how='left', on=i)
+                except Exception as e:
+                    print(display_terms_dict_multi[i])
+                    print('error: {}'.format(e))
         # Rename 'index' to 'record_id'
         multi_data.rename(columns={"index": "record_id"}, inplace = True)
 
