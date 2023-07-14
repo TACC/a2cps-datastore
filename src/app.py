@@ -128,13 +128,7 @@ api_data_simple = {
     'raw': None
 }
 
-def create_app():
-    app = Flask(__name__)
-
-    with app.app_context():
-        init_db()
-
-    return app
+app = Flask(__name__)
 
 # APIS: try to load new data, if doesn't work, get most recent
 @app.route("/api/apis")
