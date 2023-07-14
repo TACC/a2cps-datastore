@@ -200,8 +200,8 @@ def api_blood():
 @app.route("/api/subjects", methods=['GET'])
 def api_subjects():
     print('api_subjects')
-    print('Json:')
-    print(request.json)
+    # print('Json:')
+    # print(request.json)
     print('headers:')
     print(request.headers)
     print('data:')
