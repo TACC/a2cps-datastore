@@ -335,10 +335,16 @@ def get_api_blood_data(api_root = 'https://api.a2cps.org/files/v2/download/publi
         traceback.print_exc()
         return None
 
-def get_api_subjects_json(api_root = os.environ.get('API_ROOT'), tapis_token = None):
+def get_api_subjects_json(api_root = 'https://api.a2cps.org/files/v2/download/public/system/a2cps.storage.community/reports', 
+                          vbr_api_root = os.environ.get('VBR_API_ROOT'), 
+                          portal_api_root = os.environ.get('PORTAL_API_ROOT'), 
+                          coresessionid = None, 
+                          tapis_token = None):
     ''' Load subjects data from api. Note data needs to be cleaned, etc. to create properly formatted data product'''
+    print(coresessionid)
+    tapis_token = get_tapis_token(portal_api_root, coresessionid)
     print(tapis_token)
-    auth_status = get_auth_status(api_root, tapis_token)
+    auth_status = get_auth_status(vbr_api_root, tapis_token)
 
     if auth_status == True:
         try:
@@ -371,13 +377,29 @@ def get_api_subjects_json(api_root = os.environ.get('API_ROOT'), tapis_token = N
         print("Unauthorized attempt to access Subjects data")
         return None
     
-def get_auth_status(api_root, tapis_token = None):
+def get_tapis_token(portal_api_root, coresessionid = None):
+    print(coresessionid)
+    print(portal_api_root)
+    try:
+        response = requests.get(portal_api_root + '/auth/tapis/', coresessionid)
+        print('portal api response:')
+        print(response)
+        if response:
+            tapis_token = response.json()['token']
+            return tapis_token
+        else:
+            print("Unauthorized to access tapis token")
+            raise Exception
+    except Exception as e:
+        return('api error: {}'.format(e))
+    
+def get_auth_status(vbr_api_root, tapis_token = None):
     ''' This is the function that will hit the auth check for Life Science API'''
     print(tapis_token)
-    print(api_root)
+    print(vbr_api_root)
     try:
-        response = requests.get(api_root + '/status/auth', tapis_token)
-        print('response:')
+        response = requests.get(vbr_api_root + '/status/auth', tapis_token)
+        print('vbr api response:')
         print(response)
         if response.json()['status'] == 'OK':
             return True
@@ -385,7 +407,7 @@ def get_auth_status(api_root, tapis_token = None):
             print("Unauthorized to access data")
             raise Exception
     except Exception as e:
-        return('api error: {}'.format(e))
+        return('vbr api error: {}'.format(e))
 
 # ----------------------------------------------------------------------------
 # PROCESS SUBJECTS DATA
