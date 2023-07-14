@@ -128,7 +128,13 @@ api_data_simple = {
     'raw': None
 }
 
-app = Flask(__name__)
+def create_app():
+    app = Flask(__name__)
+
+    with app.app_context():
+        init_db()
+
+    return app
 
 # APIS: try to load new data, if doesn't work, get most recent
 @app.route("/api/apis")
@@ -197,7 +203,7 @@ def api_blood():
         return jsonify('error: {}'.format(e))
 
 
-@app.route("/api/subjects")
+@app.route("/api/subjects", methods=['GET'])
 def api_subjects():
     print('api_subjects')
     print(request.json)
