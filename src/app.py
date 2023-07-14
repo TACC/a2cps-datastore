@@ -198,7 +198,7 @@ def api_blood():
 
 
 @app.route("/api/subjects")
-def api_subjects(tapis_token):
+def api_subjects():
     print('api_subjects')
     global datetime_format
     global api_data_index
