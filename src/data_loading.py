@@ -374,8 +374,11 @@ def get_api_subjects_json(api_root = os.environ.get('API_ROOT'), tapis_token = N
 def get_auth_status(api_root, tapis_token = None):
     ''' This is the function that will hit the auth check for Life Science API'''
     print(tapis_token)
+    print(api_root)
     try:
         response = requests.get(api_root + '/status/auth', tapis_token)
+        print('response:')
+        print(response)
         if response.json()['status'] == 'OK':
             return True
         else:
