@@ -200,7 +200,16 @@ def api_blood():
 @app.route("/api/subjects", methods=['GET'])
 def api_subjects():
     print('api_subjects')
+    print('Json:')
     print(request.json)
+    print('headers:')
+    print(request.headers)
+    print('data:')
+    print(request.data)
+    print('args:')
+    print(request.args)
+    print('request:')
+    print(request)
     global datetime_format
     global api_data_index
     global api_data_cache
