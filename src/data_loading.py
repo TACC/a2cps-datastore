@@ -378,7 +378,9 @@ def get_api_subjects_json(api_root = 'https://api.a2cps.org/files/v2/download/pu
         return None
     
 def get_tapis_token(portal_api_root, coresessionid = None):
+    print('coresessionid')
     print(coresessionid)
+    print('portal_api_root')
     print(portal_api_root)
     try:
         response = requests.get(portal_api_root + '/auth/tapis/', coresessionid)
@@ -391,14 +393,16 @@ def get_tapis_token(portal_api_root, coresessionid = None):
             print("Unauthorized to access tapis token")
             raise Exception
     except Exception as e:
-        return('api error: {}'.format(e))
+        return('portal api error: {}'.format(e))
     
 def get_auth_status(vbr_api_root, tapis_token = None):
     ''' This is the function that will hit the auth check for Life Science API'''
+    print('tapis_token')
     print(tapis_token)
+    print('vbr_api_root')
     print(vbr_api_root)
     try:
-        response = requests.get(vbr_api_root + '/status/auth', tapis_token)
+        response = requests.get(vbr_api_root + '/status/auth/', tapis_token)
         print('vbr api response:')
         print(response)
         if response.json()['status'] == 'OK':
