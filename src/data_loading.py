@@ -338,8 +338,7 @@ def get_api_blood_data(api_root = 'https://api.a2cps.org/files/v2/download/publi
 def get_api_subjects_json(api_root = 'https://api.a2cps.org/files/v2/download/public/system/a2cps.storage.community/reports', 
                           vbr_api_root = os.environ.get('VBR_API_ROOT'), 
                           portal_api_root = os.environ.get('PORTAL_API_ROOT'), 
-                          coresessionid = None, 
-                          tapis_token = None):
+                          coresessionid = None):
     ''' Load subjects data from api. Note data needs to be cleaned, etc. to create properly formatted data product'''
     print(coresessionid)
     tapis_token = get_tapis_token(portal_api_root, coresessionid)

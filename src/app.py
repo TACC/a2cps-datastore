@@ -200,16 +200,10 @@ def api_blood():
 @app.route("/api/subjects", methods=['GET'])
 def api_subjects():
     print('api_subjects')
-    # print('Json:')
-    # print(request.json)
     print('headers:')
     print(request.headers)
-    print('data:')
-    print(request.data)
     print('args:')
     print(request.args)
-    print('request:')
-    print(request)
     global datetime_format
     global api_data_index
     global api_data_cache
@@ -218,7 +212,7 @@ def api_subjects():
     try:
         if not api_data_index['subjects'] or not check_data_current(datetime.strptime(api_data_index['subjects'], datetime_format)):
             api_date = datetime.now().strftime(datetime_format)
-            latest_subjects_json = get_api_subjects_json(os.environ.get('API_ROOT'), request.args.get('coresessionid'))
+            latest_subjects_json = get_api_subjects_json(os.environ.get('API_ROOT'),os.environ.get('VBR_API_ROOT'),os.environ.get('PORTAL_API_ROOT'), request.args.get('coresessionid'))
             if latest_subjects_json:
                 # latest_data = create_clean_subjects(latest_subjects_json, screening_sites, display_terms_dict, display_terms_dict_multi)
                 latest_data = process_subjects_data(latest_subjects_json,subjects_raw_cols_for_reports,screening_sites, display_terms_dict, display_terms_dict_multi)
