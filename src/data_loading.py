@@ -383,7 +383,7 @@ def get_tapis_token(portal_api_root, coresessionid = None):
     print('portal_api_root')
     print(portal_api_root)
     try:
-        response = requests.get(portal_api_root + '/auth/tapis/', headers={'coresessionid':coresessionid})
+        response = requests.get(portal_api_root + '/auth/tapis/', headers={'cookie':'coresessionid=' + coresessionid})
         print('portal api response:')
         print(response)
         if response:
