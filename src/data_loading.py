@@ -378,12 +378,13 @@ def get_api_subjects_json(api_root = 'https://api.a2cps.org/files/v2/download/pu
         return None
     
 def get_tapis_token(portal_api_root, coresessionid = None):
-    print('coresessionid')
+    print('get_tapis_token')
     print(coresessionid)
     print('portal_api_root')
     print(portal_api_root)
     try:
-        response = requests.get(portal_api_root + '/auth/tapis/', coresessionid)
+        requests.headers['coresessionid'] = coresessionid
+        response = requests.get(portal_api_root + '/auth/tapis/')
         print('portal api response:')
         print(response)
         if response:
@@ -404,7 +405,7 @@ def get_auth_status(vbr_api_root, tapis_token = None):
     try:
         response = requests.get(vbr_api_root + '/status/auth/', tapis_token)
         print('vbr api response:')
-        print(response)
+        print(response.json()['status'])
         if response.json()['status'] == 'OK':
             return True
         else:
@@ -523,7 +524,7 @@ def create_clean_subjects(subjects_raw, screening_sites, display_terms_dict, dis
                 try:
                     subjects = subjects.merge(display_terms, how='left', on=i)
                 except Exception as e:
-                    print(display_terms)
+                    #print(display_terms)
                     print('error: {}'.format(e))
         #------
 
