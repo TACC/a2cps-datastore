@@ -378,7 +378,7 @@ def get_api_subjects_json(api_root = 'https://api.a2cps.org/files/v2/download/pu
     
 def get_tapis_token(portal_api_root, coresessionid = None):
     print('get_tapis_token')
-    print(coresessionid[:5])
+    print(coresessionid[:15])
     print('portal_api_root')
     print(portal_api_root)
     try:
@@ -397,13 +397,13 @@ def get_tapis_token(portal_api_root, coresessionid = None):
 def get_auth_status(vbr_api_root, tapis_token = None):
     ''' This is the function that will hit the auth check for Life Science API'''
     print('tapis_token')
-    print(tapis_token[:5])
+    print(tapis_token[:15])
     print('vbr_api_root')
     print(vbr_api_root)
     try:
         response = requests.get(vbr_api_root + '/status/auth/', tapis_token)
         print('vbr api response:')
-        print(response.json()['status'])
+        print(response)
         if response.json()['status'] == 'OK':
             return True
         else:
