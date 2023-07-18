@@ -342,7 +342,7 @@ def get_api_subjects_json(api_root = 'https://api.a2cps.org/files/v2/download/pu
     ''' Load subjects data from api. Note data needs to be cleaned, etc. to create properly formatted data product'''
     print(coresessionid[:5])
     tapis_token = get_tapis_token(portal_api_root, coresessionid)
-    print(tapis_token[:5])
+    print(tapis_token)
     auth_status = get_auth_status(vbr_api_root, tapis_token)
 
     if auth_status == True:
@@ -397,7 +397,7 @@ def get_tapis_token(portal_api_root, coresessionid = None):
 def get_auth_status(vbr_api_root, tapis_token = None):
     ''' This is the function that will hit the auth check for Life Science API'''
     print('tapis_token')
-    print(tapis_token[:15])
+    print(tapis_token)
     print('vbr_api_root')
     print(vbr_api_root)
     try:
