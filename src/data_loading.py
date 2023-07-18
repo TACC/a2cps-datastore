@@ -401,7 +401,7 @@ def get_auth_status(vbr_api_root, tapis_token = None):
     print('vbr_api_root')
     print(vbr_api_root)
     try:
-        response = requests.get(vbr_api_root + '/status/auth/', tapis_token)
+        response = requests.get(vbr_api_root + '/status/auth/', headers={'Authorization: Bearer ' + tapis_token})
         print('vbr api response:')
         print(response)
         if response.json()['status'] == 'OK':
