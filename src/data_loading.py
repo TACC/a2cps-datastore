@@ -335,7 +335,7 @@ def get_api_blood_data(api_root = 'https://api.a2cps.org/files/v2/download/publi
         traceback.print_exc()
         return None
 
-def get_api_subjects_json(api_root = 'https://a2cps.tapis.io/v3/files/content/secure.corral//corral-secure/projects/A2CPS/community/reports/', 
+def get_api_subjects_json(api_root = os.environ.get('API_ROOT')', 
                           vbr_api_root = os.environ.get('VBR_API_ROOT'), 
                           portal_api_root = os.environ.get('PORTAL_API_ROOT'), 
                           coresessionid = None):
