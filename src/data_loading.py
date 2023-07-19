@@ -199,154 +199,178 @@ def get_local_subjects_raw(data_directory):
 # LOAD DATA FROM API
 # ----------------------------------------------------------------------------
 
-def get_api_consort_data(api_root = 'https://api.a2cps.org/files/v2/download/public/system/a2cps.storage.community/reports', report='consort', report_suffix = 'consort-data-[mcc]-latest.csv'):
-    '''Load data for a specified file. Handle 500 server errors'''
-    cosort_columns = ['source','target','value', 'mcc']
-    consort_df = pd.DataFrame(columns=cosort_columns)
+def get_api_consort_data(files_api_root = os.environ.get('FILES_API_ROOT'), 
+                          portal_api_root = os.environ.get('PORTAL_API_ROOT'), 
+                          coresessionid = None,
+                          report='consort', 
+                          report_suffix = 'consort-data-[mcc]-latest.csv'):
+    '''Load data for a specified consort file. Handle 500 server errors'''
+    
+    current_datetime = datetime.now()
+    tapis_token = get_tapis_token(portal_api_root, coresessionid)
 
-    # # get list of mcc files
-    # filename1 = report_suffix.replace('[mcc]',str(1))
-    # filename2 = report_suffix.replace('[mcc]',str(2))
-    # files_list = [filename1, filename2]
+    if tapis_token:
+        cosort_columns = ['source','target','value', 'mcc']
+        consort_df = pd.DataFrame(columns=cosort_columns)
 
-    try:
-        current_datetime = datetime.now()
-        mcc_list = [1,2]
-        for mcc in mcc_list:
-            filename = report_suffix.replace('[mcc]',str(mcc))
-            csv_url = '/'.join([api_root, report, filename])
-            csv_request = requests.get(csv_url)
-            csv_content = csv_request.content
-            try:
-                csv_df = pd.read_csv(io.StringIO(csv_content.decode('utf-8')), usecols=[0,1,2], header=None)
-                csv_df['mcc'] = mcc
-                csv_df.columns = cosort_columns
-            except:
-                csv_df = pd.DataFrame(columns=cosort_columns)
-            consort_df = pd.concat([consort_df,csv_df])
+        # # get list of mcc files
+        # filename1 = report_suffix.replace('[mcc]',str(1))
+        # filename2 = report_suffix.replace('[mcc]',str(2))
+        # files_list = [filename1, filename2]
 
-        consort_dict = consort_df.to_dict('records')
-        if not consort_dict:
-            consort_dict = ['No data found']
-        # IF DATA LOADS SUCCESSFULLY:
-        consort_data_json = {
-            'consort' : consort_df.to_dict('records')
-        }
-        return consort_data_json
+        try:
+            mcc_list = [1,2]
+            for mcc in mcc_list:
+                filename = report_suffix.replace('[mcc]',str(mcc))
+                csv_url = '/'.join([files_api_root, report, filename])
+                csv_request = requests.get(csv_url, headers={'X-Tapis-Token': tapis_token})
+                csv_content = csv_request.content
+                try:
+                    csv_df = pd.read_csv(io.StringIO(csv_content.decode('utf-8')), usecols=[0,1,2], header=None)
+                    csv_df['mcc'] = mcc
+                    csv_df.columns = cosort_columns
+                except:
+                    csv_df = pd.DataFrame(columns=cosort_columns)
+                consort_df = pd.concat([consort_df,csv_df])
 
-    except Exception as e:
-        traceback.print_exc()
+            consort_dict = consort_df.to_dict('records')
+            if not consort_dict:
+                consort_dict = ['No data found']
+            # IF DATA LOADS SUCCESSFULLY:
+            consort_data_json = {
+                'consort' : consort_df.to_dict('records')
+            }
+            return consort_data_json
+
+        except Exception as e:
+            traceback.print_exc()
+            return None
+
+    else:
+        print("Unauthorized attempt to access Consort data")
         return None
-
 
 ## Function to rebuild dataset from apis
 
-def get_api_imaging_data(api_root = 'https://api.a2cps.org/files/v2/download/public/system/a2cps.storage.community/reports'):
+def get_api_imaging_data(files_api_root = os.environ.get('FILES_API_ROOT'), 
+                          portal_api_root = os.environ.get('PORTAL_API_ROOT'), 
+                          coresessionid = None):
     ''' Load data from imaging api. Return bad status notice if hits Tapis API'''
 
     current_datetime = datetime.now()
+    tapis_token = get_tapis_token(portal_api_root, coresessionid)
 
-    try:
-        api_dict = {
-                'subjects':{'subjects1': 'subjects-1-latest.json','subjects2': 'subjects-2-latest.json'},
-                'imaging': {'imaging': 'imaging-log-latest.csv', 'qc': 'qc-log-latest.csv'},
-                'blood':{'blood1': 'blood-1-latest.json','blood2': 'blood-2-latest.json'},
-               }
+    if tapis_token:
+        try:
+            api_dict = {
+                    'subjects':{'subjects1': 'subjects-1-latest.json','subjects2': 'subjects-2-latest.json'},
+                    'imaging': {'imaging': 'imaging-log-latest.csv', 'qc': 'qc-log-latest.csv'},
+                    'blood':{'blood1': 'blood-1-latest.json','blood2': 'blood-2-latest.json'},
+                }
 
-        # IMAGING
-        imaging_filepath = '/'.join([api_root,'imaging',api_dict['imaging']['imaging']])
-        imaging_request = requests.get(imaging_filepath)
-        if imaging_request.status_code == 200:
-            imaging = pd.read_csv(io.StringIO(imaging_request.content.decode('utf-8')))
-        else:
-            return {'status':'500', 'source': api_dict['imaging']['imaging']}
+            # IMAGING
+            imaging_filepath = '/'.join([files_api_root,'imaging',api_dict['imaging']['imaging']])
+            imaging_request = requests.get(imaging_filepath, headers={'X-Tapis-Token': tapis_token})
+            if imaging_request.status_code == 200:
+                imaging = pd.read_csv(io.StringIO(imaging_request.content.decode('utf-8')))
+            else:
+                return {'status':'500', 'source': api_dict['imaging']['imaging']}
 
 
-        qc_filepath = '/'.join([api_root,'imaging',api_dict['imaging']['qc']])
-        qc_request = requests.get(qc_filepath)
-        if qc_request.status_code == 200:
-            qc = pd.read_csv(io.StringIO(qc_request.content.decode('utf-8')))
-        else:
-            return {'status':'500', 'source': api_dict['imaging']['qc']}
+            qc_filepath = '/'.join([files_api_root,'imaging',api_dict['imaging']['qc']])
+            qc_request = requests.get(qc_filepath, headers={'X-Tapis-Token': tapis_token})
+            if qc_request.status_code == 200:
+                qc = pd.read_csv(io.StringIO(qc_request.content.decode('utf-8')))
+            else:
+                return {'status':'500', 'source': api_dict['imaging']['qc']}
 
-        # IF DATA LOADS SUCCESSFULLY:
-        imaging_data_json = {
-            'imaging' : imaging.to_dict('records'),
-            'qc' : qc.to_dict('records')
-        }
-
-        return imaging_data_json
-
-    except Exception as e:
-        traceback.print_exc()
-        return "exception: {}".format(e)
-
-## Function to rebuild dataset from apis
-def get_api_blood_data(api_root = 'https://api.a2cps.org/files/v2/download/public/system/a2cps.storage.community/reports'):
-    ''' Load data from api'''
-
-    current_datetime = datetime.now()
-
-    try:
-        api_dict = {
-                'subjects':{'subjects1': 'subjects-1-latest.json','subjects2': 'subjects-2-latest.json'},
-                'imaging': {'imaging': 'imaging-log-latest.csv', 'qc': 'qc-log-latest.csv'},
-                'blood':{'blood1': 'blood-1-latest.json','blood2': 'blood-2-latest.json'},
-               }
-
-        # BLOOD
-        blood1_filepath = '/'.join([api_root,'blood',api_dict['blood']['blood1']])
-        blood1_request = requests.get(blood1_filepath)
-
-        blood2_filepath = '/'.join([api_root,'blood',api_dict['blood']['blood2']])
-        blood2_request = requests.get(blood2_filepath)
-
-        if blood1_request.status_code == 200:
-            blood1 = blood1_request.json()
-            blood1_request_status = [current_datetime.strftime("%m/%d/%Y, %H:%M:%S"), blood1_filepath, '200']
-        else:
-            blood1_request_status = [current_datetime.strftime("%m/%d/%Y, %H:%M:%S"), blood1_filepath, blood1_request.status_code ]
-            # return None, {'status':'500', 'source': api_dict['blood']['blood1']}
-
-        if blood2_request.status_code == 200:
-            blood2 = blood2_request.json()
-            blood2_request_status = [current_datetime.strftime("%m/%d/%Y, %H:%M:%S"), blood2_filepath, '200']
-        else:
-            blood2_request_status = [current_datetime.strftime("%m/%d/%Y, %H:%M:%S"), blood2_filepath, blood2_request.status_code]
-            # return None, {'date' : 'status':'500', 'source': api_dict['blood']['blood2']}
-
-        if blood1_request.status_code == 200 and blood2_request.status_code == 200:
-            blood_json = {'1': blood1, '2': blood2}
-
-            blood = bloodjson_to_df(blood_json, ['1','2'])
-            blood = simplify_blooddata(blood)
-
-            blood_data_json = {
-                'blood' : blood.to_dict('records')
+            # IF DATA LOADS SUCCESSFULLY:
+            imaging_data_json = {
+                'imaging' : imaging.to_dict('records'),
+                'qc' : qc.to_dict('records')
             }
-        else:
-            blood_data_json = None
 
-        request_status = [blood1_request_status, blood2_request_status]
+            return imaging_data_json
 
-        return blood_data_json, request_status
-
-    except Exception as e:
-        traceback.print_exc()
+        except Exception as e:
+            traceback.print_exc()
+            return "exception: {}".format(e)
+    else:
+        print("Unauthorized attempt to access Imaging data")
         return None
 
-def get_api_subjects_json(api_root = os.environ.get('API_ROOT'), 
-                          vbr_api_root = os.environ.get('VBR_API_ROOT'), 
+## Function to rebuild dataset from apis
+def get_api_blood_data(files_api_root = os.environ.get('FILES_API_ROOT'), 
+                          portal_api_root = os.environ.get('PORTAL_API_ROOT'), 
+                          coresessionid = None):
+    ''' Load blood data from api'''
+
+    current_datetime = datetime.now()
+    tapis_token = get_tapis_token(portal_api_root, coresessionid)
+    
+    if tapis_token:
+        try:
+            api_dict = {
+                    'subjects':{'subjects1': 'subjects-1-latest.json','subjects2': 'subjects-2-latest.json'},
+                    'imaging': {'imaging': 'imaging-log-latest.csv', 'qc': 'qc-log-latest.csv'},
+                    'blood':{'blood1': 'blood-1-latest.json','blood2': 'blood-2-latest.json'},
+                }
+
+            # BLOOD
+            blood1_filepath = '/'.join([files_api_root,'blood',api_dict['blood']['blood1']])
+            blood1_request = requests.get(blood1_filepath, headers={'X-Tapis-Token': tapis_token})
+
+            blood2_filepath = '/'.join([files_api_root,'blood',api_dict['blood']['blood2']])
+            blood2_request = requests.get(blood2_filepath, headers={'X-Tapis-Token': tapis_token})
+
+            if blood1_request.status_code == 200:
+                blood1 = blood1_request.json()
+                blood1_request_status = [current_datetime.strftime("%m/%d/%Y, %H:%M:%S"), blood1_filepath, '200']
+            else:
+                blood1_request_status = [current_datetime.strftime("%m/%d/%Y, %H:%M:%S"), blood1_filepath, blood1_request.status_code ]
+                # return None, {'status':'500', 'source': api_dict['blood']['blood1']}
+
+            if blood2_request.status_code == 200:
+                blood2 = blood2_request.json()
+                blood2_request_status = [current_datetime.strftime("%m/%d/%Y, %H:%M:%S"), blood2_filepath, '200']
+            else:
+                blood2_request_status = [current_datetime.strftime("%m/%d/%Y, %H:%M:%S"), blood2_filepath, blood2_request.status_code]
+                # return None, {'date' : 'status':'500', 'source': api_dict['blood']['blood2']}
+
+            if blood1_request.status_code == 200 and blood2_request.status_code == 200:
+                blood_json = {'1': blood1, '2': blood2}
+
+                blood = bloodjson_to_df(blood_json, ['1','2'])
+                blood = simplify_blooddata(blood)
+
+                blood_data_json = {
+                    'blood' : blood.to_dict('records')
+                }
+            else:
+                blood_data_json = None
+
+            request_status = [blood1_request_status, blood2_request_status]
+
+            return blood_data_json, request_status
+
+        except Exception as e:
+            traceback.print_exc()
+            return None
+    
+    else:
+        print("Unauthorized attempt to access Blood data")
+        return None
+
+def get_api_subjects_json(files_api_root = os.environ.get('FILES_API_ROOT'), 
                           portal_api_root = os.environ.get('PORTAL_API_ROOT'), 
                           coresessionid = None):
     ''' Load subjects data from api. Note data needs to be cleaned, etc. to create properly formatted data product'''
     tapis_token = get_tapis_token(portal_api_root, coresessionid)
-    #auth_status = get_auth_status(vbr_api_root, tapis_token)
 
     if tapis_token:
         try:
             # Load Json Data
-            subjects1_filepath = '/'.join([api_root,'subjects','subjects-1-latest.json'])
+            subjects1_filepath = '/'.join([files_api_root,'subjects','subjects-1-latest.json'])
             subjects1_request = requests.get(subjects1_filepath, headers={'X-Tapis-Token': tapis_token})
             if subjects1_request.status_code == 200:
                 subjects1 = subjects1_request.json()
@@ -354,7 +378,7 @@ def get_api_subjects_json(api_root = os.environ.get('API_ROOT'),
                 return None
                 # return {'status':'500', 'source': api_dict['subjects']['subjects1']}
 
-            subjects2_filepath = '/'.join([api_root,'subjects','subjects-2-latest.json'])
+            subjects2_filepath = '/'.join([files_api_root,'subjects','subjects-2-latest.json'])
             subjects2_request = requests.get(subjects2_filepath, headers={'X-Tapis-Token': tapis_token})
             if subjects2_request.status_code == 200:
                 subjects2 = subjects2_request.json()
@@ -391,24 +415,6 @@ def get_tapis_token(portal_api_root, coresessionid = None):
             raise Exception
     except Exception as e:
         return('portal api error: {}'.format(e))
-    
-# def get_auth_status(vbr_api_root, tapis_token = None):
-#     ''' This is the function that will hit the auth check for Life Science API'''
-#     print('tapis_token')
-#     print(tapis_token[:25])
-#     print('vbr_api_root')
-#     print(vbr_api_root)
-#     try:
-#         response = requests.get(vbr_api_root + '/status/auth/', headers={'Authorization: Bearer ' + tapis_token})
-#         print('vbr api response:')
-#         print(response)
-#         if response.json()['status'] == 'OK':
-#             return True
-#         else:
-#             print("Unauthorized to access data")
-#             raise Exception
-#     except Exception as e:
-#         return('vbr api error: {}'.format(e))
 
 # ----------------------------------------------------------------------------
 # PROCESS SUBJECTS DATA
