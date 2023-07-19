@@ -347,7 +347,7 @@ def get_api_subjects_json(api_root = os.environ.get('API_ROOT'),
         try:
             # Load Json Data
             subjects1_filepath = '/'.join([api_root,'subjects','subjects-1-latest.json'])
-            subjects1_request = requests.get(subjects1_filepath, headers={'X-Tapis-Token:' + tapis_token})
+            subjects1_request = requests.get(subjects1_filepath, headers={'X-Tapis-Token': tapis_token})
             if subjects1_request.status_code == 200:
                 subjects1 = subjects1_request.json()
             else:
@@ -355,7 +355,7 @@ def get_api_subjects_json(api_root = os.environ.get('API_ROOT'),
                 # return {'status':'500', 'source': api_dict['subjects']['subjects1']}
 
             subjects2_filepath = '/'.join([api_root,'subjects','subjects-2-latest.json'])
-            subjects2_request = requests.get(subjects2_filepath, headers={'X-Tapis-Token:' + tapis_token})
+            subjects2_request = requests.get(subjects2_filepath, headers={'X-Tapis-Token': tapis_token})
             if subjects2_request.status_code == 200:
                 subjects2 = subjects2_request.json()
             else:
