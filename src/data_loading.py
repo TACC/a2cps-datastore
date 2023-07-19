@@ -335,19 +335,19 @@ def get_api_blood_data(api_root = 'https://api.a2cps.org/files/v2/download/publi
         traceback.print_exc()
         return None
 
-def get_api_subjects_json(api_root = 'https://api.a2cps.org/files/v2/download/public/system/a2cps.storage.community/reports', 
+def get_api_subjects_json(api_root = 'https://a2cps.tapis.io/v3/files/content/secure.corral//corral-secure/projects/A2CPS/community/reports/', 
                           vbr_api_root = os.environ.get('VBR_API_ROOT'), 
                           portal_api_root = os.environ.get('PORTAL_API_ROOT'), 
                           coresessionid = None):
     ''' Load subjects data from api. Note data needs to be cleaned, etc. to create properly formatted data product'''
     tapis_token = get_tapis_token(portal_api_root, coresessionid)
-    auth_status = get_auth_status(vbr_api_root, tapis_token)
+    #auth_status = get_auth_status(vbr_api_root, tapis_token)
 
-    if auth_status == True:
+    if tapis_token:
         try:
             # Load Json Data
             subjects1_filepath = '/'.join([api_root,'subjects','subjects-1-latest.json'])
-            subjects1_request = requests.get(subjects1_filepath)
+            subjects1_request = requests.get(subjects1_filepath, headers={'X-Tapis-Token:' + tapis_token})
             if subjects1_request.status_code == 200:
                 subjects1 = subjects1_request.json()
             else:
@@ -355,7 +355,7 @@ def get_api_subjects_json(api_root = 'https://api.a2cps.org/files/v2/download/pu
                 # return {'status':'500', 'source': api_dict['subjects']['subjects1']}
 
             subjects2_filepath = '/'.join([api_root,'subjects','subjects-2-latest.json'])
-            subjects2_request = requests.get(subjects2_filepath)
+            subjects2_request = requests.get(subjects2_filepath, headers={'X-Tapis-Token:' + tapis_token})
             if subjects2_request.status_code == 200:
                 subjects2 = subjects2_request.json()
             else:
@@ -392,23 +392,23 @@ def get_tapis_token(portal_api_root, coresessionid = None):
     except Exception as e:
         return('portal api error: {}'.format(e))
     
-def get_auth_status(vbr_api_root, tapis_token = None):
-    ''' This is the function that will hit the auth check for Life Science API'''
-    print('tapis_token')
-    print(tapis_token[:25])
-    print('vbr_api_root')
-    print(vbr_api_root)
-    try:
-        response = requests.get(vbr_api_root + '/status/auth/', headers={'Authorization: Bearer ' + tapis_token})
-        print('vbr api response:')
-        print(response)
-        if response.json()['status'] == 'OK':
-            return True
-        else:
-            print("Unauthorized to access data")
-            raise Exception
-    except Exception as e:
-        return('vbr api error: {}'.format(e))
+# def get_auth_status(vbr_api_root, tapis_token = None):
+#     ''' This is the function that will hit the auth check for Life Science API'''
+#     print('tapis_token')
+#     print(tapis_token[:25])
+#     print('vbr_api_root')
+#     print(vbr_api_root)
+#     try:
+#         response = requests.get(vbr_api_root + '/status/auth/', headers={'Authorization: Bearer ' + tapis_token})
+#         print('vbr api response:')
+#         print(response)
+#         if response.json()['status'] == 'OK':
+#             return True
+#         else:
+#             print("Unauthorized to access data")
+#             raise Exception
+#     except Exception as e:
+#         return('vbr api error: {}'.format(e))
 
 # ----------------------------------------------------------------------------
 # PROCESS SUBJECTS DATA
