@@ -8,10 +8,6 @@ import csv
 # from data_processing import *
 from data_loading import *
 
-## Demonstrate that app is accessing the env variables properly
-SECRET_KEY = environ.get("SECRET_KEY")
-#print("SECRET KEY", SECRET_KEY)
-
 # ----------------------------------------------------------------------------
 # DATA PARAMETERS
 # ----------------------------------------------------------------------------
@@ -21,7 +17,7 @@ ASSETS_PATH = os.path.join(current_folder,'assets')
 
 
 # Path to Report files at TACC
-api_root = environ.get("API_ROOT") #'https://api.a2cps.org/files/v2/download/public/system/a2cps.storage.community/reports'
+files_api_root = environ.get("FILES_API_ROOT") 
 
 # ----------------------------------------------------------------------------
 # LOAD ASSETS FILES
@@ -91,7 +87,6 @@ local_data = {
 # ----------------------------------------------------------------------------
 # APIS
 # ----------------------------------------------------------------------------
-print('apis')
 datetime_format = "%m/%d/%Y, %H:%M:%S"
 
 apis_imaging_index = {}
@@ -120,7 +115,6 @@ api_data_cache = {
 # ----------------------------------------------------------------------------
 # SIMPLE APIS
 # ----------------------------------------------------------------------------
-print('simple apis')
 api_data_simple = {
     'blood':None,
     'imaging':None,
@@ -133,8 +127,6 @@ app = Flask(__name__)
 # APIS: try to load new data, if doesn't work, get most recent
 @app.route("/api/apis")
 def api_apis():
-    print('api_apis')
-    print(api_data_index)
     return jsonify(api_data_index)
 
 @app.route("/api/imaging")
@@ -234,7 +226,6 @@ def api_tester():
 
 @app.route("/api/full")
 def api_full():
-    print('api_full')
     datafeeds = {}
     for data_category in api_data_cache:
         if api_data_cache[data_category]['data']:

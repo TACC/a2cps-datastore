@@ -19,7 +19,6 @@ from datetime import datetime, timedelta
 # ----------------------------------------------------------------------------
 def check_data_current(data_date):
     '''test to see if the date in a data dictionary is from after 10am on the same day as checking.'''
-    print('check_data_current')
     now = datetime.now()
 
     if data_date.date() == now.date():
@@ -31,7 +30,6 @@ def check_data_current(data_date):
         return False
 
 def check_available_data(available_data):
-    print('check_available_data')
     if available_data:
         if isinstance(available_data, list) and type(available_data[-1]) is dict and 'date' in available_data[-1].keys() and 'data' in available_data[-1].keys():
             latest_date = available_data[-1]['date']
@@ -175,7 +173,6 @@ def get_local_blood_data(data_directory):
         return {'Stats': 'Blood data not available'}
 
 def get_local_subjects_raw(data_directory):
-    print('local_subjects')
     ''' Load subjects data from local files'''
     try:
         subjects1_filepath = os.path.join(data_directory,'subjects','subjects-1-latest.json')
@@ -369,11 +366,13 @@ def get_api_subjects_json(files_api_root = os.environ.get('FILES_API_ROOT'),
 
     if tapis_token:
         try:
+            print("files_api_root " + files_api_root)
             # Load Json Data
             subjects1_filepath = '/'.join([files_api_root,'subjects','subjects-1-latest.json'])
             subjects1_request = requests.get(subjects1_filepath, headers={'X-Tapis-Token': tapis_token})
             if subjects1_request.status_code == 200:
                 subjects1 = subjects1_request.json()
+                print('subjects1' + subjects1)
             else:
                 return None
                 # return {'status':'500', 'source': api_dict['subjects']['subjects1']}
@@ -399,14 +398,8 @@ def get_api_subjects_json(files_api_root = os.environ.get('FILES_API_ROOT'),
         return None
     
 def get_tapis_token(portal_api_root, coresessionid = None):
-    print('get_tapis_token')
-    print(coresessionid[:15])
-    print('portal_api_root')
-    print(portal_api_root)
     try:
         response = requests.get(portal_api_root + '/auth/tapis/', headers={'cookie':'coresessionid=' + coresessionid})
-        print('portal api response:')
-        print(response)
         if response:
             tapis_token = response.json()['token']
             return tapis_token
@@ -526,7 +519,6 @@ def create_clean_subjects(subjects_raw, screening_sites, display_terms_dict, dis
                 try:
                     subjects = subjects.merge(display_terms, how='left', on=i)
                 except Exception as e:
-                    #print(display_terms)
                     print('error: {}'.format(e))
         #------
 
@@ -563,7 +555,6 @@ def clean_adverse_events(adverse_events, consented, display_terms_dict_multi):
                 try:
                     multi_data = multi_data.merge(display_terms_dict_multi[i], how='left', on=i)
                 except Exception as e:
-                    print(display_terms_dict_multi[i])
                     print('error: {}'.format(e))
         # Rename 'index' to 'record_id'
         multi_data.rename(columns={"index": "record_id"}, inplace = True)
@@ -583,7 +574,6 @@ def convert_datetime_to_isoformat(df, datetime_cols_list):
     return df
 
 def process_subjects_data(subjects_raw_json, subjects_raw_cols_for_reports,screening_sites, display_terms_dict, display_terms_dict_multi):
-    print('process_subjects_data')
     ''' Take the raw subjects json and process it into separate, cleaned dataframes for subjects, consented subjects and adverse events'''
     # 1. Combine separate jsons for each MCC into a single data frame
     subjects_raw = combine_mcc_json(subjects_raw_json)#.reset_index(drop=True, inplace=True)
@@ -613,7 +603,6 @@ def process_subjects_data(subjects_raw_json, subjects_raw_cols_for_reports,scree
             'consented': consented.to_dict('records'),
             'adverse_events': adverse_events.to_dict('records')
     }
-    #print(subjects_api_data)
     return subjects_api_data
 
 # ----------------------------------------------------------------------------
