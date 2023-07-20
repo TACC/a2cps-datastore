@@ -366,13 +366,11 @@ def get_api_subjects_json(files_api_root = os.environ.get('FILES_API_ROOT'),
 
     if tapis_token:
         try:
-            print("files_api_root " + files_api_root)
             # Load Json Data
             subjects1_filepath = '/'.join([files_api_root,'subjects','subjects-1-latest.json'])
             subjects1_request = requests.get(subjects1_filepath, headers={'X-Tapis-Token': tapis_token})
             if subjects1_request.status_code == 200:
                 subjects1 = subjects1_request.json()
-                print('subjects1' + subjects1)
             else:
                 return None
                 # return {'status':'500', 'source': api_dict['subjects']['subjects1']}
