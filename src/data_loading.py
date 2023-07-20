@@ -406,7 +406,7 @@ def get_tapis_token(portal_api_root, coresessionid = None):
             raise Exception
     except Exception as e:
         print('portal api error: {}'.format(e))
-        raise e
+        return False
 
 # ----------------------------------------------------------------------------
 # PROCESS SUBJECTS DATA
