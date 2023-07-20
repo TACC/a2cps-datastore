@@ -515,10 +515,7 @@ def create_clean_subjects(subjects_raw, screening_sites, display_terms_dict, dis
                 if subjects[i].dtype == np.float64:
                     # for display columns where data is numeric, merge on display dictionary, treating cols as floats to handle nas
                     display_terms[i] = display_terms[i].astype('float64')
-                try:
                     subjects = subjects.merge(display_terms, how='left', on=i)
-                except Exception as e:
-                    raise e
         #------
 
         # Add screening sites
