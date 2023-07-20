@@ -405,7 +405,8 @@ def get_tapis_token(portal_api_root, coresessionid = None):
             print("Unauthorized to access tapis token")
             raise Exception
     except Exception as e:
-        return('portal api error: {}'.format(e))
+        print('portal api error: {}'.format(e))
+        raise e
 
 # ----------------------------------------------------------------------------
 # PROCESS SUBJECTS DATA
@@ -517,7 +518,7 @@ def create_clean_subjects(subjects_raw, screening_sites, display_terms_dict, dis
                 try:
                     subjects = subjects.merge(display_terms, how='left', on=i)
                 except Exception as e:
-                    print('error: {}'.format(e))
+                    raise e
         #------
 
         # Add screening sites
@@ -553,7 +554,7 @@ def clean_adverse_events(adverse_events, consented, display_terms_dict_multi):
                 try:
                     multi_data = multi_data.merge(display_terms_dict_multi[i], how='left', on=i)
                 except Exception as e:
-                    print('error: {}'.format(e))
+                    raise e
         # Rename 'index' to 'record_id'
         multi_data.rename(columns={"index": "record_id"}, inplace = True)
 
