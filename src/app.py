@@ -199,7 +199,7 @@ def api_subjects():
     try:
         if not api_data_index['subjects'] or not check_data_current(datetime.strptime(api_data_index['subjects'], datetime_format)):
             api_date = datetime.now().strftime(datetime_format)
-            latest_subjects_json = get_api_subjects_json(os.environ.get('FILES_API_ROOT'), os.environ.get('PORTAL_API_ROOT'), request.cookies.get('coresessionid'))
+            latest_subjects_json = get_api_subjects_json(request.cookies.get('coresessionid'))
             if latest_subjects_json:
                 # latest_data = create_clean_subjects(latest_subjects_json, screening_sites, display_terms_dict, display_terms_dict_multi)
                 latest_data = process_subjects_data(latest_subjects_json,subjects_raw_cols_for_reports,screening_sites, display_terms_dict, display_terms_dict_multi)

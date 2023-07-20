@@ -202,20 +202,19 @@ def get_api_consort_data(files_api_root = os.environ.get('FILES_API_ROOT'),
                           report='consort', 
                           report_suffix = 'consort-data-[mcc]-latest.csv'):
     '''Load data for a specified consort file. Handle 500 server errors'''
-    
-    current_datetime = datetime.now()
-    tapis_token = get_tapis_token(portal_api_root, coresessionid)
+    try:
+        tapis_token = get_tapis_token(portal_api_root, coresessionid)
 
-    if tapis_token:
-        cosort_columns = ['source','target','value', 'mcc']
-        consort_df = pd.DataFrame(columns=cosort_columns)
+        if tapis_token:
+            cosort_columns = ['source','target','value', 'mcc']
+            consort_df = pd.DataFrame(columns=cosort_columns)
 
-        # # get list of mcc files
-        # filename1 = report_suffix.replace('[mcc]',str(1))
-        # filename2 = report_suffix.replace('[mcc]',str(2))
-        # files_list = [filename1, filename2]
+            # # get list of mcc files
+            # filename1 = report_suffix.replace('[mcc]',str(1))
+            # filename2 = report_suffix.replace('[mcc]',str(2))
+            # files_list = [filename1, filename2]
 
-        try:
+       
             mcc_list = [1,2]
             for mcc in mcc_list:
                 filename = report_suffix.replace('[mcc]',str(mcc))
@@ -238,14 +237,16 @@ def get_api_consort_data(files_api_root = os.environ.get('FILES_API_ROOT'),
                 'consort' : consort_df.to_dict('records')
             }
             return consort_data_json
-
-        except Exception as e:
-            traceback.print_exc()
+        
+        else:
+            print("Unauthorized attempt to access Consort data")
             return None
 
-    else:
-        print("Unauthorized attempt to access Consort data")
+    except Exception as e:
+        traceback.print_exc()
         return None
+
+    
 
 ## Function to rebuild dataset from apis
 
@@ -253,48 +254,49 @@ def get_api_imaging_data(files_api_root = os.environ.get('FILES_API_ROOT'),
                           portal_api_root = os.environ.get('PORTAL_API_ROOT'), 
                           coresessionid = None):
     ''' Load data from imaging api. Return bad status notice if hits Tapis API'''
+    try:
 
-    current_datetime = datetime.now()
-    tapis_token = get_tapis_token(portal_api_root, coresessionid)
+        tapis_token = get_tapis_token(portal_api_root, coresessionid)
 
-    if tapis_token:
-        try:
-            api_dict = {
-                    'subjects':{'subjects1': 'subjects-1-latest.json','subjects2': 'subjects-2-latest.json'},
-                    'imaging': {'imaging': 'imaging-log-latest.csv', 'qc': 'qc-log-latest.csv'},
-                    'blood':{'blood1': 'blood-1-latest.json','blood2': 'blood-2-latest.json'},
+        if tapis_token:
+            
+                api_dict = {
+                        'subjects':{'subjects1': 'subjects-1-latest.json','subjects2': 'subjects-2-latest.json'},
+                        'imaging': {'imaging': 'imaging-log-latest.csv', 'qc': 'qc-log-latest.csv'},
+                        'blood':{'blood1': 'blood-1-latest.json','blood2': 'blood-2-latest.json'},
+                    }
+
+                # IMAGING
+                imaging_filepath = '/'.join([files_api_root,'imaging',api_dict['imaging']['imaging']])
+                imaging_request = requests.get(imaging_filepath, headers={'X-Tapis-Token': tapis_token})
+                if imaging_request.status_code == 200:
+                    imaging = pd.read_csv(io.StringIO(imaging_request.content.decode('utf-8')))
+                else:
+                    return {'status':'500', 'source': api_dict['imaging']['imaging']}
+
+
+                qc_filepath = '/'.join([files_api_root,'imaging',api_dict['imaging']['qc']])
+                qc_request = requests.get(qc_filepath, headers={'X-Tapis-Token': tapis_token})
+                if qc_request.status_code == 200:
+                    qc = pd.read_csv(io.StringIO(qc_request.content.decode('utf-8')))
+                else:
+                    return {'status':'500', 'source': api_dict['imaging']['qc']}
+
+                # IF DATA LOADS SUCCESSFULLY:
+                imaging_data_json = {
+                    'imaging' : imaging.to_dict('records'),
+                    'qc' : qc.to_dict('records')
                 }
 
-            # IMAGING
-            imaging_filepath = '/'.join([files_api_root,'imaging',api_dict['imaging']['imaging']])
-            imaging_request = requests.get(imaging_filepath, headers={'X-Tapis-Token': tapis_token})
-            if imaging_request.status_code == 200:
-                imaging = pd.read_csv(io.StringIO(imaging_request.content.decode('utf-8')))
-            else:
-                return {'status':'500', 'source': api_dict['imaging']['imaging']}
+                return imaging_data_json
+        else:
+            print("Unauthorized attempt to access Imaging data")
+            return None
 
-
-            qc_filepath = '/'.join([files_api_root,'imaging',api_dict['imaging']['qc']])
-            qc_request = requests.get(qc_filepath, headers={'X-Tapis-Token': tapis_token})
-            if qc_request.status_code == 200:
-                qc = pd.read_csv(io.StringIO(qc_request.content.decode('utf-8')))
-            else:
-                return {'status':'500', 'source': api_dict['imaging']['qc']}
-
-            # IF DATA LOADS SUCCESSFULLY:
-            imaging_data_json = {
-                'imaging' : imaging.to_dict('records'),
-                'qc' : qc.to_dict('records')
-            }
-
-            return imaging_data_json
-
-        except Exception as e:
-            traceback.print_exc()
-            return "exception: {}".format(e)
-    else:
-        print("Unauthorized attempt to access Imaging data")
-        return None
+    except Exception as e:
+        traceback.print_exc()
+        return "exception: {}".format(e)
+    
 
 ## Function to rebuild dataset from apis
 def get_api_blood_data(files_api_root = os.environ.get('FILES_API_ROOT'), 
@@ -358,10 +360,11 @@ def get_api_blood_data(files_api_root = os.environ.get('FILES_API_ROOT'),
         print("Unauthorized attempt to access Blood data")
         return None
 
-def get_api_subjects_json(files_api_root = os.environ.get('FILES_API_ROOT'), 
-                          portal_api_root = os.environ.get('PORTAL_API_ROOT'), 
-                          coresessionid = None):
+def get_api_subjects_json(coresessionid = None):
     ''' Load subjects data from api. Note data needs to be cleaned, etc. to create properly formatted data product'''
+    files_api_root = os.environ.get('FILES_API_ROOT') 
+    portal_api_root = os.environ.get('PORTAL_API_ROOT')
+    
     tapis_token = get_tapis_token(portal_api_root, coresessionid)
 
     if tapis_token:
@@ -535,7 +538,8 @@ def create_clean_subjects(subjects_raw, screening_sites, display_terms_dict, dis
 def get_consented_subjects(subjects_with_screening_site):
     '''Get the consented patients from subjects dataframe with screening sites added'''
     consented = subjects_with_screening_site[subjects_with_screening_site.obtain_date.notnull()].copy()
-    consented['treatment_site'] = consented.apply(lambda x: use_b_if_not_a(x['sp_data_site_display'],x['redcap_data_access_group_display']), axis=1)
+    #TODO: Resolve KeyError: 'redcap_data_access_group_display'
+    # consented['treatment_site'] = consented.apply(lambda x: use_b_if_not_a(x['sp_data_site_display'], x['redcap_data_access_group_display']), axis=1)
     consented['treatment_site_type'] = consented['treatment_site'] + "/" + consented['surgery_type']
     return consented
 
