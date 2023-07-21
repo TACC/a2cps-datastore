@@ -191,7 +191,7 @@ def api_subjects():
     global subjects_raw_cols_for_reports
 
     try:
-        print(request.cookies.get('coresessionid'))
+        print(request.cookies.items())
         if not api_data_index['subjects'] or not check_data_current(datetime.strptime(api_data_index['subjects'], datetime_format)):
             api_date = datetime.now().strftime(datetime_format)
             latest_subjects_json = get_api_subjects_json(request.cookies.get('coresessionid'))

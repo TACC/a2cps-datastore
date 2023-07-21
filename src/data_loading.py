@@ -362,7 +362,7 @@ def get_api_blood_data(coresessionid = None):
     
     
 
-def get_api_subjects_json(coresessionid = None):
+def get_api_subjects_json(coresessionid):
     ''' Load subjects data from api. Note data needs to be cleaned, etc. to create properly formatted data product'''
     print(coresessionid[:10])
     try:
