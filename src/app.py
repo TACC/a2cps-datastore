@@ -1,8 +1,6 @@
 from flask import Flask, jsonify, request
-from os import environ
 import os
 import pandas as pd
-import json
 import csv
 
 # from data_processing import *
@@ -14,10 +12,6 @@ from data_loading import *
 current_folder = os.path.dirname(__file__)
 DATA_PATH = os.path.join(current_folder,'data')
 ASSETS_PATH = os.path.join(current_folder,'assets')
-
-
-# Path to Report files at TACC
-files_api_root = environ.get("FILES_API_ROOT") 
 
 # ----------------------------------------------------------------------------
 # LOAD ASSETS FILES
@@ -137,7 +131,7 @@ def api_imaging():
     try:
         if not api_data_index['imaging'] or not check_data_current(datetime.strptime(api_data_index['imaging'], datetime_format)):
             api_date = datetime.now().strftime(datetime_format)
-            imaging_data = get_api_imaging_data(os.environ.get('FILES_API_ROOT'), os.environ.get('PORTAL_API_ROOT'), request.cookies.get('coresessionid'))
+            imaging_data = get_api_imaging_data(request.cookies.get('coresessionid'))
             if imaging_data:
                 api_data_cache['imaging'] = imaging_data
                 api_data_index['imaging'] = api_date
@@ -154,7 +148,7 @@ def api_consort():
     # try:
     if not api_data_index['consort'] or not check_data_current(datetime.strptime(api_data_index['consort'], datetime_format)):
         api_date = datetime.now().strftime(datetime_format)
-        consort_data_json = get_api_consort_data(os.environ.get('FILES_API_ROOT'), os.environ.get('PORTAL_API_ROOT'), request.cookies.get('coresessionid'))
+        consort_data_json = get_api_consort_data(request.cookies.get('coresessionid'))
         if consort_data_json:
             api_data_cache['consort'] = consort_data_json
             api_data_index['consort'] = api_date
@@ -172,7 +166,7 @@ def api_blood():
     try:
         if not api_data_index['blood'] or not check_data_current(datetime.strptime(api_data_index['blood'], datetime_format)):
             api_date = datetime.now().strftime(datetime_format)
-            blood_data, blood_data_request_status = get_api_blood_data(os.environ.get('FILES_API_ROOT'), os.environ.get('PORTAL_API_ROOT'), request.cookies.get('coresessionid'))
+            blood_data, blood_data_request_status = get_api_blood_data(request.cookies.get('coresessionid'))
             if blood_data:
                 api_data_index['blood'] = api_date
                 api_data_cache['blood'] = blood_data

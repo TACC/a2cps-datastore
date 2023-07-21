@@ -196,13 +196,14 @@ def get_local_subjects_raw(data_directory):
 # LOAD DATA FROM API
 # ----------------------------------------------------------------------------
 
-def get_api_consort_data(files_api_root = os.environ.get('FILES_API_ROOT'), 
-                          portal_api_root = os.environ.get('PORTAL_API_ROOT'), 
-                          coresessionid = None,
+def get_api_consort_data(coresessionid = None,
                           report='consort', 
                           report_suffix = 'consort-data-[mcc]-latest.csv'):
     '''Load data for a specified consort file. Handle 500 server errors'''
     try:
+        files_api_root = os.environ.get('FILES_API_ROOT') 
+        portal_api_root = os.environ.get('PORTAL_API_ROOT')
+
         tapis_token = get_tapis_token(portal_api_root, coresessionid)
 
         if tapis_token:
@@ -250,11 +251,12 @@ def get_api_consort_data(files_api_root = os.environ.get('FILES_API_ROOT'),
 
 ## Function to rebuild dataset from apis
 
-def get_api_imaging_data(files_api_root = os.environ.get('FILES_API_ROOT'), 
-                          portal_api_root = os.environ.get('PORTAL_API_ROOT'), 
-                          coresessionid = None):
+def get_api_imaging_data(coresessionid = None):
     ''' Load data from imaging api. Return bad status notice if hits Tapis API'''
     try:
+        files_api_root = os.environ.get('FILES_API_ROOT')
+        portal_api_root = os.environ.get('PORTAL_API_ROOT')
+        
         tapis_token = get_tapis_token(portal_api_root, coresessionid)
 
         if tapis_token:
@@ -297,11 +299,12 @@ def get_api_imaging_data(files_api_root = os.environ.get('FILES_API_ROOT'),
     
 
 ## Function to rebuild dataset from apis
-def get_api_blood_data(files_api_root = os.environ.get('FILES_API_ROOT'), 
-                          portal_api_root = os.environ.get('PORTAL_API_ROOT'), 
-                          coresessionid = None):
+def get_api_blood_data(coresessionid = None):
     ''' Load blood data from api'''
     try:
+        files_api_root = os.environ.get('FILES_API_ROOT')
+        portal_api_root = os.environ.get('PORTAL_API_ROOT')
+        
         current_datetime = datetime.now()
         tapis_token = get_tapis_token(portal_api_root, coresessionid)
         
