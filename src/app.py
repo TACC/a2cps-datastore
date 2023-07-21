@@ -131,7 +131,7 @@ def api_imaging():
     try:
         if not api_data_index['imaging'] or not check_data_current(datetime.strptime(api_data_index['imaging'], datetime_format)):
             api_date = datetime.now().strftime(datetime_format)
-            imaging_data = get_api_imaging_data(request.cookies)
+            imaging_data = get_api_imaging_data(request.cookies.get('coresessionid'))
             if imaging_data:
                 api_data_cache['imaging'] = imaging_data
                 api_data_index['imaging'] = api_date
@@ -148,7 +148,7 @@ def api_consort():
     # try:
     if not api_data_index['consort'] or not check_data_current(datetime.strptime(api_data_index['consort'], datetime_format)):
         api_date = datetime.now().strftime(datetime_format)
-        consort_data_json = get_api_consort_data(request.cookies)
+        consort_data_json = get_api_consort_data(request.cookies.get('coresessionid'))
         if consort_data_json:
             api_data_cache['consort'] = consort_data_json
             api_data_index['consort'] = api_date
@@ -166,7 +166,7 @@ def api_blood():
     try:
         if not api_data_index['blood'] or not check_data_current(datetime.strptime(api_data_index['blood'], datetime_format)):
             api_date = datetime.now().strftime(datetime_format)
-            blood_data, blood_data_request_status = get_api_blood_data(request.cookies)
+            blood_data, blood_data_request_status = get_api_blood_data(request.cookies.get('coresessionid'))
             if blood_data:
                 api_data_index['blood'] = api_date
                 api_data_cache['blood'] = blood_data
@@ -193,7 +193,7 @@ def api_subjects():
     try:
         if not api_data_index['subjects'] or not check_data_current(datetime.strptime(api_data_index['subjects'], datetime_format)):
             api_date = datetime.now().strftime(datetime_format)
-            latest_subjects_json = get_api_subjects_json(request.cookies)
+            latest_subjects_json = get_api_subjects_json(request.cookies.get('coresessionid'))
             if latest_subjects_json:
                 # latest_data = create_clean_subjects(latest_subjects_json, screening_sites, display_terms_dict, display_terms_dict_multi)
                 latest_data = process_subjects_data(latest_subjects_json,subjects_raw_cols_for_reports,screening_sites, display_terms_dict, display_terms_dict_multi)
