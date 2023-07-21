@@ -3,7 +3,6 @@ import traceback
 import os
 import io
 import requests
-import pathlib
 import json
 
 import numpy as np
@@ -11,7 +10,7 @@ import pandas as pd
 import sqlite3
 
 import datetime
-from datetime import datetime, timedelta
+from datetime import datetime
 
 
 # ----------------------------------------------------------------------------
@@ -196,13 +195,14 @@ def get_local_subjects_raw(data_directory):
 # LOAD DATA FROM API
 # ----------------------------------------------------------------------------
 
-def get_api_consort_data(coresessionid = None,
-                          report='consort', 
-                          report_suffix = 'consort-data-[mcc]-latest.csv'):
+def get_api_consort_data(cookie = None,
+                        report='consort', 
+                        report_suffix = 'consort-data-[mcc]-latest.csv'):
     '''Load data for a specified consort file. Handle 500 server errors'''
     try:
         files_api_root = os.environ.get('FILES_API_ROOT') 
         portal_api_root = os.environ.get('PORTAL_API_ROOT')
+        coresessionid = cookie['coresessionid']
 
         tapis_token = get_tapis_token(portal_api_root, coresessionid)
 
@@ -251,11 +251,12 @@ def get_api_consort_data(coresessionid = None,
 
 ## Function to rebuild dataset from apis
 
-def get_api_imaging_data(coresessionid = None):
+def get_api_imaging_data(cookie = None):
     ''' Load data from imaging api. Return bad status notice if hits Tapis API'''
     try:
         files_api_root = os.environ.get('FILES_API_ROOT')
         portal_api_root = os.environ.get('PORTAL_API_ROOT')
+        coresessionid = cookie['coresessionid']
         
         tapis_token = get_tapis_token(portal_api_root, coresessionid)
 
@@ -299,11 +300,12 @@ def get_api_imaging_data(coresessionid = None):
     
 
 ## Function to rebuild dataset from apis
-def get_api_blood_data(coresessionid = None):
+def get_api_blood_data(cookie = None):
     ''' Load blood data from api'''
     try:
         files_api_root = os.environ.get('FILES_API_ROOT')
         portal_api_root = os.environ.get('PORTAL_API_ROOT')
+        coresessionid = cookie['coresessionid']
         
         current_datetime = datetime.now()
         tapis_token = get_tapis_token(portal_api_root, coresessionid)
@@ -361,11 +363,12 @@ def get_api_blood_data(coresessionid = None):
     
     
 
-def get_api_subjects_json(coresessionid = None):
+def get_api_subjects_json(cookie = None):
     ''' Load subjects data from api. Note data needs to be cleaned, etc. to create properly formatted data product'''
     try:
         files_api_root = os.environ.get('FILES_API_ROOT') 
         portal_api_root = os.environ.get('PORTAL_API_ROOT')
+        coresessionid = cookie['coresessionid']
         
         tapis_token = get_tapis_token(portal_api_root, coresessionid)
 
