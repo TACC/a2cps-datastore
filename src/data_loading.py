@@ -12,6 +12,9 @@ import sqlite3
 import datetime
 from datetime import datetime
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 # ----------------------------------------------------------------------------
 # Updating data checks
@@ -240,7 +243,7 @@ def get_api_consort_data(cookie = None,
             return consort_data_json
         
         else:
-            print("Unauthorized attempt to access Consort data")
+            logger.warning("Unauthorized attempt to access Consort data")
             return None
 
     except Exception as e:
@@ -291,7 +294,7 @@ def get_api_imaging_data(cookie = None):
 
             return imaging_data_json
         else:
-            print("Unauthorized attempt to access Imaging data")
+            logger.warning("Unauthorized attempt to access Imaging data")
             return None
 
     except Exception as e:
@@ -354,7 +357,7 @@ def get_api_blood_data(cookie = None):
 
             return blood_data_json, request_status
         else:
-            print("Unauthorized attempt to access Blood data")
+            logger.warning("Unauthorized attempt to access Blood data")
             return None
 
     except Exception as e:
@@ -395,7 +398,7 @@ def get_api_subjects_json(cookie = None):
 
             return subjects_json
         else:
-            print("Unauthorized attempt to access Subjects data")
+            logger.warning("Unauthorized attempt to access Subjects data")
             return None
 
     except Exception as e:
@@ -409,10 +412,10 @@ def get_tapis_token(portal_api_root, coresessionid = None):
             tapis_token = response.json()['token']
             return tapis_token
         else:
-            print("Unauthorized to access tapis token")
+            logger.warning("Unauthorized to access tapis token")
             raise Exception
     except Exception as e:
-        print('portal api error: {}'.format(e))
+        logger.warning('portal api error: {}'.format(e))
         return False
 
 # ----------------------------------------------------------------------------
