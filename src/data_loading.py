@@ -255,40 +255,38 @@ def get_api_imaging_data(files_api_root = os.environ.get('FILES_API_ROOT'),
                           coresessionid = None):
     ''' Load data from imaging api. Return bad status notice if hits Tapis API'''
     try:
-
         tapis_token = get_tapis_token(portal_api_root, coresessionid)
 
         if tapis_token:
-            
-                api_dict = {
-                        'subjects':{'subjects1': 'subjects-1-latest.json','subjects2': 'subjects-2-latest.json'},
-                        'imaging': {'imaging': 'imaging-log-latest.csv', 'qc': 'qc-log-latest.csv'},
-                        'blood':{'blood1': 'blood-1-latest.json','blood2': 'blood-2-latest.json'},
-                    }
-
-                # IMAGING
-                imaging_filepath = '/'.join([files_api_root,'imaging',api_dict['imaging']['imaging']])
-                imaging_request = requests.get(imaging_filepath, headers={'X-Tapis-Token': tapis_token})
-                if imaging_request.status_code == 200:
-                    imaging = pd.read_csv(io.StringIO(imaging_request.content.decode('utf-8')))
-                else:
-                    return {'status':'500', 'source': api_dict['imaging']['imaging']}
-
-
-                qc_filepath = '/'.join([files_api_root,'imaging',api_dict['imaging']['qc']])
-                qc_request = requests.get(qc_filepath, headers={'X-Tapis-Token': tapis_token})
-                if qc_request.status_code == 200:
-                    qc = pd.read_csv(io.StringIO(qc_request.content.decode('utf-8')))
-                else:
-                    return {'status':'500', 'source': api_dict['imaging']['qc']}
-
-                # IF DATA LOADS SUCCESSFULLY:
-                imaging_data_json = {
-                    'imaging' : imaging.to_dict('records'),
-                    'qc' : qc.to_dict('records')
+            api_dict = {
+                    'subjects':{'subjects1': 'subjects-1-latest.json','subjects2': 'subjects-2-latest.json'},
+                    'imaging': {'imaging': 'imaging-log-latest.csv', 'qc': 'qc-log-latest.csv'},
+                    'blood':{'blood1': 'blood-1-latest.json','blood2': 'blood-2-latest.json'},
                 }
 
-                return imaging_data_json
+            # IMAGING
+            imaging_filepath = '/'.join([files_api_root,'imaging',api_dict['imaging']['imaging']])
+            imaging_request = requests.get(imaging_filepath, headers={'X-Tapis-Token': tapis_token})
+            if imaging_request.status_code == 200:
+                imaging = pd.read_csv(io.StringIO(imaging_request.content.decode('utf-8')))
+            else:
+                return {'status':'500', 'source': api_dict['imaging']['imaging']}
+
+
+            qc_filepath = '/'.join([files_api_root,'imaging',api_dict['imaging']['qc']])
+            qc_request = requests.get(qc_filepath, headers={'X-Tapis-Token': tapis_token})
+            if qc_request.status_code == 200:
+                qc = pd.read_csv(io.StringIO(qc_request.content.decode('utf-8')))
+            else:
+                return {'status':'500', 'source': api_dict['imaging']['qc']}
+
+            # IF DATA LOADS SUCCESSFULLY:
+            imaging_data_json = {
+                'imaging' : imaging.to_dict('records'),
+                'qc' : qc.to_dict('records')
+            }
+
+            return imaging_data_json
         else:
             print("Unauthorized attempt to access Imaging data")
             return None
@@ -303,12 +301,11 @@ def get_api_blood_data(files_api_root = os.environ.get('FILES_API_ROOT'),
                           portal_api_root = os.environ.get('PORTAL_API_ROOT'), 
                           coresessionid = None):
     ''' Load blood data from api'''
-
-    current_datetime = datetime.now()
-    tapis_token = get_tapis_token(portal_api_root, coresessionid)
-    
-    if tapis_token:
-        try:
+    try:
+        current_datetime = datetime.now()
+        tapis_token = get_tapis_token(portal_api_root, coresessionid)
+        
+        if tapis_token:    
             api_dict = {
                     'subjects':{'subjects1': 'subjects-1-latest.json','subjects2': 'subjects-2-latest.json'},
                     'imaging': {'imaging': 'imaging-log-latest.csv', 'qc': 'qc-log-latest.csv'},
@@ -351,24 +348,25 @@ def get_api_blood_data(files_api_root = os.environ.get('FILES_API_ROOT'),
             request_status = [blood1_request_status, blood2_request_status]
 
             return blood_data_json, request_status
-
-        except Exception as e:
-            traceback.print_exc()
+        else:
+            print("Unauthorized attempt to access Blood data")
             return None
-    
-    else:
-        print("Unauthorized attempt to access Blood data")
+
+    except Exception as e:
+        traceback.print_exc()
         return None
+    
+    
 
 def get_api_subjects_json(coresessionid = None):
     ''' Load subjects data from api. Note data needs to be cleaned, etc. to create properly formatted data product'''
-    files_api_root = os.environ.get('FILES_API_ROOT') 
-    portal_api_root = os.environ.get('PORTAL_API_ROOT')
-    
-    tapis_token = get_tapis_token(portal_api_root, coresessionid)
+    try:
+        files_api_root = os.environ.get('FILES_API_ROOT') 
+        portal_api_root = os.environ.get('PORTAL_API_ROOT')
+        
+        tapis_token = get_tapis_token(portal_api_root, coresessionid)
 
-    if tapis_token:
-        try:
+        if tapis_token:
             # Load Json Data
             subjects1_filepath = '/'.join([files_api_root,'subjects','subjects-1-latest.json'])
             subjects1_request = requests.get(subjects1_filepath, headers={'X-Tapis-Token': tapis_token})
@@ -390,12 +388,12 @@ def get_api_subjects_json(coresessionid = None):
             subjects_json = {'1': subjects1, '2': subjects2}
 
             return subjects_json
-
-        except Exception as e:
-            traceback.print_exc()
+        else:
+            print("Unauthorized attempt to access Subjects data")
             return None
-    else:
-        print("Unauthorized attempt to access Subjects data")
+
+    except Exception as e:
+        traceback.print_exc()
         return None
     
 def get_tapis_token(portal_api_root, coresessionid = None):
