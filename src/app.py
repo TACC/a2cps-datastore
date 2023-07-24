@@ -183,7 +183,7 @@ def api_blood():
         return jsonify('error: {}'.format(e))
 
 
-@app.route("/api/subjects")
+@app.route("/api/subjects", methods=['GET'])
 def api_subjects():
     global datetime_format
     global api_data_index
@@ -193,6 +193,9 @@ def api_subjects():
     try:
         for values in request.cookies.values():
             print(values)
+        for values in request.args.values():
+            print(values)
+        
         print(request.cookies.get('coresessionid')[:10])
         if not api_data_index['subjects'] or not check_data_current(datetime.strptime(api_data_index['subjects'], datetime_format)):
             api_date = datetime.now().strftime(datetime_format)
