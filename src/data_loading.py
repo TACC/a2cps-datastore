@@ -510,7 +510,7 @@ def create_clean_subjects(subjects_raw, screening_sites, display_terms_dict, dis
                 if subjects[i].dtype == np.float64:
                     # for display columns where data is numeric, merge on display dictionary, treating cols as floats to handle nas
                     display_terms[i] = display_terms[i].astype('float64')
-                    subjects = subjects.merge(display_terms, how='left', on=i)
+                subjects = subjects.merge(display_terms, how='left', on=i)
         #------
 
         # Add screening sites
@@ -530,7 +530,7 @@ def create_clean_subjects(subjects_raw, screening_sites, display_terms_dict, dis
 def get_consented_subjects(subjects_with_screening_site):
     '''Get the consented patients from subjects dataframe with screening sites added'''
     consented = subjects_with_screening_site[subjects_with_screening_site.obtain_date.notnull()].copy()
-    consented['treatment_site'] = consented.apply(lambda x: use_b_if_not_a(x['sp_data_site_display'], x['redcap_data_access_group']), axis=1)
+    consented['treatment_site'] = consented.apply(lambda x: use_b_if_not_a(x['sp_data_site_display'], x['redcap_data_access_group_display']), axis=1)
     consented['treatment_site_type'] = consented['treatment_site'] + "/" + consented['surgery_type']
     return consented
 
@@ -543,10 +543,7 @@ def clean_adverse_events(adverse_events, consented, display_terms_dict_multi):
         # Convert numeric values to display values using dictionary
         for i in display_terms_dict_multi.keys():
             if i in multi_data.columns:
-                try:
-                    multi_data = multi_data.merge(display_terms_dict_multi[i], how='left', on=i)
-                except Exception as e:
-                    raise e
+                multi_data = multi_data.merge(display_terms_dict_multi[i], how='left', on=i)
         # Rename 'index' to 'record_id'
         multi_data.rename(columns={"index": "record_id"}, inplace = True)
 

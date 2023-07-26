@@ -184,7 +184,7 @@ def api_blood():
         return jsonify('error: {}'.format(e))
 
 
-@app.route("/api/subjects", methods=['GET'])
+@app.route("/api/subjects")
 def api_subjects():
     global datetime_format
     global api_data_index
