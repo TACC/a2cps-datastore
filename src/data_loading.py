@@ -14,7 +14,8 @@ from datetime import datetime
 
 import logging
 logger = logging.getLogger(__name__)
-
+files_api_root = os.environ.get('FILES_API_ROOT') 
+portal_api_root = os.environ.get('PORTAL_API_ROOT')
 
 # ----------------------------------------------------------------------------
 # Updating data checks
@@ -197,15 +198,12 @@ def get_local_subjects_raw(data_directory):
 # LOAD DATA FROM API
 # ----------------------------------------------------------------------------
 
-def get_api_consort_data(coresessionid = None,
+def get_api_consort_data(api_request,
                         report='consort', 
                         report_suffix = 'consort-data-[mcc]-latest.csv'):
     '''Load data for a specified consort file. Handle 500 server errors'''
     try:
-        files_api_root = os.environ.get('FILES_API_ROOT') 
-        portal_api_root = os.environ.get('PORTAL_API_ROOT')
-
-        tapis_token = get_tapis_token(portal_api_root, coresessionid)
+        tapis_token = get_tapis_token(api_request)
 
         if tapis_token:
             cosort_columns = ['source','target','value', 'mcc']
@@ -252,13 +250,10 @@ def get_api_consort_data(coresessionid = None,
 
 ## Function to rebuild dataset from apis
 
-def get_api_imaging_data(coresessionid = None):
+def get_api_imaging_data(api_request):
     ''' Load data from imaging api. Return bad status notice if hits Tapis API'''
-    try:
-        files_api_root = os.environ.get('FILES_API_ROOT')
-        portal_api_root = os.environ.get('PORTAL_API_ROOT')
-        
-        tapis_token = get_tapis_token(portal_api_root, coresessionid)
+    try:       
+        tapis_token = get_tapis_token(api_request)
 
         if tapis_token:
             api_dict = {
@@ -300,14 +295,11 @@ def get_api_imaging_data(coresessionid = None):
     
 
 ## Function to rebuild dataset from apis
-def get_api_blood_data(coresessionid = None):
+def get_api_blood_data(api_request):
     ''' Load blood data from api'''
-    try:
-        files_api_root = os.environ.get('FILES_API_ROOT')
-        portal_api_root = os.environ.get('PORTAL_API_ROOT')
-        
+    try:      
         current_datetime = datetime.now()
-        tapis_token = get_tapis_token(portal_api_root, coresessionid)
+        tapis_token = get_tapis_token(api_request)
         
         if tapis_token:    
             api_dict = {
@@ -362,14 +354,10 @@ def get_api_blood_data(coresessionid = None):
     
     
 
-def get_api_subjects_json(coresessionid):
+def get_api_subjects_json(api_request):
     ''' Load subjects data from api. Note data needs to be cleaned, etc. to create properly formatted data product'''
-    print(coresessionid[:10])
-    try:
-        files_api_root = os.environ.get('FILES_API_ROOT') 
-        portal_api_root = os.environ.get('PORTAL_API_ROOT')
-        
-        tapis_token = get_tapis_token(portal_api_root, coresessionid)
+    try:        
+        tapis_token = get_tapis_token(api_request)
 
         if tapis_token:
             # Load Json Data
@@ -400,11 +388,11 @@ def get_api_subjects_json(coresessionid):
     except Exception as e:
         traceback.print_exc()
         return None
-    
-def get_tapis_token(portal_api_root, coresessionid = None):
+
+def get_tapis_token(api_request):
     try:
-        response = requests.get(portal_api_root + '/auth/tapis/', headers={'cookie':'coresessionid=' + coresessionid})
-        print(response)
+        response = requests.get(portal_api_root + '/auth/tapis/', cookies=api_request.cookies)
+                                #headers={'cookie':'coresessionid=' + api_request.cookies.get('coresessionid')})
         if response:
             tapis_token = response.json()['token']
             return tapis_token
