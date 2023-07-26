@@ -404,6 +404,7 @@ def get_api_subjects_json(coresessionid):
 def get_tapis_token(portal_api_root, coresessionid = None):
     try:
         response = requests.get(portal_api_root + '/auth/tapis/', headers={'cookie':'coresessionid=' + coresessionid})
+        print(response)
         if response:
             tapis_token = response.json()['token']
             return tapis_token

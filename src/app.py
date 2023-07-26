@@ -117,6 +117,7 @@ api_data_simple = {
 }
 
 app = Flask(__name__)
+app.debug = True
 
 # APIS: try to load new data, if doesn't work, get most recent
 @app.route("/api/apis")
@@ -191,12 +192,6 @@ def api_subjects():
     global subjects_raw_cols_for_reports
 
     try:
-        # for values in request.cookies.values():
-        #     print(values)
-        # for values in request.args.values():
-        #     print(values)
-        
-        print(request.args.get('coresessionid')[:10])
         if not api_data_index['subjects'] or not check_data_current(datetime.strptime(api_data_index['subjects'], datetime_format)):
             api_date = datetime.now().strftime(datetime_format)
             latest_subjects_json = get_api_subjects_json(request.args.get('coresessionid'))
