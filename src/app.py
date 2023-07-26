@@ -166,6 +166,7 @@ def api_blood():
     global api_data_cache
     try:
         if not api_data_index['blood'] or not check_data_current(datetime.strptime(api_data_index['blood'], datetime_format)):
+            __print_request()
             api_date = datetime.now().strftime(datetime_format)
             blood_data, blood_data_request_status = get_api_blood_data(request.cookies.get('coresessionid'))
             if blood_data:
@@ -194,7 +195,8 @@ def api_subjects():
     try:
         if not api_data_index['subjects'] or not check_data_current(datetime.strptime(api_data_index['subjects'], datetime_format)):
             api_date = datetime.now().strftime(datetime_format)
-            latest_subjects_json = get_api_subjects_json(request.args.get('coresessionid'))
+            __print_request()
+            latest_subjects_json = get_api_subjects_json(request.cookies.get('coresessionid'))
             if latest_subjects_json:
                 # latest_data = create_clean_subjects(latest_subjects_json, screening_sites, display_terms_dict, display_terms_dict_multi)
                 latest_data = process_subjects_data(latest_subjects_json,subjects_raw_cols_for_reports,screening_sites, display_terms_dict, display_terms_dict_multi)
@@ -237,7 +239,15 @@ def api_simple():
         return jsonify('not found')
 
 
+def __print_request():
+    print("Request Method:", request.method)
+    print("Request URL:", request.url)
+    print("Request Cookies:", request.cookies)
+    print("Request Headers:", request.headers)
+    print("Request Args:", request.args)
+    print("Request Data:", request.data)
 
+    
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
