@@ -52,31 +52,34 @@ subjects_raw_cols_for_reports = ['ewcomments',
  'main_record_id',
  'sp_mricompatscr',
  'ewdateterm']
+
+
 # ----------------------------------------------------------------------------
 # LOAD INITAL DATA FROM FILES
 # ----------------------------------------------------------------------------
 
-local_date = '2022-09-08'
+# local_date = '2022-09-08'
+local_data_date = '2022-09-08'
 
-local_imaging_data = {
-    'date': local_date,
-    'data': get_local_imaging_data(DATA_PATH)}
+# local_imaging_data = {
+#     'date': local_date,
+#     'data': get_local_imaging_data(DATA_PATH)}
 
-local_blood_data = {
-    'date': local_date,
-    'data': get_local_blood_data(DATA_PATH)}
+# local_blood_data = {
+#     'date': local_date,
+#     'data': get_local_blood_data(DATA_PATH)}
 
-subjects_raw = get_local_subjects_raw(DATA_PATH)
-local_subjects_data = {
-    'date': local_date,
-    'data': process_subjects_data(subjects_raw,subjects_raw_cols_for_reports,screening_sites, display_terms_dict, display_terms_dict_multi)
-    }
+# subjects_raw = get_local_subjects_raw(DATA_PATH)
+# local_subjects_data = {
+#     'date': local_date,
+#     'data': process_subjects_data(subjects_raw,subjects_raw_cols_for_reports,screening_sites, display_terms_dict, display_terms_dict_multi)
+#     }
 
-local_data = {
-        'imaging': local_imaging_data,
-        'blood': local_imaging_data,
-        'subjects': local_subjects_data
-}
+# local_data = {
+#         'imaging': local_imaging_data,
+#         'blood': local_imaging_data,
+#         'subjects': local_subjects_data
+# }
 
 # ----------------------------------------------------------------------------
 # APIS
@@ -131,11 +134,17 @@ def api_imaging():
     global api_data_cache
     try:
         if not api_data_index['imaging'] or not check_data_current(datetime.strptime(api_data_index['imaging'], datetime_format)):
-            api_date = datetime.now().strftime(datetime_format)
-            imaging_data = get_api_imaging_data(request)
+            if data_access_type != 'LOCAL':
+                data_date = datetime.now().strftime(datetime_format)
+                imaging_data = get_api_imaging_data(request)
+            else:
+                data_date = local_data_date
+                imaging_data = get_local_imaging_data(DATA_PATH)
+            
             if imaging_data:
+                api_data_index['imaging'] = data_date
                 api_data_cache['imaging'] = imaging_data
-                api_data_index['imaging'] = api_date
+                
         return jsonify({'date': api_data_index['imaging'], 'data': api_data_cache['imaging']})
     except Exception as e:
         traceback.print_exc()
@@ -194,13 +203,19 @@ def api_subjects():
     try:
         if not api_data_index['subjects'] or not check_data_current(datetime.strptime(api_data_index['subjects'], datetime_format)):
             api_date = datetime.now().strftime(datetime_format)
-            latest_subjects_json = get_api_subjects_json(request)
+            if data_access_type != 'LOCAL':
+                data_date = datetime.now().strftime(datetime_format)
+                latest_subjects_json = get_api_subjects_json(request)
+            else:
+                data_date = local_data_date
+                latest_subjects_json = get_local_subjects_raw(DATA_PATH)
             if latest_subjects_json:
                 # latest_data = create_clean_subjects(latest_subjects_json, screening_sites, display_terms_dict, display_terms_dict_multi)
                 latest_data = process_subjects_data(latest_subjects_json,subjects_raw_cols_for_reports,screening_sites, display_terms_dict, display_terms_dict_multi)
 
+                api_data_index['subjects'] = data_date
                 api_data_cache['subjects'] = latest_data
-                api_data_index['subjects'] = api_date
+                
 
         return jsonify({'date': api_data_index['subjects'], 'data': api_data_cache['subjects']})
     except Exception as e:
