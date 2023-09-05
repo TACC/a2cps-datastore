@@ -14,8 +14,23 @@ from datetime import datetime
 
 import logging
 logger = logging.getLogger(__name__)
+
+
+# ----------------------------------------------------------------------------
+# ENV Variables
+# ----------------------------------------------------------------------------
+data_access_type = os.environ.get('DATA_ACCESS_TYPE')
 files_api_root = os.environ.get('FILES_API_ROOT') 
 portal_api_root = os.environ.get('PORTAL_API_ROOT')
+
+# LOCAL DATA SETTINGS
+local_data_path = os.environ.get("LOCAL_DATA_PATH","")
+local_data_date = os.environ.get("LOCAL_DATA_DATE","2022-01-01")
+
+current_folder = os.path.dirname(__file__)
+DATA_PATH = os.path.join(current_folder,local_data_path)
+ASSETS_PATH = os.path.join(current_folder,'assets')
+
 
 # ----------------------------------------------------------------------------
 # Updating data checks
@@ -80,28 +95,6 @@ def move_column_inplace(df, col, pos):
 # DATA DISPLAY DICTIONARIES
 # ----------------------------------------------------------------------------
 
-def load_display_terms(ASSETS_PATH, display_terms_file):
-    '''Load the data file that explains how to translate the data columns and controlled terms into the English language
-    terms to be displayed to the user'''
-    try:
-        if ASSETS_PATH:
-            display_terms = pd.read_csv(os.path.join(ASSETS_PATH, display_terms_file))
-        else:
-            display_terms = pd.read_csv(display_terms_file)
-
-        # Get display terms dictionary for one-to-one records
-        display_terms_uni = display_terms[display_terms.multi == 0]
-        display_terms_dict = get_display_dictionary(display_terms_uni, 'api_field', 'api_value', 'display_text')
-
-        # Get display terms dictionary for one-to-many records
-        display_terms_multi = display_terms[display_terms.multi == 1]
-        display_terms_dict_multi = get_display_dictionary(display_terms_multi, 'api_field', 'api_value', 'display_text')
-
-        return display_terms, display_terms_dict, display_terms_dict_multi
-    except Exception as e:
-        traceback.print_exc()
-        return None
-
 def get_display_dictionary(display_terms, api_field, api_value, display_col):
     '''from a dataframe with the table display information, create a dictionary by field to match the database
     value to a value for use in the UI '''
@@ -118,6 +111,26 @@ def get_display_dictionary(display_terms, api_field, api_value, display_col):
             display_terms_dict[i] = term_df
         return display_terms_dict
 
+    except Exception as e:
+        traceback.print_exc()
+        return None
+
+
+def load_display_terms_from_github(display_terms_gihub_raw_url):
+    '''Load the data file that explains how to translate the data columns and controlled terms into the English language
+    terms to be displayed to the user'''
+    try:
+        display_terms = pd.read_csv(display_terms_gihub_raw_url)
+
+        # Get display terms dictionary for one-to-one records
+        display_terms_uni = display_terms[display_terms.multi == 0]
+        display_terms_dict = get_display_dictionary(display_terms_uni, 'api_field', 'api_value', 'display_text')
+
+        # Get display terms dictionary for one-to-many records
+        display_terms_multi = display_terms[display_terms.multi == 1]
+        display_terms_dict_multi = get_display_dictionary(display_terms_multi, 'api_field', 'api_value', 'display_text')
+
+        return display_terms, display_terms_dict, display_terms_dict_multi
     except Exception as e:
         traceback.print_exc()
         return None
@@ -197,6 +210,20 @@ def get_local_subjects_raw(data_directory):
 # ----------------------------------------------------------------------------
 # LOAD DATA FROM API
 # ----------------------------------------------------------------------------
+# Get Tapis token if authorized to access data files
+def get_tapis_token(api_request):
+    try:
+        response = requests.get(portal_api_root + '/auth/tapis/', cookies=api_request.cookies)
+                                #headers={'cookie':'coresessionid=' + api_request.cookies.get('coresessionid')})
+        if response:
+            tapis_token = response.json()['token']
+            return tapis_token
+        else:
+            logger.warning("Unauthorized to access tapis token")
+            raise Exception
+    except Exception as e:
+        logger.warning('portal api error: {}'.format(e))
+        return False
 
 def get_api_consort_data(api_request,
                         report='consort', 
@@ -246,8 +273,6 @@ def get_api_consort_data(api_request,
         traceback.print_exc()
         return None
 
-    
-
 ## Function to rebuild dataset from apis
 
 def get_api_imaging_data(api_request):
@@ -256,27 +281,21 @@ def get_api_imaging_data(api_request):
         tapis_token = get_tapis_token(api_request)
 
         if tapis_token:
-            api_dict = {
-                    'subjects':{'subjects1': 'subjects-1-latest.json','subjects2': 'subjects-2-latest.json'},
-                    'imaging': {'imaging': 'imaging-log-latest.csv', 'qc': 'qc-log-latest.csv'},
-                    'blood':{'blood1': 'blood-1-latest.json','blood2': 'blood-2-latest.json'},
-                }
-
             # IMAGING
-            imaging_filepath = '/'.join([files_api_root,'imaging',api_dict['imaging']['imaging']])
+            imaging_filepath = '/'.join([files_api_root,'imaging','imaging-log-latest.csv'])
             imaging_request = requests.get(imaging_filepath, headers={'X-Tapis-Token': tapis_token})
             if imaging_request.status_code == 200:
                 imaging = pd.read_csv(io.StringIO(imaging_request.content.decode('utf-8')))
             else:
-                return {'status':'500', 'source': api_dict['imaging']['imaging']}
+                return {'status':'500', 'source': 'imaging-log-latest.csv'}
 
 
-            qc_filepath = '/'.join([files_api_root,'imaging',api_dict['imaging']['qc']])
+            qc_filepath = '/'.join([files_api_root,'imaging','qc-log-latest.csv'])
             qc_request = requests.get(qc_filepath, headers={'X-Tapis-Token': tapis_token})
             if qc_request.status_code == 200:
                 qc = pd.read_csv(io.StringIO(qc_request.content.decode('utf-8')))
             else:
-                return {'status':'500', 'source': api_dict['imaging']['qc']}
+                return {'status':'500', 'source': 'qc-log-latest.csv'}
 
             # IF DATA LOADS SUCCESSFULLY:
             imaging_data_json = {
@@ -351,8 +370,7 @@ def get_api_blood_data(api_request):
     except Exception as e:
         traceback.print_exc()
         return None
-    
-    
+       
 
 def get_api_subjects_json(api_request):
     ''' Load subjects data from api. Note data needs to be cleaned, etc. to create properly formatted data product'''
@@ -389,19 +407,6 @@ def get_api_subjects_json(api_request):
         traceback.print_exc()
         return None
 
-def get_tapis_token(api_request):
-    try:
-        response = requests.get(portal_api_root + '/auth/tapis/', cookies=api_request.cookies)
-                                #headers={'cookie':'coresessionid=' + api_request.cookies.get('coresessionid')})
-        if response:
-            tapis_token = response.json()['token']
-            return tapis_token
-        else:
-            logger.warning("Unauthorized to access tapis token")
-            raise Exception
-    except Exception as e:
-        logger.warning('portal api error: {}'.format(e))
-        return False
 
 # ----------------------------------------------------------------------------
 # PROCESS SUBJECTS DATA
