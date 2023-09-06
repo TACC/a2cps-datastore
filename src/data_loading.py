@@ -139,11 +139,11 @@ def load_display_terms_from_github(display_terms_gihub_raw_url):
 # LOAD DATA FROM LOCAL FILES, Return *JSON*
 # ----------------------------------------------------------------------------
 
-def get_local_imaging_data(data_directory):
+def get_local_imaging_data(imaging_filepath, qc_filepath):
     ''' Load data from local imaging files. '''
     try:
-        imaging = pd.read_csv(os.path.join(data_directory,'imaging','imaging-log-latest.csv'))
-        qc = pd.read_csv(os.path.join(data_directory,'imaging','qc-log-latest.csv'))
+        imaging = pd.read_csv(imaging_filepath)
+        qc = pd.read_csv(qc_filepath)
 
         imaging_data_json = {
             'imaging' : imaging.to_dict('records'),
@@ -156,45 +156,13 @@ def get_local_imaging_data(data_directory):
         traceback.print_exc()
         return {'status': 'Problem with local imaging files'}
 
-def get_local_blood_data(data_directory):
+def get_local_subjects_raw(subjects1_filepath, subjects2_filepath):
     ''' Load subjects data from local files'''
-
+    print(subjects1_filepath, subjects2_filepath)
     try:
-        blood_json = {}
-
-        blood1_filepath = '/'.join([data_directory,'blood','blood-1-latest.json'])
-        with open(blood1_filepath) as file:
-            blood1 = json.load(file)
-
-        blood2_filepath = '/'.join([data_directory,'blood','blood-2-latest.json'])
-        with open(blood2_filepath) as file:
-            blood2 = json.load(file)
-
-         # Create combined json
-        blood_json = {'1': blood1, '2': blood2}
-
-        return blood_json
-        blood = bloodjson_to_df(blood_json, ['1','2'])
-        blood = simplify_blooddata(blood)
-
-        blood_data_json = {
-            'blood' : blood.to_dict('records')
-        }
-
-        return blood_data_json
-
-    except Exception as e:
-        traceback.print_exc()
-        return {'Stats': 'Blood data not available'}
-
-def get_local_subjects_raw(data_directory):
-    ''' Load subjects data from local files'''
-    try:
-        subjects1_filepath = os.path.join(data_directory,'subjects','subjects-1-latest.json')
         with open(subjects1_filepath) as file:
             subjects1 = json.load(file)
 
-        subjects2_filepath = os.path.join(data_directory,'subjects','subjects-2-latest.json')
         with open(subjects2_filepath) as file:
             subjects2 = json.load(file)
 
@@ -206,6 +174,38 @@ def get_local_subjects_raw(data_directory):
     except Exception as e:
         traceback.print_exc()
         return {'Stats': 'Subjects data not available'}
+
+
+def get_local_blood_data(blood1_filepath, blood2_filepath):
+    ''' Load blood data from local files'''
+
+    try:
+        blood_json = {}
+
+        with open(blood1_filepath) as file:
+            blood1 = json.load(file)
+
+        with open(blood2_filepath) as file:
+            blood2 = json.load(file)
+
+         # Create combined json
+        blood_json = {'1': blood1, '2': blood2}
+
+        blood = bloodjson_to_df(blood_json, ['1','2'])
+        blood = simplify_blooddata(blood)
+
+        blood_data_json = {
+            'blood' : blood.to_dict('records')
+        }
+
+        request_status = ['local file']
+
+        return blood_data_json, request_status
+
+    except Exception as e:
+        traceback.print_exc()
+        return {'Stats': 'Blood data not available'}
+
 
 # ----------------------------------------------------------------------------
 # LOAD DATA FROM API
@@ -321,17 +321,11 @@ def get_api_blood_data(api_request):
         tapis_token = get_tapis_token(api_request)
         
         if tapis_token:    
-            api_dict = {
-                    'subjects':{'subjects1': 'subjects-1-latest.json','subjects2': 'subjects-2-latest.json'},
-                    'imaging': {'imaging': 'imaging-log-latest.csv', 'qc': 'qc-log-latest.csv'},
-                    'blood':{'blood1': 'blood-1-latest.json','blood2': 'blood-2-latest.json'},
-                }
-
             # BLOOD
-            blood1_filepath = '/'.join([files_api_root,'blood',api_dict['blood']['blood1']])
+            blood1_filepath = '/'.join([files_api_root,'blood','blood-1-latest.json'])
             blood1_request = requests.get(blood1_filepath, headers={'X-Tapis-Token': tapis_token})
 
-            blood2_filepath = '/'.join([files_api_root,'blood',api_dict['blood']['blood2']])
+            blood2_filepath = '/'.join([files_api_root,'blood','blood-2-latest.json'])
             blood2_request = requests.get(blood2_filepath, headers={'X-Tapis-Token': tapis_token})
 
             if blood1_request.status_code == 200:
