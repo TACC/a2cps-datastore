@@ -24,7 +24,7 @@ blood2_filepath = os.path.join(local_data_path,os.environ.get("BLOOD2_FILE"))
 subjects1_filepath = os.path.join(local_data_path,os.environ.get("SUBJECTS1_FILE"))
 subjects2_filepath = os.path.join(local_data_path,os.environ.get("SUBJECTS2_FILE"))
 
-print(local_data_path, local_data_date, subjects2_filepath)
+print(local_data_path, local_data_date, subjects1_filepath, subjects2_filepath)
 
 
 # ----------------------------------------------------------------------------
@@ -40,31 +40,32 @@ screening_sites = pd.read_csv(screening_sites_github_url)
 display_terms, display_terms_dict, display_terms_dict_multi = load_display_terms_from_github(display_terms_github_url)
 
 # Columns used in reports [UPDATE THIS IF START TO USE MORE]
-subjects_raw_cols_for_reports = ['ewcomments',
- 'start_v3_3mo',
- 'start_12mo',
- 'sp_inclage1884',
- 'start_v2_6wk',
- 'obtain_date',
- 'sp_inclcomply',
- 'participation_interest',
- 'sp_inclsurg',
- 'sp_exclnoreadspkenglish',
- 'ptinterest_comment',
- 'reason_not_interested',
- 'start_v1_preop',
- 'sp_exclarthkneerep',
- 'sp_surg_date',
- 'sp_exclprevbilthorpro',
- 'sp_exclothmajorsurg',
- 'sp_exclbilkneerep',
- 'age',
- 'sp_exclinfdxjoint',
- 'screening_age',
- 'start_6mo',
- 'main_record_id',
- 'sp_mricompatscr',
- 'ewdateterm']
+subjects_raw_cols_for_reports = ['index',
+                                'ewcomments',
+                                'start_v3_3mo',
+                                'start_12mo',
+                                'sp_inclage1884',
+                                'start_v2_6wk',
+                                'obtain_date',
+                                'sp_inclcomply',
+                                'participation_interest',
+                                'sp_inclsurg',
+                                'sp_exclnoreadspkenglish',
+                                'ptinterest_comment',
+                                'reason_not_interested',
+                                'start_v1_preop',
+                                'sp_exclarthkneerep',
+                                'sp_surg_date',
+                                'sp_exclprevbilthorpro',
+                                'sp_exclothmajorsurg',
+                                'sp_exclbilkneerep',
+                                'age',
+                                'sp_exclinfdxjoint',
+                                'screening_age',
+                                'start_6mo',
+                                'main_record_id',
+                                'sp_mricompatscr',
+                                'ewdateterm']
 
 
 
@@ -213,19 +214,47 @@ def api_subjects():
             else:
                 data_date = local_data_date
                 latest_subjects_json = get_local_subjects_raw(subjects1_filepath, subjects2_filepath)
-            if latest_subjects_json:
-                latest_data = create_clean_subjects(latest_subjects_json, screening_sites, display_terms_dict, display_terms_dict_multi)
-                latest_data = process_subjects_data(latest_subjects_json,subjects_raw_cols_for_reports,screening_sites, display_terms_dict, display_terms_dict_multi)
+                print(latest_subjects_json.keys())
 
-                api_data_index['subjects'] = data_date
-                api_data_cache['subjects'] = latest_subjects_json  # latest_data
-                
+            # if latest_subjects_json:
+            latest_data = process_subjects_data(latest_subjects_json,subjects_raw_cols_for_reports,screening_sites, display_terms_dict, display_terms_dict_multi)
+
+            api_data_index['subjects'] = data_date
+            api_data_cache['subjects'] = latest_data  
+
+            with open("combined_subjects","w") as outfile:
+                outfile.write(api_data_cache['subjects'])
+        
 
         return jsonify({'date': api_data_index['subjects'], 'data': api_data_cache['subjects']})
     except Exception as e:
         traceback.print_exc()
         return jsonify('error: {}'.format(e))
 
+@app.route("/api/subjects_debug")
+def api_subjects_debug():
+    global datetime_format
+    global api_data_index
+    global api_data_cache
+    global subjects_raw_cols_for_reports
+
+    try:
+
+        data_date = local_data_date
+        latest_subjects_json = get_local_subjects_raw(subjects1_filepath, subjects2_filepath)
+        print(latest_subjects_json.keys())
+
+        latest_data = latest_subjects_json
+        # latest_data = process_subjects_data(latest_subjects_json,subjects_raw_cols_for_reports,screening_sites, display_terms_dict, display_terms_dict_multi)
+
+        api_data_index['subjects'] = data_date
+        api_data_cache['subjects'] = latest_data  
+
+
+        return jsonify({'date': api_data_index['subjects'], 'data': api_data_cache['subjects']})
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify('error: {}'.format(e))
 
 # @app.route("/api/full")
 # def api_full():
