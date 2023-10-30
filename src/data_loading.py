@@ -11,9 +11,9 @@ import sqlite3
 
 import datetime
 from datetime import datetime
+from retrying import retry
 
 import logging
-logger = logging.getLogger(__name__)
 
 
 # ----------------------------------------------------------------------------
@@ -210,28 +210,31 @@ def get_local_blood_data(blood1_filepath, blood2_filepath):
 # ----------------------------------------------------------------------------
 # LOAD DATA FROM API
 # ----------------------------------------------------------------------------
+
+# Retry handler for requests
+@retry(wait_exponential_multiplier=500, wait_exponential_max=5000, stop_max_attempt_number=3)
+def make_request_with_retry(url, cookies):
+    return requests.get(url, cookies=cookies)
+
 # Get Tapis token if authorized to access data files
 def get_tapis_token(api_request):
     try:
-        response = requests.get(portal_api_root + '/auth/tapis/', cookies=api_request.cookies)
-                                #headers={'cookie':'coresessionid=' + api_request.cookies.get('coresessionid')})
+        response = make_request_with_retry(portal_api_root + '/auth/tapis/', api_request.cookies)
         if response:
             tapis_token = response.json()['token']
             return tapis_token
         else:
-            logger.warning("Unauthorized to access tapis token")
+            logging.exception("Unauthorized to access tapis token.")
             raise Exception
     except Exception as e:
-        logger.warning('portal api error: {}'.format(e))
+        logging.exception('portal api error: {}'.format(e))
         return False
 
-def get_api_consort_data(api_request,
+def get_api_consort_data(tapis_token,
                         report='consort', 
                         report_suffix = 'consort-data-[mcc]-latest.csv'):
     '''Load data for a specified consort file. Handle 500 server errors'''
     try:
-        tapis_token = get_tapis_token(api_request)
-
         if tapis_token:
             cosort_columns = ['source','target','value', 'mcc']
             consort_df = pd.DataFrame(columns=cosort_columns)
@@ -266,7 +269,7 @@ def get_api_consort_data(api_request,
             return consort_data_json
         
         else:
-            logger.warning("Unauthorized attempt to access Consort data")
+            logging.warning("Unauthorized attempt to access Consort data")
             return None
 
     except Exception as e:
@@ -275,11 +278,9 @@ def get_api_consort_data(api_request,
 
 ## Function to rebuild dataset from apis
 
-def get_api_imaging_data(api_request):
+def get_api_imaging_data(tapis_token):
     ''' Load data from imaging api. Return bad status notice if hits Tapis API'''
-    try:       
-        tapis_token = get_tapis_token(api_request)
-
+    try: 
         if tapis_token:
             # IMAGING
             imaging_filepath = '/'.join([files_api_root,'imaging','imaging-log-latest.csv'])
@@ -305,7 +306,7 @@ def get_api_imaging_data(api_request):
 
             return imaging_data_json
         else:
-            logger.warning("Unauthorized attempt to access Imaging data")
+            logging.exception("Unauthorized attempt to access Imaging data")
             return None
 
     except Exception as e:
@@ -314,11 +315,10 @@ def get_api_imaging_data(api_request):
     
 
 ## Function to rebuild dataset from apis
-def get_api_blood_data(api_request):
+def get_api_blood_data(tapis_token):
     ''' Load blood data from api'''
     try:      
         current_datetime = datetime.now()
-        tapis_token = get_tapis_token(api_request)
         
         if tapis_token:    
             # BLOOD
@@ -358,7 +358,7 @@ def get_api_blood_data(api_request):
 
             return blood_data_json, request_status
         else:
-            logger.warning("Unauthorized attempt to access Blood data")
+            logging.exception("Unauthorized attempt to access Blood data")
             return None
 
     except Exception as e:
@@ -366,11 +366,9 @@ def get_api_blood_data(api_request):
         return None
        
 
-def get_api_subjects_json(api_request):
+def get_api_subjects_json(tapis_token):
     ''' Load subjects data from api. Note data needs to be cleaned, etc. to create properly formatted data product'''
-    try:        
-        tapis_token = get_tapis_token(api_request)
-
+    try:
         if tapis_token:
             # Load Json Data
             subjects1_filepath = '/'.join([files_api_root,'subjects','subjects-1-latest.json'])
@@ -394,7 +392,7 @@ def get_api_subjects_json(api_request):
 
             return subjects_json
         else:
-            logger.warning("Unauthorized attempt to access Subjects data")
+            logging.exception("Unauthorized attempt to access Subjects data")
             return None
 
     except Exception as e:

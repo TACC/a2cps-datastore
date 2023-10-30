@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+import logging
 import os
 import pandas as pd
 import csv
@@ -109,6 +110,7 @@ api_data_simple = {
 
 app = Flask(__name__)
 app.debug = True
+logging.basicConfig(filename='app.log',level=logging.DEBUG)
 
 # APIS: try to load new data, if doesn't work, get most recent
 @app.route("/api/apis")
@@ -129,10 +131,11 @@ def api_imaging():
     global api_data_cache
     
     try:
+        tapis_token = get_tapis_token(request)
         if not api_data_index['imaging'] or not check_data_current(datetime.strptime(api_data_index['imaging'], datetime_format)):
             if data_access_type != 'LOCAL':
                 data_date = datetime.now().strftime(datetime_format)
-                imaging_data = get_api_imaging_data(request)
+                imaging_data = get_api_imaging_data(tapis_token)
             else:
                 data_date = local_data_date
                 imaging_data = get_local_imaging_data(imaging_filepath, qc_filepath)
@@ -146,22 +149,23 @@ def api_imaging():
         traceback.print_exc()
         return jsonify('error: {}'.format(e))
 
-# @app.route("/api/consort")
-# def api_consort():
-#     global datetime_format
-#     global api_data_index
-#     global api_data_cache
-#     # try:
-#     if not api_data_index['consort'] or not check_data_current(datetime.strptime(api_data_index['consort'], datetime_format)):
-#         api_date = datetime.now().strftime(datetime_format)
-#         consort_data_json = get_api_consort_data(request)
-#         if consort_data_json:
-#             api_data_cache['consort'] = consort_data_json
-#             api_data_index['consort'] = api_date
-#     return jsonify({'date': api_data_index['consort'], 'data': api_data_cache['consort']})
-#     # except Exception as e:
-#     #     traceback.print_exc()
-#     #     return jsonify('error: {}'.format(e))
+@app.route("/api/consort")
+def api_consort():
+    global datetime_format
+    global api_data_index
+    global api_data_cache
+    # try:
+    tapis_token = get_tapis_token(request)
+    if not api_data_index['consort'] or not check_data_current(datetime.strptime(api_data_index['consort'], datetime_format)):
+        api_date = datetime.now().strftime(datetime_format)
+        consort_data_json = get_api_consort_data(tapis_token)
+        if consort_data_json:
+            api_data_cache['consort'] = consort_data_json
+            api_data_index['consort'] = api_date
+    return jsonify({'date': api_data_index['consort'], 'data': api_data_cache['consort']})
+    # except Exception as e:
+    #     traceback.print_exc()
+    #     return jsonify('error: {}'.format(e))
 
 # # get_api_consort_data
 
@@ -172,11 +176,12 @@ def api_blood():
     global api_data_index
     global api_data_cache
     try:
+        tapis_token = get_tapis_token(request)
         if not api_data_index['blood'] or not check_data_current(datetime.strptime(api_data_index['blood'], datetime_format)):
 
             if data_access_type != 'LOCAL':
                 data_date = datetime.now().strftime(datetime_format)
-                blood_data, blood_data_request_status = get_api_blood_data(request)
+                blood_data, blood_data_request_status = get_api_blood_data(tapis_token)
             else:
                 data_date = local_data_date
                 blood_data, blood_data_request_status = get_local_blood_data(blood1_filepath, blood2_filepath)
@@ -205,11 +210,12 @@ def api_subjects():
     global subjects_raw_cols_for_reports
 
     try:
+        tapis_token = get_tapis_token(request)
         if not api_data_index['subjects'] or not check_data_current(datetime.strptime(api_data_index['subjects'], datetime_format)):
             api_date = datetime.now().strftime(datetime_format)
             if data_access_type != 'LOCAL':
                 data_date = datetime.now().strftime(datetime_format)
-                latest_subjects_json = get_api_subjects_json(request)
+                latest_subjects_json = get_api_subjects_json(tapis_token)
             else:
                 data_date = local_data_date
                 latest_subjects_json = get_local_subjects_raw(subjects1_filepath, subjects2_filepath)
