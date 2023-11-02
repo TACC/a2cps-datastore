@@ -132,11 +132,11 @@ logger.setLevel(logging.DEBUG)
 
 @app.before_request
 def before_request_log():
-    app.logger.info(f"{request.remote_addr} \"{request.method} {request.url}\"")
+    app.logger.debug(f"{request.remote_addr} \"{request.method} {request.url}\"")
 
 @app.after_request
 def after_request_log(response):
-    app.logger.info(f"{request.remote_addr} \"{request.method} {request.url}\" {response.status_code}")
+    app.logger.debug(f"{request.remote_addr} \"{request.method} {request.url}\" {response.status_code}")
     return response
     
 
