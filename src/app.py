@@ -1,10 +1,13 @@
+from datetime import datetime
 from flask import Flask, jsonify, request
 import os
 import pandas as pd
 import csv
+import logging
 
 # from data_processing import *
 from data_loading import *
+
 
 # ----------------------------------------------------------------------------
 # DATA PARAMETERS
@@ -118,6 +121,25 @@ api_data_simple = {
 
 app = Flask(__name__)
 app.debug = True
+gunicorn_logger = logging.getLogger('gunicorn.error')
+app.logger  = logging.getLogger("datastore_app")
+app.logger.handlers = gunicorn_logger.handlers
+app.logger.setLevel(logging.DEBUG)
+
+logger = logging.getLogger('werkzeug')
+logger.addHandler = gunicorn_logger.handlers
+logger.setLevel(logging.DEBUG)
+
+@app.before_request
+def before_request_log():
+    app.logger.debug(f"{request.remote_addr} \"{request.method} {request.url}\"")
+
+@app.after_request
+def after_request_log(response):
+    app.logger.debug(f"{request.remote_addr} \"{request.method} {request.url}\" {response.status_code}")
+    return response
+    
+
 
 # APIS: try to load new data, if doesn't work, get most recent
 @app.route("/api/apis")
@@ -130,15 +152,17 @@ def api_imaging():
     global api_data_index
     global api_data_cache
     try:
+        tapis_token = get_tapis_token(request)
         if not api_data_index['imaging'] or not check_data_current(datetime.strptime(api_data_index['imaging'], datetime_format)):
             api_date = datetime.now().strftime(datetime_format)
-            imaging_data = get_api_imaging_data(request)
+            imaging_data = get_api_imaging_data(tapis_token)
             if imaging_data:
+                app.logger.info(f"Caching imaging report data. Date: {api_date}")
                 api_data_cache['imaging'] = imaging_data
                 api_data_index['imaging'] = api_date
         return jsonify({'date': api_data_index['imaging'], 'data': api_data_cache['imaging']})
     except Exception as e:
-        traceback.print_exc()
+        app.logger.error(("Error in imaging API request: {0}").format(str(e)))
         return jsonify('error: {}'.format(e))
 
 @app.route("/api/consort")
@@ -147,10 +171,12 @@ def api_consort():
     global api_data_index
     global api_data_cache
     # try:
+    tapis_token = get_tapis_token(request)
     if not api_data_index['consort'] or not check_data_current(datetime.strptime(api_data_index['consort'], datetime_format)):
         api_date = datetime.now().strftime(datetime_format)
-        consort_data_json = get_api_consort_data(request)
+        consort_data_json = get_api_consort_data(tapis_token)
         if consort_data_json:
+            app.logger.info(f"Caching consort report data. Date: {api_date}")
             api_data_cache['consort'] = consort_data_json
             api_data_index['consort'] = api_date
     return jsonify({'date': api_data_index['consort'], 'data': api_data_cache['consort']})
@@ -165,10 +191,12 @@ def api_blood():
     global api_data_index
     global api_data_cache
     try:
+        tapis_token = get_tapis_token(request)
         if not api_data_index['blood'] or not check_data_current(datetime.strptime(api_data_index['blood'], datetime_format)):
             api_date = datetime.now().strftime(datetime_format)
-            blood_data, blood_data_request_status = get_api_blood_data(request)
+            blood_data, blood_data_request_status = get_api_blood_data(tapis_token)
             if blood_data:
+                app.logger.info(f"Caching blood api response data. Date: {api_date}")
                 api_data_index['blood'] = api_date
                 api_data_cache['blood'] = blood_data
 
@@ -180,7 +208,7 @@ def api_blood():
 
         return jsonify({'date': api_data_index['blood'], 'data': api_data_cache['blood']})
     except Exception as e:
-        traceback.print_exc()
+        app.logger.error(("Error in blood API request: {0}").format(str(e)))
         return jsonify('error: {}'.format(e))
 
 
@@ -192,20 +220,22 @@ def api_subjects():
     global subjects_raw_cols_for_reports
 
     try:
+        tapis_token = get_tapis_token(request)
         if not api_data_index['subjects'] or not check_data_current(datetime.strptime(api_data_index['subjects'], datetime_format)):
             api_date = datetime.now().strftime(datetime_format)
-            latest_subjects_json = get_api_subjects_json(request)
+            latest_subjects_json = get_api_subjects_json(tapis_token)
             if latest_subjects_json:
                 # latest_data = create_clean_subjects(latest_subjects_json, screening_sites, display_terms_dict, display_terms_dict_multi)
                 latest_data = process_subjects_data(latest_subjects_json,subjects_raw_cols_for_reports,screening_sites, display_terms_dict, display_terms_dict_multi)
-
+                app.logger.info(f"Caching subjects api response data. Date: {api_date}")
                 api_data_cache['subjects'] = latest_data
                 api_data_index['subjects'] = api_date
 
         return jsonify({'date': api_data_index['subjects'], 'data': api_data_cache['subjects']})
     except Exception as e:
-        traceback.print_exc()
+        app.logger.error(("Error in subjects API request: {0}").format(str(e)))
         return jsonify('error: {}'.format(e))
+
 def api_tester():
 
     global local_subjects_data
@@ -235,7 +265,6 @@ def api_simple():
         return jsonify('simple subjects')
     else:
         return jsonify('not found')
-
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
