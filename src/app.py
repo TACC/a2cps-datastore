@@ -138,8 +138,6 @@ def before_request_log():
 def after_request_log(response):
     app.logger.debug(f"{request.remote_addr} \"{request.method} {request.url}\" {response.status_code}")
     return response
-    
-
 
 # APIS: try to load new data, if doesn't work, get most recent
 @app.route("/api/apis")
@@ -153,7 +151,7 @@ def api_imaging():
     global api_data_cache
     try:
         tapis_token = get_tapis_token(request)
-        if not api_data_index['imaging'] or not check_data_current(datetime.strptime(api_data_index['imaging'], datetime_format)):
+        if not api_data_index['imaging'] or not check_data_current(request, datetime.strptime(api_data_index['imaging'], datetime_format)):
             api_date = datetime.now().strftime(datetime_format)
             imaging_data = get_api_imaging_data(tapis_token)
             if imaging_data:
@@ -162,27 +160,25 @@ def api_imaging():
                 api_data_index['imaging'] = api_date
         return jsonify({'date': api_data_index['imaging'], 'data': api_data_cache['imaging']})
     except Exception as e:
-        app.logger.error(("Error in imaging API request: {0}").format(str(e)))
-        return jsonify('error: {}'.format(e))
+        return handle_exception(e, "Imaging API")
 
 @app.route("/api/consort")
 def api_consort():
     global datetime_format
     global api_data_index
     global api_data_cache
-    # try:
-    tapis_token = get_tapis_token(request)
-    if not api_data_index['consort'] or not check_data_current(datetime.strptime(api_data_index['consort'], datetime_format)):
-        api_date = datetime.now().strftime(datetime_format)
-        consort_data_json = get_api_consort_data(tapis_token)
-        if consort_data_json:
-            app.logger.info(f"Caching consort report data. Date: {api_date}")
-            api_data_cache['consort'] = consort_data_json
-            api_data_index['consort'] = api_date
-    return jsonify({'date': api_data_index['consort'], 'data': api_data_cache['consort']})
-    # except Exception as e:
-    #     traceback.print_exc()
-    #     return jsonify('error: {}'.format(e))
+    try:
+        tapis_token = get_tapis_token(request)
+        if not api_data_index['consort'] or not check_data_current(request, datetime.strptime(api_data_index['consort'], datetime_format)):
+            api_date = datetime.now().strftime(datetime_format)
+            consort_data_json = get_api_consort_data(tapis_token)
+            if consort_data_json:
+                app.logger.info(f"Caching consort report data. Date: {api_date}")
+                api_data_cache['consort'] = consort_data_json
+                api_data_index['consort'] = api_date
+        return jsonify({'date': api_data_index['consort'], 'data': api_data_cache['consort']})
+    except Exception as e:
+        return handle_exception(e, "Consort API")
 
 # get_api_consort_data
 @app.route("/api/blood")
@@ -192,7 +188,7 @@ def api_blood():
     global api_data_cache
     try:
         tapis_token = get_tapis_token(request)
-        if not api_data_index['blood'] or not check_data_current(datetime.strptime(api_data_index['blood'], datetime_format)):
+        if not api_data_index['blood'] or not check_data_current(request, datetime.strptime(api_data_index['blood'], datetime_format)):
             api_date = datetime.now().strftime(datetime_format)
             blood_data, blood_data_request_status = get_api_blood_data(tapis_token)
             if blood_data:
@@ -208,8 +204,7 @@ def api_blood():
 
         return jsonify({'date': api_data_index['blood'], 'data': api_data_cache['blood']})
     except Exception as e:
-        app.logger.error(("Error in blood API request: {0}").format(str(e)))
-        return jsonify('error: {}'.format(e))
+        return handle_exception(e, "Blood API")
 
 
 @app.route("/api/subjects")
@@ -221,7 +216,7 @@ def api_subjects():
 
     try:
         tapis_token = get_tapis_token(request)
-        if not api_data_index['subjects'] or not check_data_current(datetime.strptime(api_data_index['subjects'], datetime_format)):
+        if not api_data_index['subjects'] or not check_data_current(request, datetime.strptime(api_data_index['subjects'], datetime_format)):
             api_date = datetime.now().strftime(datetime_format)
             latest_subjects_json = get_api_subjects_json(tapis_token)
             if latest_subjects_json:
@@ -233,8 +228,7 @@ def api_subjects():
 
         return jsonify({'date': api_data_index['subjects'], 'data': api_data_cache['subjects']})
     except Exception as e:
-        app.logger.error(("Error in subjects API request: {0}").format(str(e)))
-        return jsonify('error: {}'.format(e))
+        return handle_exception(e, "Subjects API")
 
 def api_tester():
 

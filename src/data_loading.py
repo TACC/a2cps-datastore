@@ -12,6 +12,8 @@ import sqlite3
 import datetime
 from datetime import datetime
 from retrying import retry
+from flask import jsonify
+
 
 import logging
 files_api_root = os.environ.get('FILES_API_ROOT') 
@@ -19,11 +21,35 @@ portal_api_root = os.environ.get('PORTAL_API_ROOT')
 logger  = logging.getLogger("datastore_app")
 
 
+class MissingPortalSessionIdException(Exception):
+    '''Custom Exception for Misisng Session Id'''
+
+class TapisTokenRetrievalException(Exception):
+    '''Custom Exception for Tapis Token retrieval error'''
+
+def handle_exception(ex, api_message):
+    '''Handle errors for api requests. Provide error code for categorizing response'''
+    logger.error(("Error in {0} request: {1}").format(api_message, str(ex)))
+    error_code = 'DATA_ERROR'
+    if isinstance(ex, MissingPortalSessionIdException):
+        error_code = "MISSING_SESSION_ID"
+    elif isinstance(ex, TapisTokenRetrievalException):
+        error_code = "INVALID_TAPIS_TOKEN"
+    json_data = {
+        'error_code':error_code,
+        'error':str(ex)
+    }
+    return jsonify(json_data)
+
 # ----------------------------------------------------------------------------
 # Updating data checks
 # ----------------------------------------------------------------------------
-def check_data_current(data_date):
+def check_data_current(api_request, data_date):
     '''test to see if the date in a data dictionary is from after 10am on the same day as checking.'''
+    if api_request.args.get('ignore_cache') == 'True':
+        logger.info('Ignoring cache for the request.')
+        return False
+
     now = datetime.now()
 
     if data_date.date() == now.date():
@@ -240,13 +266,11 @@ def get_api_consort_data(tapis_token,
             return consort_data_json
         
         else:
-            logger.exception("Unauthorized attempt to access Consort data")
-            return None
+            raise TapisTokenRetrievalException()
 
-    except Exception as e:
+    except Exception:
         traceback.print_exc()
-        return None
-
+        raise
     
 
 ## Function to rebuild dataset from apis
@@ -285,12 +309,11 @@ def get_api_imaging_data(tapis_token):
 
             return imaging_data_json
         else:
-            logger.exception("Unauthorized attempt to access Imaging data")
-            return None
+           raise TapisTokenRetrievalException()
 
-    except Exception as e:
+    except Exception:
         traceback.print_exc()
-        return "exception: {}".format(e)
+        raise
     
 
 ## Function to rebuild dataset from apis
@@ -342,12 +365,11 @@ def get_api_blood_data(tapis_token):
 
             return blood_data_json, request_status
         else:
-            logger.exception("Unauthorized attempt to access Blood data")
-            return None
+            raise TapisTokenRetrievalException()
 
-    except Exception as e:
+    except Exception:
         traceback.print_exc()
-        return None
+        raise
     
     
 
@@ -377,12 +399,10 @@ def get_api_subjects_json(tapis_token):
 
             return subjects_json
         else:
-            logger.exception("Unauthorized attempt to access Subjects data")
-            return None
-
-    except Exception as e:
+            raise TapisTokenRetrievalException()
+    except Exception:
         traceback.print_exc()
-        return None
+        raise
 
 # Retry handler for requests
 @retry(wait_exponential_multiplier=500, wait_exponential_max=5000, stop_max_attempt_number=3)
@@ -395,14 +415,18 @@ def get_tapis_token(api_request):
     '''Get tapis token using the session cookie. If the session is not authenticated, this will fail.'''
     session_id  = api_request.cookies.get("coresessionid")
     if session_id is None:
-        raise Exception("Missing session id")
-    cookies = {'coresessionid':session_id}
-    response = make_request_with_retry(portal_api_root + '/auth/tapis/', cookies)
+        raise MissingPortalSessionIdException("Missing session id")
+    try:
+        cookies = {'coresessionid':session_id}
+        response = make_request_with_retry(portal_api_root + '/auth/tapis/', cookies)
 
-    response.raise_for_status()
-    tapis_token = response.json()['token']
-    logger.info("Received tapis token.")
-    return tapis_token
+        response.raise_for_status()
+        tapis_token = response.json()['token']
+        logger.info("Received tapis token.")
+        return tapis_token
+    except Exception as e:
+        raise TapisTokenRetrievalException('Unable to get Tapis Token') from e
+
 
 def make_report_data_request(url, tapis_token):
     logger.info(f"Sending request to {url}")
