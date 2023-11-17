@@ -139,6 +139,7 @@ def after_request_log(response):
     app.logger.debug(f"{request.remote_addr} \"{request.method} {request.url}\" {response.status_code}")
     return response
 
+
 # APIS: try to load new data, if doesn't work, get most recent
 @app.route("/api/apis")
 def api_apis():
@@ -151,6 +152,7 @@ def api_imaging():
     global api_data_cache
     try:
         tapis_token = get_tapis_token(request)
+
         if not api_data_index['imaging'] or not check_data_current(request, datetime.strptime(api_data_index['imaging'], datetime_format)):
             api_date = datetime.now().strftime(datetime_format)
             imaging_data = get_api_imaging_data(tapis_token)
@@ -160,7 +162,7 @@ def api_imaging():
                 api_data_index['imaging'] = api_date
         return jsonify({'date': api_data_index['imaging'], 'data': api_data_cache['imaging']})
     except Exception as e:
-        return handle_exception(e, "Imaging API")
+      return handle_exception(e, "Imaging API")
 
 @app.route("/api/consort")
 def api_consort():

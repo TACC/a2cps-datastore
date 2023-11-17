@@ -14,7 +14,6 @@ from datetime import datetime
 from retrying import retry
 from flask import jsonify
 
-
 import logging
 files_api_root = os.environ.get('FILES_API_ROOT') 
 portal_api_root = os.environ.get('PORTAL_API_ROOT')
@@ -311,6 +310,7 @@ def get_api_imaging_data(tapis_token):
         else:
            raise TapisTokenRetrievalException()
 
+
     except Exception:
         traceback.print_exc()
         raise
@@ -426,7 +426,6 @@ def get_tapis_token(api_request):
         return tapis_token
     except Exception as e:
         raise TapisTokenRetrievalException('Unable to get Tapis Token') from e
-
 
 def make_report_data_request(url, tapis_token):
     logger.info(f"Sending request to {url}")
