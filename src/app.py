@@ -207,7 +207,7 @@ def api_subjects():
 
     try:
         if not api_data_index['subjects'] or not check_data_current(datetime.strptime(api_data_index['subjects'], datetime_format)):
-            api_date = datetime.now().strftime(datetime_format)
+            # api_date = datetime.now().strftime(datetime_format)
             if data_access_type != 'LOCAL':
                 data_date = datetime.now().strftime(datetime_format)
                 latest_subjects_json = get_api_subjects_json(request)
@@ -221,10 +221,7 @@ def api_subjects():
 
             api_data_index['subjects'] = data_date
             api_data_cache['subjects'] = latest_data  
-
-            with open("combined_subjects","w") as outfile:
-                outfile.write(api_data_cache['subjects'])
-        
+       
 
         return jsonify({'date': api_data_index['subjects'], 'data': api_data_cache['subjects']})
     except Exception as e:
