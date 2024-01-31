@@ -160,11 +160,11 @@ def get_local_subjects_raw(subjects1_filepath, subjects2_filepath):
     ''' Load subjects data from local files'''
     print(subjects1_filepath, subjects2_filepath)
     try:
-        with open(subjects1_filepath) as file:
-            subjects1 = json.load(file)
+        with open(subjects1_filepath) as file1:
+            subjects1 = json.load(file1)
 
-        with open(subjects2_filepath) as file:
-            subjects2 = json.load(file)
+        with open(subjects2_filepath) as file2:
+            subjects2 = json.load(file2)
 
          # Create combined json
         subjects_json = {'1': subjects1, '2': subjects2}
@@ -206,6 +206,21 @@ def get_local_blood_data(blood1_filepath, blood2_filepath):
         traceback.print_exc()
         return {'Stats': 'Blood data not available'}
 
+
+def get_local_monitoring_data(monitoring_data_filepath):
+    ''' Load monitoring data from local files'''
+
+    try:
+        with open(monitoring_data_filepath) as file:
+            monitoring_json = json.load(file)
+
+            request_status = ['local file']
+
+        return monitoring_json, request_status
+
+    except Exception as e:
+        traceback.print_exc()
+        return {'Stats': 'Monitoring data not available'}
 
 # ----------------------------------------------------------------------------
 # LOAD DATA FROM API
@@ -312,6 +327,34 @@ def get_api_imaging_data(api_request):
         traceback.print_exc()
         return "exception: {}".format(e)
     
+## Monitoring data for Briha's app
+def get_api_monitoring_data(api_request):
+    ''' Load blood data from api'''
+    try:      
+        current_datetime = datetime.now()
+        tapis_token = get_tapis_token(api_request)
+        
+        if tapis_token:    
+            # Monitoring
+            monitoring_filepath = '/'.join([files_api_root,'blood','blood-1-latest.json'])
+            monitoring_request = requests.get(monitoring_filepath, headers={'X-Tapis-Token': tapis_token})
+
+
+            if monitoring_request.status_code == 200:
+                monitoring_request_status = [current_datetime.strftime("%m/%d/%Y, %H:%M:%S"), monitoring_filepath, '200']
+                monitoring_data_json = monitoring_request.json()
+            else:
+                monitoring_request_status = [current_datetime.strftime("%m/%d/%Y, %H:%M:%S"), monitoring_filepath, monitoring_request.status_code ]
+                monitoring_data_json = None
+
+            return monitoring_data_json, monitoring_request_status
+        else:
+            logger.warning("Unauthorized attempt to access Monitoring data")
+            return None
+
+    except Exception as e:
+        traceback.print_exc()
+        return None    
 
 ## Function to rebuild dataset from apis
 def get_api_blood_data(api_request):
@@ -410,14 +453,19 @@ def get_api_subjects_json(api_request):
 def combine_mcc_json(mcc_json):
     '''Convert MCC json subjects data into dataframe and combine'''
     df = pd.DataFrame()
-    for mcc in mcc_json:
-        mcc_data = pd.DataFrame.from_dict(mcc_json[mcc], orient='index').reset_index()
+    for mcc in mcc_json.keys():
+        mcc_data = pd.DataFrame.from_dict(mcc_json[mcc], orient='index')
         mcc_data['mcc'] = mcc
+        print(mcc + str(len(mcc_data)))
         if df.empty:
+            print('df empty')
             df = mcc_data
+            print('empty df len: '+ str(len(df)))
         else:
-            df = pd.concat([df, mcc_data])
-
+            print('df len: '+ str(len(df)))
+            df = pd.concat([df, mcc_data],axis=0)
+            
+            print('df len post concat: '+ str(len(df)))
     return df
 
 # 2. extract nested 1-to-many adverse events data
@@ -531,7 +579,9 @@ def get_consented_subjects(subjects_with_screening_site):
     consented = subjects_with_screening_site[subjects_with_screening_site.obtain_date.notnull()].copy()
     consented['treatment_site'] = consented.apply(lambda x: use_b_if_not_a(x['sp_data_site_display'], x['redcap_data_access_group_display']), axis=1)
     consented['treatment_site_type'] = consented['treatment_site'] + "/" + consented['surgery_type']
+
     return consented
+
 
 # 5. restrict Adverse Events data to those subjects identified as 'consented' in step 5
 def clean_adverse_events(adverse_events, consented, display_terms_dict_multi):
@@ -563,7 +613,9 @@ def convert_datetime_to_isoformat(df, datetime_cols_list):
 def process_subjects_data(subjects_raw_json, subjects_raw_cols_for_reports,screening_sites, display_terms_dict, display_terms_dict_multi):
     ''' Take the raw subjects json and process it into separate, cleaned dataframes for subjects, consented subjects and adverse events'''
     # 1. Combine separate jsons for each MCC into a single data frame
-    subjects_raw = combine_mcc_json(subjects_raw_json)#.reset_index(drop=True, inplace=True)
+    subjects_raw = combine_mcc_json(subjects_raw_json)
+    subjects_raw.reset_index(inplace=True)
+    # print('raw: ' + str(len(subjects_raw)))
 
     # 3. extract nested 1-to-many adverse events data
     adverse_effects_raw = extract_adverse_effects_data(subjects_raw)
@@ -573,9 +625,11 @@ def process_subjects_data(subjects_raw_json, subjects_raw_cols_for_reports,scree
 
     # 5. Clean subjects dataframe
     subjects = create_clean_subjects(subjects_raw, screening_sites, display_terms_dict, display_terms_dict_multi)
+    # print('subjects: ' + str(len(subjects)))
 
     # 6. Extract data for only those patients who ultimately consented
     consented = get_consented_subjects(subjects)
+    # print('consented: ' + str(len(consented)))
 
     # 7. restrict Adverse Events data to those subjects identified as 'consented' in step 5
     adverse_events = clean_adverse_events(adverse_effects_raw, consented, display_terms_dict_multi)
