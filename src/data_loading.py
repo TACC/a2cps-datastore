@@ -207,6 +207,21 @@ def get_local_blood_data(blood1_filepath, blood2_filepath):
         return {'Stats': 'Blood data not available'}
 
 
+def get_local_monitoring_data(monitoring_data_filepath):
+    ''' Load monitoring data from local files'''
+
+    try:
+        with open(monitoring_data_filepath) as file:
+            monitoring_json = json.load(file)
+
+            request_status = ['local file']
+
+        return monitoring_json, request_status
+
+    except Exception as e:
+        traceback.print_exc()
+        return {'Stats': 'Monitoring data not available'}
+
 # ----------------------------------------------------------------------------
 # LOAD DATA FROM API
 # ----------------------------------------------------------------------------
@@ -312,6 +327,34 @@ def get_api_imaging_data(api_request):
         traceback.print_exc()
         return "exception: {}".format(e)
     
+## Monitoring data for Briha's app
+def get_api_monitoring_data(api_request):
+    ''' Load blood data from api'''
+    try:      
+        current_datetime = datetime.now()
+        tapis_token = get_tapis_token(api_request)
+        
+        if tapis_token:    
+            # Monitoring
+            monitoring_filepath = '/'.join([files_api_root,'blood','blood-1-latest.json'])
+            monitoring_request = requests.get(monitoring_filepath, headers={'X-Tapis-Token': tapis_token})
+
+
+            if monitoring_request.status_code == 200:
+                monitoring_request_status = [current_datetime.strftime("%m/%d/%Y, %H:%M:%S"), monitoring_filepath, '200']
+                monitoring_data_json = monitoring_request.json()
+            else:
+                monitoring_request_status = [current_datetime.strftime("%m/%d/%Y, %H:%M:%S"), monitoring_filepath, monitoring_request.status_code ]
+                monitoring_data_json = None
+
+            return monitoring_data_json, monitoring_request_status
+        else:
+            logger.warning("Unauthorized attempt to access Monitoring data")
+            return None
+
+    except Exception as e:
+        traceback.print_exc()
+        return None    
 
 ## Function to rebuild dataset from apis
 def get_api_blood_data(api_request):
