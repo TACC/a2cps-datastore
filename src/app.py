@@ -248,15 +248,17 @@ def api_monitoring():
             else:
                 latest_monitoring_json_tuple = get_local_monitoring_data(monitoring_data_filepath)
 
-            latest_monitoring_json = latest_monitoring_json_tuple[0]
-            print(type(latest_monitoring_json))
-                
+            latest_monitoring_json = latest_monitoring_json_tuple[0]               
 
-            # api_data_index['monitoring'] = latest_monitoring_json[0]['date']
-            # api_data_cache['monitoring'] = latest_monitoring_json[0]['data']  
+            api_data_index['monitoring'] = latest_monitoring_json['date']
+            api_data_cache['monitoring'] = latest_monitoring_json['data']  
+
+
+            # This is currently in timestamp string format.  may need to change this later if we want to standardize format
+            # print(api_data_index['monitoring'])
        
-        # return jsonify({'date': api_data_index['monitoring'], 'data': api_data_cache['monitoring']})
-        return jsonify({'date':'20231221', 'data':{'test-data':'test-data'}})
+        return jsonify({'date': api_data_index['monitoring'], 'data': api_data_cache['monitoring']})
+
     
     except Exception as e:
         traceback.print_exc()
