@@ -17,16 +17,25 @@ ASSETS_PATH = os.path.join(current_folder,'assets')
 local_data_path = os.environ.get("LOCAL_DATA_PATH","")
 local_data_date = os.environ.get("LOCAL_DATA_DATE","")
 
-imaging_filepath = os.path.join(local_data_path,os.environ.get("IMAGING_FILE"))
-qc_filepath = os.path.join(local_data_path,os.environ.get("QC_FILE"))
-blood1_filepath = os.path.join(local_data_path,os.environ.get("BLOOD1_FILE"))
-blood2_filepath = os.path.join(local_data_path,os.environ.get("BLOOD2_FILE"))
-subjects1_filepath = os.path.join(local_data_path,os.environ.get("SUBJECTS1_FILE"))
-subjects2_filepath = os.path.join(local_data_path,os.environ.get("SUBJECTS2_FILE"))
-monitoring_data_filepath = os.path.join(local_data_path,os.environ.get("MONITORING_FILE"))
+if data_access_type == "LOCAL":
 
-print(local_data_path, local_data_date, subjects1_filepath, subjects2_filepath, monitoring_data_filepath)
+    imaging_filepath = os.path.join(local_data_path,os.environ.get("IMAGING_FILE"))
+    qc_filepath = os.path.join(local_data_path,os.environ.get("QC_FILE"))
+    blood1_filepath = os.path.join(local_data_path,os.environ.get("BLOOD1_FILE"))
+    blood2_filepath = os.path.join(local_data_path,os.environ.get("BLOOD2_FILE"))
+    subjects1_filepath = os.path.join(local_data_path,os.environ.get("SUBJECTS1_FILE"))
+    subjects2_filepath = os.path.join(local_data_path,os.environ.get("SUBJECTS2_FILE"))
+    monitoring_data_filepath = os.path.join(local_data_path,os.environ.get("MONITORING_FILE"))
 
+    print(local_data_path, local_data_date, subjects1_filepath, subjects2_filepath, monitoring_data_filepath)
+else: 
+    imaging_filepath = None
+    qc_filepath = None
+    blood1_filepath = None
+    blood2_filepath = None
+    subjects1_filepath = None
+    subjects2_filepath = None
+    monitoring_data_filepath = None
 
 # ----------------------------------------------------------------------------
 # LOAD ASSETS FILES
