@@ -152,24 +152,24 @@ def api_imaging():
         traceback.print_exc()
         return jsonify('error: {}'.format(e))
 
-# @app.route("/api/consort")
-# def api_consort():
-#     global datetime_format
-#     global api_data_index
-#     global api_data_cache
-#     # try:
-#     if not api_data_index['consort'] or not check_data_current(datetime.strptime(api_data_index['consort'], datetime_format)):
-#         api_date = datetime.now().strftime(datetime_format)
-#         consort_data_json = get_api_consort_data(request)
-#         if consort_data_json:
-#             api_data_cache['consort'] = consort_data_json
-#             api_data_index['consort'] = api_date
-#     return jsonify({'date': api_data_index['consort'], 'data': api_data_cache['consort']})
-#     # except Exception as e:
-#     #     traceback.print_exc()
-#     #     return jsonify('error: {}'.format(e))
+@app.route("/api/consort")
+def api_consort():
+    global datetime_format
+    global api_data_index
+    global api_data_cache
+    # try:
+    if not api_data_index['consort'] or not check_data_current(datetime.strptime(api_data_index['consort'], datetime_format)):
+        api_date = datetime.now().strftime(datetime_format)
+        consort_data_json = get_api_consort_data(request)
+        if consort_data_json:
+            api_data_cache['consort'] = consort_data_json
+            api_data_index['consort'] = api_date
+    return jsonify({'date': api_data_index['consort'], 'data': api_data_cache['consort']})
+    # except Exception as e:
+    #     traceback.print_exc()
+    #     return jsonify('error: {}'.format(e))
 
-# # get_api_consort_data
+# get_api_consort_data
 
 
 @app.route("/api/blood")
@@ -249,14 +249,18 @@ def api_monitoring():
                 latest_monitoring_json_tuple = get_local_monitoring_data(monitoring_data_filepath)
 
             latest_monitoring_json = latest_monitoring_json_tuple[0]
-            print(type(latest_monitoring_json))
-                
+            print(latest_monitoring_json.keys())
 
-            # api_data_index['monitoring'] = latest_monitoring_json[0]['date']
-            # api_data_cache['monitoring'] = latest_monitoring_json[0]['data']  
+            #Convert filename timestamp format "%Y%m%dT%H%M%SZ" to "%m/%d/%Y, %H:%M:%S"
+            date_format = "%Y%m%dT%H%M%SZ"
+            data_date = latest_monitoring_json['date']
+            formatted_date = datetime.strptime(data_date, date_format).strftime("%m/%d/%Y, %H:%M:%S")
+            api_data_index['monitoring'] = formatted_date
+            
+            api_data_cache['monitoring'] = latest_monitoring_json['data']  
        
-        # return jsonify({'date': api_data_index['monitoring'], 'data': api_data_cache['monitoring']})
-        return jsonify({'date':'20231221', 'data':{'test-data':'test-data'}})
+        return jsonify({'date': api_data_index['monitoring'], 'data': api_data_cache['monitoring']})
+        # return jsonify({'date':'20231221', 'data':{'test-data':'test-data'}})
     
     except Exception as e:
         traceback.print_exc()
