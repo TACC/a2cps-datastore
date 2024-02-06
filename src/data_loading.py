@@ -473,7 +473,7 @@ def get_tapis_token(api_request):
 
 def make_report_data_request(url, tapis_token):
     logger.info(f"Sending request to {url}")
-    response = make_report_data_request(url, tapis_token)
+    response = requests.get(url, headers={'X-Tapis-Token': tapis_token})
     logger.info(f'Response status code: {response.status_code}')
     return response
 
