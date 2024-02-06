@@ -196,6 +196,7 @@ def api_consort():
             api_date = datetime.now().strftime(datetime_format)
             consort_data_json = get_api_consort_data(tapis_token)
             if consort_data_json:
+                app.logger.info(f"Caching consort api response data. Date: {api_date}")
                 api_data_cache['consort'] = consort_data_json
                 api_data_index['consort'] = api_date
         return jsonify({'date': api_data_index['consort'], 'data': api_data_cache['consort']})
@@ -223,6 +224,7 @@ def api_blood():
                 blood_data, blood_data_request_status = get_local_blood_data(blood1_filepath, blood2_filepath)
                 
             if blood_data:
+                app.logger.info(f"Caching blood api response data. Date: {data_date}")
                 api_data_index['blood'] = data_date
                 api_data_cache['blood'] = blood_data
 
@@ -291,6 +293,7 @@ def api_monitoring():
             date_format = "%Y%m%dT%H%M%SZ"
             data_date = latest_monitoring_json['date']
             formatted_date = datetime.strptime(data_date, date_format).strftime("%m/%d/%Y, %H:%M:%S")
+            app.logger.info(f"Caching monitoring api response data. Date: {formatted_date}")
             api_data_index['monitoring'] = formatted_date
 
             api_data_cache['monitoring'] = latest_monitoring_json['data']  
