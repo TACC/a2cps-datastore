@@ -11,9 +11,13 @@ import sqlite3
 
 import datetime
 from datetime import datetime
+from retrying import retry
+from flask import jsonify
 
 import logging
-logger = logging.getLogger(__name__)
+files_api_root = os.environ.get('FILES_API_ROOT') 
+portal_api_root = os.environ.get('PORTAL_API_ROOT')
+logger  = logging.getLogger("datastore_app")
 
 
 # ----------------------------------------------------------------------------
@@ -31,12 +35,38 @@ current_folder = os.path.dirname(__file__)
 DATA_PATH = os.path.join(current_folder,local_data_path)
 ASSETS_PATH = os.path.join(current_folder,'assets')
 
+# ----------------------------------------------------------------------------
+# Common utils
+# ----------------------------------------------------------------------------
+class MissingPortalSessionIdException(Exception):
+    '''Custom Exception for Misisng Session Id'''
+
+class TapisTokenRetrievalException(Exception):
+    '''Custom Exception for Tapis Token retrieval error'''
+
+def handle_exception(ex, api_message):
+    '''Handle errors for api requests. Provide error code for categorizing response'''
+    logger.error(("Error in {0} request: {1}").format(api_message, str(ex)))
+    error_code = 'DATA_ERROR'
+    if isinstance(ex, MissingPortalSessionIdException):
+        error_code = "MISSING_SESSION_ID"
+    elif isinstance(ex, TapisTokenRetrievalException):
+        error_code = "INVALID_TAPIS_TOKEN"
+    json_data = {
+        'error_code':error_code,
+        'error':str(ex)
+    }
+    return jsonify(json_data)
 
 # ----------------------------------------------------------------------------
 # Updating data checks
 # ----------------------------------------------------------------------------
-def check_data_current(data_date):
+def check_data_current(api_request, data_date):
     '''test to see if the date in a data dictionary is from after 10am on the same day as checking.'''
+    if api_request.args.get('ignore_cache') == 'True':
+        logger.info('Ignoring cache for the request.')
+        return False
+
     now = datetime.now()
 
     if data_date.date() == now.date():
@@ -225,28 +255,11 @@ def get_local_monitoring_data(monitoring_data_filepath):
 # ----------------------------------------------------------------------------
 # LOAD DATA FROM API
 # ----------------------------------------------------------------------------
-# Get Tapis token if authorized to access data files
-def get_tapis_token(api_request):
-    try:
-        response = requests.get(portal_api_root + '/auth/tapis/', cookies=api_request.cookies)
-                                #headers={'cookie':'coresessionid=' + api_request.cookies.get('coresessionid')})
-        if response:
-            tapis_token = response.json()['token']
-            return tapis_token
-        else:
-            logger.warning("Unauthorized to access tapis token")
-            raise Exception
-    except Exception as e:
-        logger.warning('portal api error: {}'.format(e))
-        return False
-
-def get_api_consort_data(api_request,
+def get_api_consort_data(tapis_token,
                         report='consort', 
                         report_suffix = 'consort-data-[mcc]-latest.csv'):
     '''Load data for a specified consort file. Handle 500 server errors'''
     try:
-        tapis_token = get_tapis_token(api_request)
-
         if tapis_token:
             cosort_columns = ['source','target','value', 'mcc']
             consort_df = pd.DataFrame(columns=cosort_columns)
@@ -290,11 +303,9 @@ def get_api_consort_data(api_request,
 
 ## Function to rebuild dataset from apis
 
-def get_api_imaging_data(api_request):
+def get_api_imaging_data(tapis_token):
     ''' Load data from imaging api. Return bad status notice if hits Tapis API'''
-    try:       
-        tapis_token = get_tapis_token(api_request)
-
+    try:
         if tapis_token:
             # IMAGING
             imaging_filepath = '/'.join([files_api_root,'imaging','imaging-log-latest.csv'])
@@ -320,19 +331,17 @@ def get_api_imaging_data(api_request):
 
             return imaging_data_json
         else:
-            logger.warning("Unauthorized attempt to access Imaging data")
-            return None
+           raise TapisTokenRetrievalException()
 
     except Exception as e:
         traceback.print_exc()
         return "exception: {}".format(e)
     
 ## Monitoring data for Briha's app
-def get_api_monitoring_data(api_request):
+def get_api_monitoring_data(tapis_token):
     ''' Load blood data from api'''
     try:      
         current_datetime = datetime.now()
-        tapis_token = get_tapis_token(api_request)
         
         if tapis_token:    
             # Monitoring
@@ -349,8 +358,7 @@ def get_api_monitoring_data(api_request):
 
             return monitoring_data_json, monitoring_request_status
         else:
-            logger.warning("Unauthorized attempt to access Monitoring data")
-            return None
+            raise TapisTokenRetrievalException()
 
     except Exception as e:
         traceback.print_exc()
@@ -401,19 +409,16 @@ def get_api_blood_data(api_request):
 
             return blood_data_json, request_status
         else:
-            logger.warning("Unauthorized attempt to access Blood data")
-            return None
+            raise TapisTokenRetrievalException()
 
     except Exception as e:
         traceback.print_exc()
         return None
        
 
-def get_api_subjects_json(api_request):
+def get_api_subjects_json(tapis_token):
     ''' Load subjects data from api. Note data needs to be cleaned, etc. to create properly formatted data product'''
-    try:        
-        tapis_token = get_tapis_token(api_request)
-
+    try:
         if tapis_token:
             # Load Json Data
             subjects1_filepath = '/'.join([files_api_root,'subjects','subjects-1-latest.json'])
@@ -437,8 +442,7 @@ def get_api_subjects_json(api_request):
 
             return subjects_json
         else:
-            logger.warning("Unauthorized attempt to access Subjects data")
-            return None
+            raise TapisTokenRetrievalException()
 
     except Exception as e:
         traceback.print_exc()
