@@ -168,7 +168,7 @@ def api_imaging():
     
     try:
         tapis_token = get_tapis_token(request)
-        if not api_data_index['imaging'] or not check_data_current(datetime.strptime(api_data_index['imaging'], datetime_format)):
+        if not api_data_index['imaging'] or not check_data_current(request, datetime.strptime(api_data_index['imaging'], datetime_format)):
             if data_access_type != 'LOCAL':
                 data_date = datetime.now().strftime(datetime_format)
                 imaging_data = get_api_imaging_data(tapis_token)
@@ -192,7 +192,7 @@ def api_consort():
     global api_data_cache
     try:
         tapis_token = get_tapis_token(request)
-        if not api_data_index['consort'] or not check_data_current(datetime.strptime(api_data_index['consort'], datetime_format)):
+        if not api_data_index['consort'] or not check_data_current(request, datetime.strptime(api_data_index['consort'], datetime_format)):
             api_date = datetime.now().strftime(datetime_format)
             consort_data_json = get_api_consort_data(tapis_token)
             if consort_data_json:
@@ -213,7 +213,7 @@ def api_blood():
     global api_data_cache
     try:
         tapis_token = get_tapis_token(request)
-        if not api_data_index['blood'] or not check_data_current(datetime.strptime(api_data_index['blood'], datetime_format)):
+        if not api_data_index['blood'] or not check_data_current(request, datetime.strptime(api_data_index['blood'], datetime_format)):
 
             if data_access_type != 'LOCAL':
                 data_date = datetime.now().strftime(datetime_format)
@@ -247,7 +247,7 @@ def api_subjects():
 
     try:
         tapis_token = get_tapis_token(request)
-        if not api_data_index['subjects'] or not check_data_current(datetime.strptime(api_data_index['subjects'], datetime_format)):
+        if not api_data_index['subjects'] or not check_data_current(request, datetime.strptime(api_data_index['subjects'], datetime_format)):
             # api_date = datetime.now().strftime(datetime_format)
             if data_access_type != 'LOCAL':
                 data_date = datetime.now().strftime(datetime_format)
@@ -277,7 +277,7 @@ def api_monitoring():
 
     try:
 
-        if not api_data_index['monitoring'] or not check_data_current(datetime.strptime(api_data_index['monitoring'], datetime_format)):
+        if not api_data_index['monitoring'] or not check_data_current(request, datetime.strptime(api_data_index['monitoring'], datetime_format)):
             # api_date = datetime.now().strftime(datetime_format)
             if data_access_type != 'LOCAL':
                 latest_monitoring_json_tuple = get_api_monitoring_data(request)
