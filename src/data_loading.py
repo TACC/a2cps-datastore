@@ -274,7 +274,7 @@ def get_api_consort_data(tapis_token,
             for mcc in mcc_list:
                 filename = report_suffix.replace('[mcc]',str(mcc))
                 csv_url = '/'.join([files_api_root, report, filename])
-                csv_request = requests.get(csv_url, headers={'X-Tapis-Token': tapis_token})
+                csv_request = make_report_data_request(csv_url, tapis_token)
                 csv_content = csv_request.content
                 try:
                     csv_df = pd.read_csv(io.StringIO(csv_content.decode('utf-8')), usecols=[0,1,2], header=None)
@@ -309,7 +309,7 @@ def get_api_imaging_data(tapis_token):
         if tapis_token:
             # IMAGING
             imaging_filepath = '/'.join([files_api_root,'imaging','imaging-log-latest.csv'])
-            imaging_request = requests.get(imaging_filepath, headers={'X-Tapis-Token': tapis_token})
+            imaging_request = make_report_data_request(imaging_filepath, tapis_token)
             if imaging_request.status_code == 200:
                 imaging = pd.read_csv(io.StringIO(imaging_request.content.decode('utf-8')))
             else:
@@ -317,7 +317,7 @@ def get_api_imaging_data(tapis_token):
 
 
             qc_filepath = '/'.join([files_api_root,'imaging','qc-log-latest.csv'])
-            qc_request = requests.get(qc_filepath, headers={'X-Tapis-Token': tapis_token})
+            qc_request = make_report_data_request(qc_filepath, tapis_token)
             if qc_request.status_code == 200:
                 qc = pd.read_csv(io.StringIO(qc_request.content.decode('utf-8')))
             else:
@@ -346,7 +346,7 @@ def get_api_monitoring_data(tapis_token):
         if tapis_token:    
             # Monitoring
             monitoring_filepath = '/'.join([files_api_root,'blood','blood-1-latest.json'])
-            monitoring_request = requests.get(monitoring_filepath, headers={'X-Tapis-Token': tapis_token})
+            monitoring_request = make_report_data_request(monitoring_filepath, tapis_token)
 
 
             if monitoring_request.status_code == 200:
@@ -374,10 +374,10 @@ def get_api_blood_data(api_request):
         if tapis_token:    
             # BLOOD
             blood1_filepath = '/'.join([files_api_root,'blood','blood-1-latest.json'])
-            blood1_request = requests.get(blood1_filepath, headers={'X-Tapis-Token': tapis_token})
+            blood1_request = make_report_data_request(blood1_filepath, tapis_token)
 
             blood2_filepath = '/'.join([files_api_root,'blood','blood-2-latest.json'])
-            blood2_request = requests.get(blood2_filepath, headers={'X-Tapis-Token': tapis_token})
+            blood2_request = make_report_data_request(blood2_filepath, tapis_token)
 
             if blood1_request.status_code == 200:
                 blood1 = blood1_request.json()
@@ -422,7 +422,7 @@ def get_api_subjects_json(tapis_token):
         if tapis_token:
             # Load Json Data
             subjects1_filepath = '/'.join([files_api_root,'subjects','subjects-1-latest.json'])
-            subjects1_request = requests.get(subjects1_filepath, headers={'X-Tapis-Token': tapis_token})
+            subjects1_request = make_report_data_request(subjects1_filepath, tapis_token)
             if subjects1_request.status_code == 200:
                 subjects1 = subjects1_request.json()
             else:
@@ -430,7 +430,7 @@ def get_api_subjects_json(tapis_token):
                 # return {'status':'500', 'source': api_dict['subjects']['subjects1']}
 
             subjects2_filepath = '/'.join([files_api_root,'subjects','subjects-2-latest.json'])
-            subjects2_request = requests.get(subjects2_filepath, headers={'X-Tapis-Token': tapis_token})
+            subjects2_request = make_report_data_request(subjects2_filepath, tapis_token)
             if subjects2_request.status_code == 200:
                 subjects2 = subjects2_request.json()
             else:
@@ -447,6 +447,35 @@ def get_api_subjects_json(tapis_token):
     except Exception as e:
         traceback.print_exc()
         return None
+    
+# Retry handler for requests
+@retry(wait_exponential_multiplier=500, wait_exponential_max=5000, stop_max_attempt_number=3)
+def make_request_with_retry(url, cookies):
+    '''Use exponential retry with requests.'''
+    return requests.get(url, cookies=cookies)
+
+# Get Tapis token if authorized to access data files
+def get_tapis_token(api_request):
+    '''Get tapis token using the session cookie. If the session is not authenticated, this will fail.'''
+    session_id  = api_request.cookies.get("coresessionid")
+    if session_id is None:
+        raise MissingPortalSessionIdException("Missing session id")
+    try:
+        cookies = {'coresessionid':session_id}
+        response = make_request_with_retry(portal_api_root + '/auth/tapis/', cookies)
+
+        response.raise_for_status()
+        tapis_token = response.json()['token']
+        logger.info("Received tapis token.")
+        return tapis_token
+    except Exception as e:
+        raise TapisTokenRetrievalException('Unable to get Tapis Token') from e
+
+def make_report_data_request(url, tapis_token):
+    logger.info(f"Sending request to {url}")
+    response = make_report_data_request(url, tapis_token)
+    logger.info(f'Response status code: {response.status_code}')
+    return response
 
 
 # ----------------------------------------------------------------------------
