@@ -278,11 +278,11 @@ def api_monitoring():
     global api_data_cache
 
     try:
-
+        tapis_token = get_tapis_token(request)
         if not api_data_index['monitoring'] or not check_data_current(request, datetime.strptime(api_data_index['monitoring'], datetime_format)):
             # api_date = datetime.now().strftime(datetime_format)
             if data_access_type != 'LOCAL':
-                latest_monitoring_json_tuple = get_api_monitoring_data(request)
+                latest_monitoring_json_tuple = get_api_monitoring_data(tapis_token)
             else:
                 latest_monitoring_json_tuple = get_local_monitoring_data(monitoring_data_filepath)
 
