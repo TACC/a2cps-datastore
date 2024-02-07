@@ -58,6 +58,9 @@ def handle_exception(ex, api_message):
     }
     return jsonify(json_data)
 
+def _is_local():
+    return data_access_type == "LOCAL"
+
 # ----------------------------------------------------------------------------
 # Updating data checks
 # ----------------------------------------------------------------------------
@@ -454,6 +457,10 @@ def make_request_with_retry(url, cookies):
 
 # Get Tapis token if authorized to access data files
 def get_tapis_token(api_request):
+    if _is_local():
+        logger.info("Running local, not fetching tapis token.")
+        return None
+
     '''Get tapis token using the session cookie. If the session is not authenticated, this will fail.'''
     session_id  = api_request.cookies.get("coresessionid")
     if session_id is None:
