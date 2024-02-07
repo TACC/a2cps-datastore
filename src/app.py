@@ -190,6 +190,7 @@ def api_consort():
     global datetime_format
     global api_data_index
     global api_data_cache
+
     try:
         tapis_token = get_tapis_token(request)
         if not api_data_index['consort'] or not check_data_current(request, datetime.strptime(api_data_index['consort'], datetime_format)):
@@ -287,6 +288,7 @@ def api_monitoring():
                 latest_monitoring_json_tuple = get_local_monitoring_data(monitoring_data_filepath)
 
             latest_monitoring_json = latest_monitoring_json_tuple[0]
+
             app.logger.info(latest_monitoring_json.keys())     
 
             #Convert filename timestamp format "%Y%m%dT%H%M%SZ" to "%m/%d/%Y, %H:%M:%S"
