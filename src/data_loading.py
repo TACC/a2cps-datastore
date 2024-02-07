@@ -338,19 +338,15 @@ def get_api_imaging_data(tapis_token):
         return "exception: {}".format(e)
     
 ## Monitoring data for Briha's app
-
-def get_api_monitoring_data(api_request):
+def get_api_monitoring_data(tapis_token):
     ''' Load monitoring data from api'''
-
     try:      
         current_datetime = datetime.now()
-        tapis_token = get_tapis_token(api_request)
         
         if tapis_token:    
             # Monitoring
             monitoring_filepath = '/'.join([files_api_root,'data-monitoring','aggregated.json'])
-            monitoring_request = requests.get(monitoring_filepath, headers={'X-Tapis-Token': tapis_token})
-
+            monitoring_request = make_report_data_request(monitoring_filepath, tapis_token)
 
 
             if monitoring_request.status_code == 200:
@@ -369,12 +365,10 @@ def get_api_monitoring_data(api_request):
         return None    
 
 ## Function to rebuild dataset from apis
-def get_api_blood_data(api_request):
+def get_api_blood_data(tapis_token):
     ''' Load blood data from api'''
     try:      
-        current_datetime = datetime.now()
-        tapis_token = get_tapis_token(api_request)
-        
+        current_datetime = datetime.now()        
         if tapis_token:    
             # BLOOD
             blood1_filepath = '/'.join([files_api_root,'blood','blood-1-latest.json'])
