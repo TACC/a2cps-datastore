@@ -329,14 +329,14 @@ def get_api_imaging_data(api_request):
     
 ## Monitoring data for Briha's app
 def get_api_monitoring_data(api_request):
-    ''' Load blood data from api'''
+    ''' Load monitoring data from api'''
     try:      
         current_datetime = datetime.now()
         tapis_token = get_tapis_token(api_request)
         
         if tapis_token:    
             # Monitoring
-            monitoring_filepath = '/'.join([files_api_root,'blood','blood-1-latest.json'])
+            monitoring_filepath = '/'.join([files_api_root,'data-monitoring','aggregated.json'])
             monitoring_request = requests.get(monitoring_filepath, headers={'X-Tapis-Token': tapis_token})
 
 
