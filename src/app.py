@@ -157,17 +157,19 @@ def api_consort():
     global datetime_format
     global api_data_index
     global api_data_cache
-    # try:
-    if not api_data_index['consort'] or not check_data_current(datetime.strptime(api_data_index['consort'], datetime_format)):
-        api_date = datetime.now().strftime(datetime_format)
-        consort_data_json = get_api_consort_data(request)
-        if consort_data_json:
-            api_data_cache['consort'] = consort_data_json
-            api_data_index['consort'] = api_date
-    return jsonify({'date': api_data_index['consort'], 'data': api_data_cache['consort']})
-    # except Exception as e:
-    #     traceback.print_exc()
-    #     return jsonify('error: {}'.format(e))
+    try:
+        tapis_token = get_tapis_token(request)
+        if not api_data_index['consort'] or not check_data_current(request, datetime.strptime(api_data_index['consort'], datetime_format)):
+            api_date = datetime.now().strftime(datetime_format)
+            consort_data_json = get_api_consort_data(tapis_token)
+            if consort_data_json:
+                app.logger.info(f"Caching consort api response data. Date: {api_date}")
+                api_data_cache['consort'] = consort_data_json
+                api_data_index['consort'] = api_date
+        return jsonify({'date': api_data_index['consort'], 'data': api_data_cache['consort']})
+    except Exception as e:
+        app.logger.error(("Error in consort API request: {0}").format(str(e)))
+        return jsonify('error: {}'.format(e))
 
 # get_api_consort_data
 
@@ -249,16 +251,17 @@ def api_monitoring():
                 latest_monitoring_json_tuple = get_local_monitoring_data(monitoring_data_filepath)
 
             latest_monitoring_json = latest_monitoring_json_tuple[0]
-            print(latest_monitoring_json.keys())
+            app.logger.info(latest_monitoring_json.keys())     
 
             #Convert filename timestamp format "%Y%m%dT%H%M%SZ" to "%m/%d/%Y, %H:%M:%S"
             date_format = "%Y%m%dT%H%M%SZ"
             data_date = latest_monitoring_json['date']
             formatted_date = datetime.strptime(data_date, date_format).strftime("%m/%d/%Y, %H:%M:%S")
+            app.logger.info(f"Caching monitoring api response data. Date: {formatted_date}")
             api_data_index['monitoring'] = formatted_date
-            
+
             api_data_cache['monitoring'] = latest_monitoring_json['data']  
-       
+
         return jsonify({'date': api_data_index['monitoring'], 'data': api_data_cache['monitoring']})
         # return jsonify({'date':'20231221', 'data':{'test-data':'test-data'}})
     
