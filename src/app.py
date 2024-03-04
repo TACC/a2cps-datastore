@@ -282,13 +282,14 @@ def api_monitoring():
         tapis_token = get_tapis_token(request)
         if not api_data_index['monitoring'] or not check_data_current(request, datetime.strptime(api_data_index['monitoring'], datetime_format)):
             # api_date = datetime.now().strftime(datetime_format)
+            print(data_access_type)
             if data_access_type != 'LOCAL':
                 latest_monitoring_json_tuple = get_api_monitoring_data(tapis_token)
             else:
                 latest_monitoring_json_tuple = get_local_monitoring_data(monitoring_data_filepath)
 
             latest_monitoring_json = latest_monitoring_json_tuple[0]
-
+            print((latest_monitoring_json.keys()))
             app.logger.info(latest_monitoring_json.keys())     
 
             #Convert filename timestamp format "%Y%m%dT%H%M%SZ" to "%m/%d/%Y, %H:%M:%S"
@@ -298,7 +299,7 @@ def api_monitoring():
             app.logger.info(f"Caching monitoring api response data. Date: {formatted_date}")
             api_data_index['monitoring'] = formatted_date
 
-            api_data_cache['monitoring'] = latest_monitoring_json['data']  
+            api_data_cache['monitoring'] = latest_monitoring_json['data']            
 
         return jsonify({'date': api_data_index['monitoring'], 'data': api_data_cache['monitoring']})
 
