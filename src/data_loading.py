@@ -149,11 +149,11 @@ def get_display_dictionary(display_terms, api_field, api_value, display_col):
         return None
 
 
-def load_display_terms_from_github(display_terms_gihub_raw_url):
+def load_display_terms(display_terms_location):
     '''Load the data file that explains how to translate the data columns and controlled terms into the English language
     terms to be displayed to the user'''
     try:
-        display_terms = pd.read_csv(display_terms_gihub_raw_url)
+        display_terms = pd.read_csv(display_terms_location)
 
         # Get display terms dictionary for one-to-one records
         display_terms_uni = display_terms[display_terms.multi == 0]
@@ -306,6 +306,24 @@ def get_api_consort_data(tapis_token,
 
 ## Function to rebuild dataset from apis
 
+def subset_imaging_data(imaging_full):
+    imaging_columns_used = ['site', 'subject_id', 'visit','acquisition_week','Surgery Week','bids', 'dicom', 
+    'T1 Indicated','DWI Indicated', '1st Resting State Indicated','fMRI Individualized Pressure Indicated', 
+    'fMRI Standard Pressure Indicated','2nd Resting State Indicated',
+    'T1 Received', 'DWI Received', 'fMRI Individualized Pressure Received', 'fMRI Standard Pressure Received',
+    '1st Resting State Received', '2nd Resting State Received']
+
+    imaging = imaging_full[imaging_columns_used].copy() # Select subset of columns
+    imaging = imaging.replace('na', np.nan) # Clean up data
+
+    return imaging
+
+def subset_qc_data(qc_full):
+    qc_cols_used = ['site', 'sub', 'ses', 'scan','rating']
+    qc = qc_full[qc_cols_used].copy() # Select subset of columns
+    return qc
+
+
 def get_api_imaging_data(tapis_token):
     ''' Load data from imaging api. Return bad status notice if hits Tapis API'''
     try:
@@ -314,7 +332,8 @@ def get_api_imaging_data(tapis_token):
             imaging_filepath = '/'.join([files_api_root,'imaging','imaging-log-latest.csv'])
             imaging_request = make_report_data_request(imaging_filepath, tapis_token)
             if imaging_request.status_code == 200:
-                imaging = pd.read_csv(io.StringIO(imaging_request.content.decode('utf-8')))
+                imaging_full = pd.read_csv(io.StringIO(imaging_request.content.decode('utf-8')))
+                imaging = subset_imaging_data(imaging_full)
             else:
                 return {'status':'500', 'source': 'imaging-log-latest.csv'}
 
@@ -322,7 +341,8 @@ def get_api_imaging_data(tapis_token):
             qc_filepath = '/'.join([files_api_root,'imaging','qc-log-latest.csv'])
             qc_request = make_report_data_request(qc_filepath, tapis_token)
             if qc_request.status_code == 200:
-                qc = pd.read_csv(io.StringIO(qc_request.content.decode('utf-8')))
+                qc_full = pd.read_csv(io.StringIO(qc_request.content.decode('utf-8')))
+                qc = subset_qc_data(qc_full)
             else:
                 return {'status':'500', 'source': 'qc-log-latest.csv'}
 
