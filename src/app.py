@@ -47,13 +47,23 @@ else:
 # LOAD ASSETS FILES
 # ----------------------------------------------------------------------------
 
-# Pointers to official files stored at github repository main branch
-screening_sites_github_url = 'https://raw.githubusercontent.com/TACC/a2cps-datastore-weekly/main/src/assets/screening_sites.csv'
-display_terms_github_url = 'https://raw.githubusercontent.com/TACC/a2cps-datastore-weekly/main/src/assets/A2CPS_display_terms.csv'
 
-# load display terms and screening sites
-screening_sites = pd.read_csv(screening_sites_github_url)
-display_terms, display_terms_dict, display_terms_dict_multi = load_display_terms_from_github(display_terms_github_url)
+
+# # Pointers to official files stored at github repository main branch
+# screening_sites_github_url = 'https://raw.githubusercontent.com/TACC/a2cps-datastore-weekly/main/src/assets/screening_sites.csv'
+# display_terms_github_url = 'https://raw.githubusercontent.com/TACC/a2cps-datastore-weekly/main/src/assets/A2CPS_display_terms.csv'
+
+# # load display terms and screening sites
+# screening_sites = pd.read_csv(screening_sites_github_url)
+# display_terms, display_terms_dict, display_terms_dict_multi = load_display_terms_from_github(display_terms_github_url)
+
+# For datastore: load locally from assets file to avoid issues with url library.
+screening_sites_location = os.path.join(ASSETS_PATH, 'screening_sites.csv')
+display_terms_location = os.path.join(ASSETS_PATH, 'A2CPS_display_terms.csv')
+
+screening_sites = pd.read_csv(screening_sites_location)
+display_terms, display_terms_dict, display_terms_dict_multi = load_display_terms(display_terms_location)
+
 
 # Columns used in reports [UPDATE THIS IF START TO USE MORE]
 subjects_raw_cols_for_reports = ['index',
