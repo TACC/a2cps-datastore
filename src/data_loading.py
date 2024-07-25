@@ -175,8 +175,11 @@ def load_display_terms(display_terms_location):
 def get_local_imaging_data(imaging_filepath, qc_filepath):
     ''' Load data from local imaging files. '''
     try:
-        imaging = pd.read_csv(imaging_filepath)
-        qc = pd.read_csv(qc_filepath)
+        imaging_full = pd.read_csv(imaging_filepath)
+        imaging = subset_imaging_data(imaging_full)
+
+        qc_full = pd.read_csv(qc_filepath)
+        qc = subset_qc_data(qc_full)
 
         imaging_data_json = {
             'imaging' : imaging.to_dict('records'),
@@ -306,12 +309,13 @@ def get_api_consort_data(tapis_token,
 
 ## Function to rebuild dataset from apis
 
+
 def subset_imaging_data(imaging_full):
     imaging_columns_used = ['site', 'subject_id', 'visit','acquisition_week','Surgery Week','bids', 'dicom', 
     'T1 Indicated','DWI Indicated', '1st Resting State Indicated','fMRI Individualized Pressure Indicated', 
     'fMRI Standard Pressure Indicated','2nd Resting State Indicated',
     'T1 Received', 'DWI Received', 'fMRI Individualized Pressure Received', 'fMRI Standard Pressure Received',
-    '1st Resting State Received', '2nd Resting State Received']
+    '1st Resting State Received', '2nd Resting State Received','Cuff1 Applied Pressure']
 
     imaging = imaging_full[imaging_columns_used].copy() # Select subset of columns
     imaging = imaging.replace('na', np.nan) # Clean up data
