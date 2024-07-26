@@ -1,4 +1,4 @@
-FROM python:3.9-slim
+FROM python:3.11-slim
 EXPOSE 8050
 ENV PYTHONUNBUFFERED=TRUE
 COPY requirements.txt requirements.txt
