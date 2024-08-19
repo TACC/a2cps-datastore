@@ -309,7 +309,7 @@ def get_api_consort_data(tapis_token,
 
 ## Function to rebuild dataset from apis
 
-
+# rename subset_imaging_data to clean_imaging
 def subset_imaging_data(imaging_full):
     imaging_columns_used = ['site', 'subject_id', 'visit','acquisition_week','Surgery Week','bids', 'dicom', 
     'T1 Indicated','DWI Indicated', '1st Resting State Indicated','fMRI Individualized Pressure Indicated', 
@@ -319,12 +319,78 @@ def subset_imaging_data(imaging_full):
 
     imaging = imaging_full[imaging_columns_used].copy() # Select subset of columns
     imaging = imaging.replace('na', np.nan) # Clean up data
+    imaging['completions_id'] = imaging.apply(lambda x: str(x['subject_id']) + x['visit'],axis=1) # Add completions id value from combination of subject ID and visit
 
     return imaging
 
+def clean_imaging(imaging_full):
+    ''' Clean up the incoming imaging dataframe'''
+    # Imaging columns actually used.  Subset to just these portion of the data. 
+    # Dictionary keys = columns used, dictionary value = new column name
+    imaging_columns_dict = {
+        'site': 'site',
+        'subject_id': 'subject_id',
+        'visit': 'visit',
+        'acquisition_week': 'acquisition_week',
+        'Surgery Week':'Surgery Week',
+        'bids':'bids',
+        'dicom':'dicom', 
+        'T1 Indicated':'T1',
+        'DWI Indicated':'DWI',
+        '1st Resting State Indicated':'REST1',
+        'fMRI Individualized Pressure Indicated':'CUFF1',
+        'fMRI Standard Pressure Indicated':'CUFF2',
+        '2nd Resting State Indicated':'REST2',
+        'T1 Received':'T1 Received',
+        'DWI Received':'DWI Received',
+        '1st Resting State Received':'REST1 Received',
+        'fMRI Individualized Pressure Received':'CUFF1 Received',
+        'fMRI Standard Pressure Received':'CUFF2 Received',
+        '2nd Resting State Received':'REST2 Received',
+        'Cuff1 Applied Pressure':'Cuff1 Applied Pressure'
+}
+    
+    imaging_cols = list(imaging_columns_dict.keys()) # Get list of columns to keep
+    imaging = imaging_full[imaging_cols].copy() # Copy subset of imaging dataframe
+    imaging.rename(columns=imaging_columns_dict, inplace=True) # Rename columns
+    imaging = imaging.replace('na', np.nan) # Replace 'na' string with actual null value
+    imaging['completions_id'] = imaging.apply(lambda x: str(x['subject_id']) + x['visit'],axis=1) # Add completions id value from combination of subject ID and visit
+    
+    return imaging
+
+# rename subset_qc_data to clean_qc
 def subset_qc_data(qc_full):
     qc_cols_used = ['site', 'sub', 'ses', 'scan','rating']
-    qc = qc_full[qc_cols_used].copy() # Select subset of columns
+    qc = qc_full[qc_cols_used].copy() # Select subset of columns    
+    # Set columns to categorical values
+    ignore = ['sub']
+    qc = (qc.set_index(ignore, append=True)
+            .astype("category")
+            .reset_index(ignore)
+           )
+    
+    return qc
+
+def clean_qc(qc_full):
+    ''' Clean up the incoming qc dataframe. Rename downstream as it breaks too many things here'''
+    qc_columns_dict = {
+            'site':'site', 
+            'sub': 'subject_id',
+            'ses': 'ses',
+            'scan':'scan',
+            'rating': 'rating'
+        }
+    qc_cols = list(qc_columns_dict.keys()) # Get list of columns to keep
+    qc = qc_full[qc_cols].copy() # Copy subset of imaging dataframe
+    # qc.rename(columns=qc_columns_dict, inplace=True) # Rename columns
+
+    # Set columns to categorical values
+    ignore = ['subject_id']
+    qc = (qc.set_index(ignore, append=True)
+            .astype("category")
+            .reset_index(ignore)
+           )
+    
     return qc
 
 
@@ -800,6 +866,68 @@ def clean_blooddata(blood_df):
     blood_df = blood_df.rename(columns=rename_dict)
 
     return blood_df
+
+
+# ----------------------------------------------------------------------------
+# PROCESS IMAGING DATA
+# ----------------------------------------------------------------------------
+
+def clean_imaging(imaging_full):
+    ''' Clean up the incoming imaging dataframe'''
+    # Imaging columns actually used.  Subset to just these portion of the data. 
+    # Dictionary keys = columns used, dictionary value = new column name
+    imaging_columns_dict = {
+        'site': 'site',
+        'subject_id': 'subject_id',
+        'visit': 'visit',
+        'acquisition_week': 'acquisition_week',
+        'Surgery Week':'Surgery Week',
+        'bids':'bids',
+        'dicom':'dicom', 
+        'T1 Indicated':'T1',
+        'DWI Indicated':'DWI',
+        '1st Resting State Indicated':'REST1',
+        'fMRI Individualized Pressure Indicated':'CUFF1',
+        'fMRI Standard Pressure Indicated':'CUFF2',
+        '2nd Resting State Indicated':'REST2',
+        'T1 Received':'T1 Received',
+        'DWI Received':'DWI Received',
+        '1st Resting State Received':'REST1 Received',
+        'fMRI Individualized Pressure Received':'CUFF1 Received',
+        'fMRI Standard Pressure Received':'CUFF2 Received',
+        '2nd Resting State Received':'REST2 Received',
+        'Cuff1 Applied Pressure':'Cuff1 Applied Pressure'
+        }
+    
+    imaging_cols = list(imaging_columns_dict.keys()) # Get list of columns to keep
+    imaging = imaging_full[imaging_cols].copy() # Copy subset of imaging dataframe
+    imaging.rename(columns=imaging_columns_dict, inplace=True) # Rename columns
+    imaging = imaging.replace('na', np.nan) # Replace 'na' string with actual null value
+    imaging['completions_id'] = imaging.apply(lambda x: str(x['subject_id']) + x['visit'],axis=1) # Add completions id value from combination of subject ID and visit
+    
+    return imaging
+
+def clean_qc(qc_full):
+    ''' Clean up the incoming qc dataframe. rename downstreamt to avoid causing issues. '''
+    qc_columns_dict = {
+            'site':'site', 
+            'sub': 'subject_id',
+            'ses': 'ses',
+            'scan':'scan',
+            'rating': 'rating'
+        }
+    qc_cols = list(qc_columns_dict.keys()) # Get list of columns to keep
+    qc = qc_full[qc_cols].copy() # Copy subset of imaging dataframe
+    qc.rename(columns=qc_columns_dict, inplace=True) # Rename columns
+
+    # Set columns to categorical values
+    ignore = ['subject_id']
+    qc = (qc.set_index(ignore, append=True)
+            .astype("category")
+            .reset_index(ignore)
+           )
+    
+    return qc
 
 # ----------------------------------------------------------------------------
 # OTHER APIS?
