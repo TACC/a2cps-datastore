@@ -187,13 +187,13 @@ def api_imaging():
                 imaging_data = get_local_imaging_data(imaging_filepath, qc_filepath)
             
             if imaging_data:
+                app.logger.info(f"Caching imaging report data. Date: {data_date}")
                 api_data_index['imaging'] = data_date
                 api_data_cache['imaging'] = imaging_data
                 
         return jsonify({'date': api_data_index['imaging'], 'data': api_data_cache['imaging']})
     except Exception as e:
-        app.logger.error(("Error in imaging API request: {0}").format(str(e)))
-        return jsonify('error: {}'.format(e))
+        return handle_exception(e, "Imaging API")
 
 @app.route("/api/consort")
 def api_consort():
@@ -213,7 +213,7 @@ def api_consort():
         return jsonify({'date': api_data_index['consort'], 'data': api_data_cache['consort']})
     except Exception as e:
         app.logger.error(("Error in consort API request: {0}").format(str(e)))
-        return jsonify('error: {}'.format(e))
+        return handle_exception(e, "Consort API")
 
 # get_api_consort_data
 
@@ -247,8 +247,7 @@ def api_blood():
 
         return jsonify({'date': api_data_index['blood'], 'data': api_data_cache['blood']})
     except Exception as e:
-        app.logger.error(("Error in blood API request: {0}").format(str(e)))
-        return jsonify('error: {}'.format(e))
+        return handle_exception(e, "Blood API")
 
 
 @app.route("/api/subjects")
@@ -279,8 +278,7 @@ def api_subjects():
 
         return jsonify({'date': api_data_index['subjects'], 'data': api_data_cache['subjects']})
     except Exception as e:
-        app.logger.error(("Error in subjects API request: {0}").format(str(e)))
-        return jsonify('error: {}'.format(e))
+        return handle_exception(e, "Subjects API")
 
 @app.route("/api/monitoring")
 def api_monitoring():
@@ -316,7 +314,7 @@ def api_monitoring():
     
     except Exception as e:
         app.logger.error(("Error in monitoring API request: {0}").format(str(e)))
-        return jsonify('error: {}'.format(e))
+        return handle_exception(e, "Data Monitoring API")
 
 @app.route("/api/subjects_debug")
 def api_subjects_debug():
@@ -341,7 +339,7 @@ def api_subjects_debug():
         return jsonify({'date': api_data_index['subjects'], 'data': api_data_cache['subjects']})
     except Exception as e:
         traceback.print_exc()
-        return jsonify('error: {}'.format(e))
+        return handle_exception(e, "Subjects Debug API")
 
 # @app.route("/api/full")
 # def api_full():
