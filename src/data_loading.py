@@ -38,7 +38,6 @@ ASSETS_PATH = os.path.join(current_folder,'assets')
 # ----------------------------------------------------------------------------
 # Common utils
 # ----------------------------------------------------------------------------
-
 class MissingPortalSessionIdException(Exception):
     '''Custom Exception for Misisng Session Id'''
 
@@ -61,7 +60,6 @@ def handle_exception(ex, api_message):
 
 def _is_local():
     return data_access_type == "LOCAL"
-
 
 # ----------------------------------------------------------------------------
 # Updating data checks
@@ -263,7 +261,6 @@ def get_local_monitoring_data(monitoring_data_filepath):
 # ----------------------------------------------------------------------------
 # LOAD DATA FROM API
 # ----------------------------------------------------------------------------
-
 def get_api_consort_data(tapis_token,
                         report='consort', 
                         report_suffix = 'consort-data-[mcc]-latest.csv'):
@@ -306,42 +303,9 @@ def get_api_consort_data(tapis_token,
             logger.warning("Unauthorized attempt to access Consort data")
             return None
 
-
-        if tapis_token:
-            cosort_columns = ['source','target','value', 'mcc']
-            consort_df = pd.DataFrame(columns=cosort_columns)
-
-            # # get list of mcc files
-            # filename1 = report_suffix.replace('[mcc]',str(1))
-            # filename2 = report_suffix.replace('[mcc]',str(2))
-            # files_list = [filename1, filename2]
-
-       
-            mcc_list = [1,2]
-            for mcc in mcc_list:
-                filename = report_suffix.replace('[mcc]',str(mcc))
-                csv_url = '/'.join([files_api_root, report, filename])
-                csv_request = make_report_data_request(csv_url, tapis_token)
-                csv_content = csv_request.content
-                try:
-                    csv_df = pd.read_csv(io.StringIO(csv_content.decode('utf-8')), usecols=[0,1,2], header=None)
-                    csv_df['mcc'] = mcc
-                    csv_df.columns = cosort_columns
-                except:
-                    csv_df = pd.DataFrame(columns=cosort_columns)
-                consort_df = pd.concat([consort_df,csv_df])
-
-            consort_dict = consort_df.to_dict('records')
-            if not consort_dict:
-                consort_dict = ['No data found']
-            # IF DATA LOADS SUCCESSFULLY:
-            consort_data_json = {
-                'consort' : consort_df.to_dict('records')
-            }
-            return consort_data_json
-        
-        else:
-            raise TapisTokenRetrievalException()
+    except Exception as e:
+        traceback.print_exc()
+        return None
 
 ## Function to rebuild dataset from apis
 
@@ -444,12 +408,6 @@ def get_api_imaging_data(tapis_token):
                 return {'status':'500', 'source': 'imaging-log-latest.csv'}
 
 
-            # IF DATA LOADS SUCCESSFULLY:
-            imaging_data_json = {
-                'imaging' : imaging.to_dict('records'),
-                'qc' : qc.to_dict('records')
-            }
-
             qc_filepath = '/'.join([files_api_root,'imaging','qc-log-latest.csv'])
             qc_request = make_report_data_request(qc_filepath, tapis_token)
             if qc_request.status_code == 200:
@@ -468,8 +426,7 @@ def get_api_imaging_data(tapis_token):
         else:
            raise TapisTokenRetrievalException()
 
-
-    except Exception:
+    except Exception as e:
         traceback.print_exc()
         return "exception: {}".format(e)
     
@@ -554,7 +511,7 @@ def get_api_blood_data(api_request):
     except Exception as e:
         traceback.print_exc()
         return None
-
+       
 
 def get_api_subjects_json(tapis_token):
     ''' Load subjects data from api. Note data needs to be cleaned, etc. to create properly formatted data product'''
@@ -584,10 +541,6 @@ def get_api_subjects_json(tapis_token):
         else:
             raise TapisTokenRetrievalException()
 
-        response.raise_for_status()
-        tapis_token = response.json()['token']
-        logger.info("Received tapis token.")
-        return tapis_token
     except Exception as e:
         traceback.print_exc()
         return None
@@ -626,11 +579,7 @@ def make_report_data_request(url, tapis_token):
     return response
 
 
-def make_report_data_request(url, tapis_token):
-    logger.info(f"Sending request to {url}")
-    response = requests.get(url, headers={'X-Tapis-Token': tapis_token})
-    logger.info(f'Response status code: {response.status_code}')
-    return response
+
 
 # ----------------------------------------------------------------------------
 # PROCESS SUBJECTS DATA
