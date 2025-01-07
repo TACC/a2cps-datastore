@@ -9,6 +9,7 @@ import logging
 # from data_processing import *
 from data_loading import *
 
+
 # ----------------------------------------------------------------------------
 # ENV Variables & DATA PARAMETERS
 # ----------------------------------------------------------------------------
@@ -42,6 +43,7 @@ else:
     subjects1_filepath = None
     subjects2_filepath = None
     monitoring_data_filepath = None
+
 
 # ----------------------------------------------------------------------------
 # LOAD ASSETS FILES
@@ -189,11 +191,13 @@ def api_imaging():
             if imaging_data:
                 app.logger.info(f"Caching imaging report data. Date: {data_date}")
                 api_data_index['imaging'] = data_date
+
                 api_data_cache['imaging'] = imaging_data
                 
         return jsonify({'date': api_data_index['imaging'], 'data': api_data_cache['imaging']})
     except Exception as e:
         return handle_exception(e, "Imaging API")
+
 
 @app.route("/api/consort")
 def api_consort():
@@ -213,6 +217,7 @@ def api_consort():
         return jsonify({'date': api_data_index['consort'], 'data': api_data_cache['consort']})
     except Exception as e:
         app.logger.error(("Error in consort API request: {0}").format(str(e)))
+
         return handle_exception(e, "Consort API")
 
 # get_api_consort_data
@@ -274,7 +279,7 @@ def api_subjects():
             app.logger.info(f"Caching subjects api response data. Date: {data_date}")
             api_data_index['subjects'] = data_date
             api_data_cache['subjects'] = latest_data  
-       
+
 
         return jsonify({'date': api_data_index['subjects'], 'data': api_data_cache['subjects']})
     except Exception as e:
@@ -335,7 +340,6 @@ def api_subjects_debug():
         api_data_index['subjects'] = data_date
         api_data_cache['subjects'] = latest_data  
 
-
         return jsonify({'date': api_data_index['subjects'], 'data': api_data_cache['subjects']})
     except Exception as e:
         traceback.print_exc()
@@ -354,6 +358,7 @@ def api_subjects_debug():
 @app.route("/api/simple")
 def api_simple():
     return jsonify({'date':'20231221', 'data':{'test-data':'test-data'}})
+
 
 
 if __name__ == "__main__":

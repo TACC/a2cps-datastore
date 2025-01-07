@@ -1,7 +1,7 @@
-name: Build on push to auth-check
+name: Build on push to experiment
 on:
   push:
-    branches: [ auth-check ]
+    branches: [ experiment ]
 
 jobs:
   build_commit:
