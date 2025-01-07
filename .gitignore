@@ -1,4 +1,7 @@
 # Local files that aren't part of the
+.env
+data/
+src/data/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

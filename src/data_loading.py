@@ -20,6 +20,25 @@ portal_api_root = os.environ.get('PORTAL_API_ROOT')
 logger  = logging.getLogger("datastore_app")
 
 
+# ----------------------------------------------------------------------------
+# ENV Variables
+# ----------------------------------------------------------------------------
+data_access_type = os.environ.get('DATA_ACCESS_TYPE')
+files_api_root = os.environ.get('FILES_API_ROOT') 
+portal_api_root = os.environ.get('PORTAL_API_ROOT')
+
+# LOCAL DATA SETTINGS
+local_data_path = os.environ.get("LOCAL_DATA_PATH","")
+local_data_date = os.environ.get("LOCAL_DATA_DATE","2022-01-01")
+
+current_folder = os.path.dirname(__file__)
+DATA_PATH = os.path.join(current_folder,local_data_path)
+ASSETS_PATH = os.path.join(current_folder,'assets')
+
+# ----------------------------------------------------------------------------
+# Common utils
+# ----------------------------------------------------------------------------
+
 class MissingPortalSessionIdException(Exception):
     '''Custom Exception for Misisng Session Id'''
 
@@ -39,6 +58,10 @@ def handle_exception(ex, api_message):
         'error':str(ex)
     }
     return jsonify(json_data)
+
+def _is_local():
+    return data_access_type == "LOCAL"
+
 
 # ----------------------------------------------------------------------------
 # Updating data checks
@@ -107,28 +130,6 @@ def move_column_inplace(df, col, pos):
 # DATA DISPLAY DICTIONARIES
 # ----------------------------------------------------------------------------
 
-def load_display_terms(ASSETS_PATH, display_terms_file):
-    '''Load the data file that explains how to translate the data columns and controlled terms into the English language
-    terms to be displayed to the user'''
-    try:
-        if ASSETS_PATH:
-            display_terms = pd.read_csv(os.path.join(ASSETS_PATH, display_terms_file))
-        else:
-            display_terms = pd.read_csv(display_terms_file)
-
-        # Get display terms dictionary for one-to-one records
-        display_terms_uni = display_terms[display_terms.multi == 0]
-        display_terms_dict = get_display_dictionary(display_terms_uni, 'api_field', 'api_value', 'display_text')
-
-        # Get display terms dictionary for one-to-many records
-        display_terms_multi = display_terms[display_terms.multi == 1]
-        display_terms_dict_multi = get_display_dictionary(display_terms_multi, 'api_field', 'api_value', 'display_text')
-
-        return display_terms, display_terms_dict, display_terms_dict_multi
-    except Exception as e:
-        traceback.print_exc()
-        return None
-
 def get_display_dictionary(display_terms, api_field, api_value, display_col):
     '''from a dataframe with the table display information, create a dictionary by field to match the database
     value to a value for use in the UI '''
@@ -149,15 +150,38 @@ def get_display_dictionary(display_terms, api_field, api_value, display_col):
         traceback.print_exc()
         return None
 
+
+def load_display_terms(display_terms_location):
+    '''Load the data file that explains how to translate the data columns and controlled terms into the English language
+    terms to be displayed to the user'''
+    try:
+        display_terms = pd.read_csv(display_terms_location)
+
+        # Get display terms dictionary for one-to-one records
+        display_terms_uni = display_terms[display_terms.multi == 0]
+        display_terms_dict = get_display_dictionary(display_terms_uni, 'api_field', 'api_value', 'display_text')
+
+        # Get display terms dictionary for one-to-many records
+        display_terms_multi = display_terms[display_terms.multi == 1]
+        display_terms_dict_multi = get_display_dictionary(display_terms_multi, 'api_field', 'api_value', 'display_text')
+
+        return display_terms, display_terms_dict, display_terms_dict_multi
+    except Exception as e:
+        traceback.print_exc()
+        return None
+
 # ----------------------------------------------------------------------------
 # LOAD DATA FROM LOCAL FILES, Return *JSON*
 # ----------------------------------------------------------------------------
 
-def get_local_imaging_data(data_directory):
+def get_local_imaging_data(imaging_filepath, qc_filepath):
     ''' Load data from local imaging files. '''
     try:
-        imaging = pd.read_csv(os.path.join(data_directory,'imaging','imaging-log-latest.csv'))
-        qc = pd.read_csv(os.path.join(data_directory,'imaging','qc-log-latest.csv'))
+        imaging_full = pd.read_csv(imaging_filepath)
+        imaging = subset_imaging_data(imaging_full)
+
+        qc_full = pd.read_csv(qc_filepath)
+        qc = subset_qc_data(qc_full)
 
         imaging_data_json = {
             'imaging' : imaging.to_dict('records'),
@@ -170,47 +194,15 @@ def get_local_imaging_data(data_directory):
         traceback.print_exc()
         return {'status': 'Problem with local imaging files'}
 
-def get_local_blood_data(data_directory):
+def get_local_subjects_raw(subjects1_filepath, subjects2_filepath):
     ''' Load subjects data from local files'''
-
+    print(subjects1_filepath, subjects2_filepath)
     try:
-        blood_json = {}
+        with open(subjects1_filepath) as file1:
+            subjects1 = json.load(file1)
 
-        blood1_filepath = '/'.join([data_directory,'blood','blood-1-latest.json'])
-        with open(blood1_filepath) as file:
-            blood1 = json.load(file)
-
-        blood2_filepath = '/'.join([data_directory,'blood','blood-2-latest.json'])
-        with open(blood2_filepath) as file:
-            blood2 = json.load(file)
-
-         # Create combined json
-        blood_json = {'1': blood1, '2': blood2}
-
-        return blood_json
-        blood = bloodjson_to_df(blood_json, ['1','2'])
-        blood = simplify_blooddata(blood)
-
-        blood_data_json = {
-            'blood' : blood.to_dict('records')
-        }
-
-        return blood_data_json
-
-    except Exception as e:
-        traceback.print_exc()
-        return {'Stats': 'Blood data not available'}
-
-def get_local_subjects_raw(data_directory):
-    ''' Load subjects data from local files'''
-    try:
-        subjects1_filepath = os.path.join(data_directory,'subjects','subjects-1-latest.json')
-        with open(subjects1_filepath) as file:
-            subjects1 = json.load(file)
-
-        subjects2_filepath = os.path.join(data_directory,'subjects','subjects-2-latest.json')
-        with open(subjects2_filepath) as file:
-            subjects2 = json.load(file)
+        with open(subjects2_filepath) as file2:
+            subjects2 = json.load(file2)
 
          # Create combined json
         subjects_json = {'1': subjects1, '2': subjects2}
@@ -221,6 +213,53 @@ def get_local_subjects_raw(data_directory):
         traceback.print_exc()
         return {'Stats': 'Subjects data not available'}
 
+
+def get_local_blood_data(blood1_filepath, blood2_filepath):
+    ''' Load blood data from local files'''
+
+    try:
+        blood_json = {}
+
+        with open(blood1_filepath) as file:
+            blood1 = json.load(file)
+
+        with open(blood2_filepath) as file:
+            blood2 = json.load(file)
+
+         # Create combined json
+        blood_json = {'1': blood1, '2': blood2}
+
+        blood = bloodjson_to_df(blood_json, ['1','2'])
+        blood = simplify_blooddata(blood)
+
+        blood_data_json = {
+            'blood' : blood.to_dict('records')
+        }
+
+        request_status = ['local file']
+
+        return blood_data_json, request_status
+
+    except Exception as e:
+        traceback.print_exc()
+        return {'Stats': 'Blood data not available'}
+
+
+def get_local_monitoring_data(monitoring_data_filepath):
+    ''' Load monitoring data from local files'''
+
+    try:
+        with open(monitoring_data_filepath) as file:
+            monitoring_json = json.load(file)
+
+            request_status = ['local file']
+
+        return monitoring_json, request_status
+
+    except Exception as e:
+        traceback.print_exc()
+        return {'Stats': 'Monitoring data not available'}
+
 # ----------------------------------------------------------------------------
 # LOAD DATA FROM API
 # ----------------------------------------------------------------------------
@@ -230,6 +269,43 @@ def get_api_consort_data(tapis_token,
                         report_suffix = 'consort-data-[mcc]-latest.csv'):
     '''Load data for a specified consort file. Handle 500 server errors'''
     try:
+        if tapis_token:
+            cosort_columns = ['source','target','value', 'mcc']
+            consort_df = pd.DataFrame(columns=cosort_columns)
+
+            # # get list of mcc files
+            # filename1 = report_suffix.replace('[mcc]',str(1))
+            # filename2 = report_suffix.replace('[mcc]',str(2))
+            # files_list = [filename1, filename2]
+
+       
+            mcc_list = [1,2]
+            for mcc in mcc_list:
+                filename = report_suffix.replace('[mcc]',str(mcc))
+                csv_url = '/'.join([files_api_root, report, filename])
+                csv_request = make_report_data_request(csv_url, tapis_token)
+                csv_content = csv_request.content
+                try:
+                    csv_df = pd.read_csv(io.StringIO(csv_content.decode('utf-8')), usecols=[0,1,2], header=None)
+                    csv_df['mcc'] = mcc
+                    csv_df.columns = cosort_columns
+                except:
+                    csv_df = pd.DataFrame(columns=cosort_columns)
+                consort_df = pd.concat([consort_df,csv_df])
+
+            consort_dict = consort_df.to_dict('records')
+            if not consort_dict:
+                consort_dict = ['No data found']
+            # IF DATA LOADS SUCCESSFULLY:
+            consort_data_json = {
+                'consort' : consort_df.to_dict('records')
+            }
+            return consort_data_json
+        
+        else:
+            logger.warning("Unauthorized attempt to access Consort data")
+            return None
+
 
         if tapis_token:
             cosort_columns = ['source','target','value', 'mcc']
@@ -267,38 +343,120 @@ def get_api_consort_data(tapis_token,
         else:
             raise TapisTokenRetrievalException()
 
-    except Exception:
-        traceback.print_exc()
-        raise
-    
-
 ## Function to rebuild dataset from apis
+
+# rename subset_imaging_data to clean_imaging
+def subset_imaging_data(imaging_full):
+    imaging_columns_used = ['site', 'subject_id', 'visit','acquisition_week','Surgery Week','bids', 'dicom', 
+    'T1 Indicated','DWI Indicated', '1st Resting State Indicated','fMRI Individualized Pressure Indicated', 
+    'fMRI Standard Pressure Indicated','2nd Resting State Indicated',
+    'T1 Received', 'DWI Received', 'fMRI Individualized Pressure Received', 'fMRI Standard Pressure Received',
+    '1st Resting State Received', '2nd Resting State Received','Cuff1 Applied Pressure']
+
+    imaging = imaging_full[imaging_columns_used].copy() # Select subset of columns
+    imaging = imaging.replace('na', np.nan) # Clean up data
+    imaging['completions_id'] = imaging.apply(lambda x: str(x['subject_id']) + x['visit'],axis=1) # Add completions id value from combination of subject ID and visit
+
+    return imaging
+
+def clean_imaging(imaging_full):
+    ''' Clean up the incoming imaging dataframe'''
+    # Imaging columns actually used.  Subset to just these portion of the data. 
+    # Dictionary keys = columns used, dictionary value = new column name
+    imaging_columns_dict = {
+        'site': 'site',
+        'subject_id': 'subject_id',
+        'visit': 'visit',
+        'acquisition_week': 'acquisition_week',
+        'Surgery Week':'Surgery Week',
+        'bids':'bids',
+        'dicom':'dicom', 
+        'T1 Indicated':'T1',
+        'DWI Indicated':'DWI',
+        '1st Resting State Indicated':'REST1',
+        'fMRI Individualized Pressure Indicated':'CUFF1',
+        'fMRI Standard Pressure Indicated':'CUFF2',
+        '2nd Resting State Indicated':'REST2',
+        'T1 Received':'T1 Received',
+        'DWI Received':'DWI Received',
+        '1st Resting State Received':'REST1 Received',
+        'fMRI Individualized Pressure Received':'CUFF1 Received',
+        'fMRI Standard Pressure Received':'CUFF2 Received',
+        '2nd Resting State Received':'REST2 Received',
+        'Cuff1 Applied Pressure':'Cuff1 Applied Pressure'
+}
+    
+    imaging_cols = list(imaging_columns_dict.keys()) # Get list of columns to keep
+    imaging = imaging_full[imaging_cols].copy() # Copy subset of imaging dataframe
+    imaging.rename(columns=imaging_columns_dict, inplace=True) # Rename columns
+    imaging = imaging.replace('na', np.nan) # Replace 'na' string with actual null value
+    imaging['completions_id'] = imaging.apply(lambda x: str(x['subject_id']) + x['visit'],axis=1) # Add completions id value from combination of subject ID and visit
+    
+    return imaging
+
+# rename subset_qc_data to clean_qc
+def subset_qc_data(qc_full):
+    qc_cols_used = ['site', 'sub', 'ses', 'scan','rating']
+    qc = qc_full[qc_cols_used].copy() # Select subset of columns    
+    # Set columns to categorical values
+    ignore = ['sub']
+    qc = (qc.set_index(ignore, append=True)
+            .astype("category")
+            .reset_index(ignore)
+           )
+    
+    return qc
+
+def clean_qc(qc_full):
+    ''' Clean up the incoming qc dataframe. Rename downstream as it breaks too many things here'''
+    qc_columns_dict = {
+            'site':'site', 
+            'sub': 'subject_id',
+            'ses': 'ses',
+            'scan':'scan',
+            'rating': 'rating'
+        }
+    qc_cols = list(qc_columns_dict.keys()) # Get list of columns to keep
+    qc = qc_full[qc_cols].copy() # Copy subset of imaging dataframe
+    # qc.rename(columns=qc_columns_dict, inplace=True) # Rename columns
+
+    # Set columns to categorical values
+    ignore = ['subject_id']
+    qc = (qc.set_index(ignore, append=True)
+            .astype("category")
+            .reset_index(ignore)
+           )
+    
+    return qc
+
 
 def get_api_imaging_data(tapis_token):
     ''' Load data from imaging api. Return bad status notice if hits Tapis API'''
     try:
         if tapis_token:
-            api_dict = {
-                    'subjects':{'subjects1': 'subjects-1-latest.json','subjects2': 'subjects-2-latest.json'},
-                    'imaging': {'imaging': 'imaging-log-latest.csv', 'qc': 'qc-log-latest.csv'},
-                    'blood':{'blood1': 'blood-1-latest.json','blood2': 'blood-2-latest.json'},
-                }
-
             # IMAGING
-            imaging_filepath = '/'.join([files_api_root,'imaging',api_dict['imaging']['imaging']])
+            imaging_filepath = '/'.join([files_api_root,'imaging','imaging-log-latest.csv'])
             imaging_request = make_report_data_request(imaging_filepath, tapis_token)
             if imaging_request.status_code == 200:
-                imaging = pd.read_csv(io.StringIO(imaging_request.content.decode('utf-8')))
+                imaging_full = pd.read_csv(io.StringIO(imaging_request.content.decode('utf-8')))
+                imaging = subset_imaging_data(imaging_full)
             else:
-                return {'status':'500', 'source': api_dict['imaging']['imaging']}
+                return {'status':'500', 'source': 'imaging-log-latest.csv'}
 
 
-            qc_filepath = '/'.join([files_api_root,'imaging',api_dict['imaging']['qc']])
+            # IF DATA LOADS SUCCESSFULLY:
+            imaging_data_json = {
+                'imaging' : imaging.to_dict('records'),
+                'qc' : qc.to_dict('records')
+            }
+
+            qc_filepath = '/'.join([files_api_root,'imaging','qc-log-latest.csv'])
             qc_request = make_report_data_request(qc_filepath, tapis_token)
             if qc_request.status_code == 200:
-                qc = pd.read_csv(io.StringIO(qc_request.content.decode('utf-8')))
+                qc_full = pd.read_csv(io.StringIO(qc_request.content.decode('utf-8')))
+                qc = subset_qc_data(qc_full)
             else:
-                return {'status':'500', 'source': api_dict['imaging']['qc']}
+                return {'status':'500', 'source': 'qc-log-latest.csv'}
 
             # IF DATA LOADS SUCCESSFULLY:
             imaging_data_json = {
@@ -313,26 +471,52 @@ def get_api_imaging_data(tapis_token):
 
     except Exception:
         traceback.print_exc()
-        raise
+        return "exception: {}".format(e)
     
+## Monitoring data for Briha's app
+
+def get_api_monitoring_data(api_request):
+    ''' Load monitoring data from api'''
+
+    try:      
+        current_datetime = datetime.now()
+        tapis_token = get_tapis_token(api_request)
+        
+        if tapis_token:    
+            # Monitoring
+            monitoring_filepath = '/'.join([files_api_root,'data-monitoring','aggregated.json'])
+            monitoring_request = requests.get(monitoring_filepath, headers={'X-Tapis-Token': tapis_token})
+
+
+
+            if monitoring_request.status_code == 200:
+                monitoring_request_status = [current_datetime.strftime("%m/%d/%Y, %H:%M:%S"), monitoring_filepath, '200']
+                monitoring_data_json = monitoring_request.json()
+            else:
+                monitoring_request_status = [current_datetime.strftime("%m/%d/%Y, %H:%M:%S"), monitoring_filepath, monitoring_request.status_code ]
+                monitoring_data_json = None
+
+            return monitoring_data_json, monitoring_request_status
+        else:
+            raise TapisTokenRetrievalException()
+
+    except Exception as e:
+        traceback.print_exc()
+        return None    
 
 ## Function to rebuild dataset from apis
-def get_api_blood_data(tapis_token):
+def get_api_blood_data(api_request):
     ''' Load blood data from api'''
     try:      
         current_datetime = datetime.now()
+        tapis_token = get_tapis_token(api_request)
+        
         if tapis_token:    
-            api_dict = {
-                    'subjects':{'subjects1': 'subjects-1-latest.json','subjects2': 'subjects-2-latest.json'},
-                    'imaging': {'imaging': 'imaging-log-latest.csv', 'qc': 'qc-log-latest.csv'},
-                    'blood':{'blood1': 'blood-1-latest.json','blood2': 'blood-2-latest.json'},
-                }
-
             # BLOOD
-            blood1_filepath = '/'.join([files_api_root,'blood',api_dict['blood']['blood1']])
+            blood1_filepath = '/'.join([files_api_root,'blood','blood-1-latest.json'])
             blood1_request = make_report_data_request(blood1_filepath, tapis_token)
 
-            blood2_filepath = '/'.join([files_api_root,'blood',api_dict['blood']['blood2']])
+            blood2_filepath = '/'.join([files_api_root,'blood','blood-2-latest.json'])
             blood2_request = make_report_data_request(blood2_filepath, tapis_token)
 
             if blood1_request.status_code == 200:
@@ -367,11 +551,10 @@ def get_api_blood_data(tapis_token):
         else:
             raise TapisTokenRetrievalException()
 
-    except Exception:
+    except Exception as e:
         traceback.print_exc()
-        raise
-    
-    
+        return None
+
 
 def get_api_subjects_json(tapis_token):
     ''' Load subjects data from api. Note data needs to be cleaned, etc. to create properly formatted data product'''
@@ -400,10 +583,15 @@ def get_api_subjects_json(tapis_token):
             return subjects_json
         else:
             raise TapisTokenRetrievalException()
-    except Exception:
-        traceback.print_exc()
-        raise
 
+        response.raise_for_status()
+        tapis_token = response.json()['token']
+        logger.info("Received tapis token.")
+        return tapis_token
+    except Exception as e:
+        traceback.print_exc()
+        return None
+    
 # Retry handler for requests
 @retry(wait_exponential_multiplier=500, wait_exponential_max=5000, stop_max_attempt_number=3)
 def make_request_with_retry(url, cookies):
@@ -412,6 +600,10 @@ def make_request_with_retry(url, cookies):
 
 # Get Tapis token if authorized to access data files
 def get_tapis_token(api_request):
+    if _is_local():
+        logger.info("Running local, not fetching tapis token.")
+        return None
+
     '''Get tapis token using the session cookie. If the session is not authenticated, this will fail.'''
     session_id  = api_request.cookies.get("coresessionid")
     if session_id is None:
@@ -433,6 +625,13 @@ def make_report_data_request(url, tapis_token):
     logger.info(f'Response status code: {response.status_code}')
     return response
 
+
+def make_report_data_request(url, tapis_token):
+    logger.info(f"Sending request to {url}")
+    response = requests.get(url, headers={'X-Tapis-Token': tapis_token})
+    logger.info(f'Response status code: {response.status_code}')
+    return response
+
 # ----------------------------------------------------------------------------
 # PROCESS SUBJECTS DATA
 # ----------------------------------------------------------------------------
@@ -441,14 +640,19 @@ def make_report_data_request(url, tapis_token):
 def combine_mcc_json(mcc_json):
     '''Convert MCC json subjects data into dataframe and combine'''
     df = pd.DataFrame()
-    for mcc in mcc_json:
-        mcc_data = pd.DataFrame.from_dict(mcc_json[mcc], orient='index').reset_index()
+    for mcc in mcc_json.keys():
+        mcc_data = pd.DataFrame.from_dict(mcc_json[mcc], orient='index')
         mcc_data['mcc'] = mcc
+        print(mcc + str(len(mcc_data)))
         if df.empty:
+            print('df empty')
             df = mcc_data
+            print('empty df len: '+ str(len(df)))
         else:
-            df = pd.concat([df, mcc_data])
-
+            print('df len: '+ str(len(df)))
+            df = pd.concat([df, mcc_data],axis=0)
+            
+            print('df len post concat: '+ str(len(df)))
     return df
 
 # 2. extract nested 1-to-many adverse events data
@@ -562,7 +766,9 @@ def get_consented_subjects(subjects_with_screening_site):
     consented = subjects_with_screening_site[subjects_with_screening_site.obtain_date.notnull()].copy()
     consented['treatment_site'] = consented.apply(lambda x: use_b_if_not_a(x['sp_data_site_display'], x['redcap_data_access_group_display']), axis=1)
     consented['treatment_site_type'] = consented['treatment_site'] + "/" + consented['surgery_type']
+
     return consented
+
 
 # 5. restrict Adverse Events data to those subjects identified as 'consented' in step 5
 def clean_adverse_events(adverse_events, consented, display_terms_dict_multi):
@@ -594,7 +800,9 @@ def convert_datetime_to_isoformat(df, datetime_cols_list):
 def process_subjects_data(subjects_raw_json, subjects_raw_cols_for_reports,screening_sites, display_terms_dict, display_terms_dict_multi):
     ''' Take the raw subjects json and process it into separate, cleaned dataframes for subjects, consented subjects and adverse events'''
     # 1. Combine separate jsons for each MCC into a single data frame
-    subjects_raw = combine_mcc_json(subjects_raw_json)#.reset_index(drop=True, inplace=True)
+    subjects_raw = combine_mcc_json(subjects_raw_json)
+    subjects_raw.reset_index(inplace=True)
+    # print('raw: ' + str(len(subjects_raw)))
 
     # 3. extract nested 1-to-many adverse events data
     adverse_effects_raw = extract_adverse_effects_data(subjects_raw)
@@ -604,9 +812,11 @@ def process_subjects_data(subjects_raw_json, subjects_raw_cols_for_reports,scree
 
     # 5. Clean subjects dataframe
     subjects = create_clean_subjects(subjects_raw, screening_sites, display_terms_dict, display_terms_dict_multi)
+    # print('subjects: ' + str(len(subjects)))
 
     # 6. Extract data for only those patients who ultimately consented
     consented = get_consented_subjects(subjects)
+    # print('consented: ' + str(len(consented)))
 
     # 7. restrict Adverse Events data to those subjects identified as 'consented' in step 5
     adverse_events = clean_adverse_events(adverse_effects_raw, consented, display_terms_dict_multi)
@@ -709,6 +919,68 @@ def clean_blooddata(blood_df):
     blood_df = blood_df.rename(columns=rename_dict)
 
     return blood_df
+
+
+# ----------------------------------------------------------------------------
+# PROCESS IMAGING DATA
+# ----------------------------------------------------------------------------
+
+def clean_imaging(imaging_full):
+    ''' Clean up the incoming imaging dataframe'''
+    # Imaging columns actually used.  Subset to just these portion of the data. 
+    # Dictionary keys = columns used, dictionary value = new column name
+    imaging_columns_dict = {
+        'site': 'site',
+        'subject_id': 'subject_id',
+        'visit': 'visit',
+        'acquisition_week': 'acquisition_week',
+        'Surgery Week':'Surgery Week',
+        'bids':'bids',
+        'dicom':'dicom', 
+        'T1 Indicated':'T1',
+        'DWI Indicated':'DWI',
+        '1st Resting State Indicated':'REST1',
+        'fMRI Individualized Pressure Indicated':'CUFF1',
+        'fMRI Standard Pressure Indicated':'CUFF2',
+        '2nd Resting State Indicated':'REST2',
+        'T1 Received':'T1 Received',
+        'DWI Received':'DWI Received',
+        '1st Resting State Received':'REST1 Received',
+        'fMRI Individualized Pressure Received':'CUFF1 Received',
+        'fMRI Standard Pressure Received':'CUFF2 Received',
+        '2nd Resting State Received':'REST2 Received',
+        'Cuff1 Applied Pressure':'Cuff1 Applied Pressure'
+        }
+    
+    imaging_cols = list(imaging_columns_dict.keys()) # Get list of columns to keep
+    imaging = imaging_full[imaging_cols].copy() # Copy subset of imaging dataframe
+    imaging.rename(columns=imaging_columns_dict, inplace=True) # Rename columns
+    imaging = imaging.replace('na', np.nan) # Replace 'na' string with actual null value
+    imaging['completions_id'] = imaging.apply(lambda x: str(x['subject_id']) + x['visit'],axis=1) # Add completions id value from combination of subject ID and visit
+    
+    return imaging
+
+def clean_qc(qc_full):
+    ''' Clean up the incoming qc dataframe. rename downstreamt to avoid causing issues. '''
+    qc_columns_dict = {
+            'site':'site', 
+            'sub': 'subject_id',
+            'ses': 'ses',
+            'scan':'scan',
+            'rating': 'rating'
+        }
+    qc_cols = list(qc_columns_dict.keys()) # Get list of columns to keep
+    qc = qc_full[qc_cols].copy() # Copy subset of imaging dataframe
+    qc.rename(columns=qc_columns_dict, inplace=True) # Rename columns
+
+    # Set columns to categorical values
+    ignore = ['subject_id']
+    qc = (qc.set_index(ignore, append=True)
+            .astype("category")
+            .reset_index(ignore)
+           )
+    
+    return qc
 
 # ----------------------------------------------------------------------------
 # OTHER APIS?
