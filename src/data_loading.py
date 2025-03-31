@@ -127,6 +127,12 @@ def move_column_inplace(df, col, pos):
 # ----------------------------------------------------------------------------
 # DATA DISPLAY DICTIONARIES
 # ----------------------------------------------------------------------------
+def parse_numbers(x):
+    ''' Function to handle pandas deprecation of errors="ignore" in pd.to_numeric'''
+    try: 
+        return pd.to_numeric(x)
+    except:
+        return x
 
 def get_display_dictionary(display_terms, api_field, api_value, display_col):
     '''from a dataframe with the table display information, create a dictionary by field to match the database
@@ -168,9 +174,16 @@ def load_display_terms(display_terms_location):
         traceback.print_exc()
         return None
 
+
+# ----------------------------------------------------------------------------
+# LOAD *RELEASE* DATA FROM LOCAL FILES
+# ----------------------------------------------------------------------------
+
+
 # ----------------------------------------------------------------------------
 # LOAD DATA FROM LOCAL FILES, Return *JSON*
 # ----------------------------------------------------------------------------
+
 
 def get_local_imaging_data(imaging_filepath, qc_filepath):
     ''' Load data from local imaging files. '''
