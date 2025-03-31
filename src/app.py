@@ -2,6 +2,7 @@ from datetime import datetime
 from flask import Flask, jsonify, request
 from os import environ
 import os
+import json
 import pandas as pd
 import csv
 import logging
@@ -21,8 +22,36 @@ ASSETS_PATH = os.path.join(current_folder,'assets')
 # Path to Report files at TACC
 api_root = environ.get("API_ROOT") 
 
-local_data_path = os.environ.get("LOCAL_DATA_PATH","")
+local_data_path=DATA_PATH
+# local_data_path = os.environ.get("LOCAL_DATA_PATH","")
 local_data_date = os.environ.get("LOCAL_DATA_DATE","")
+
+def get_imaging_releases(imaging_release_folder, release_files_list):
+    ''' Load imaging release data from release files.  Files stored as json, Use list without the .json at end'''
+    try:
+        imaging_releases = {}
+
+        for f in release_files_list:
+            f_filename = f + '.json'
+            imaging_filepath = os.path.join(imaging_release_folder, f_filename)
+
+            with open(imaging_filepath) as imaging_file:
+                imaging_releases[f] = json.load(imaging_file)
+
+        return imaging_releases
+
+    except Exception as e:
+        traceback.print_exc()
+        return {'Stats': 'Error obtaining Imaging release data'}
+
+
+
+
+imaging_release_folder = os.path.join(DATA_PATH,'data-products')
+release_files_list=['imaging_1_0','imaging_1_1','imaging_2_0']
+imaging_releases = get_imaging_releases(imaging_release_folder, release_files_list)
+print(imaging_releases.keys())
+
 
 if data_access_type == "LOCAL":
 
@@ -43,6 +72,7 @@ else:
     subjects1_filepath = None
     subjects2_filepath = None
     monitoring_data_filepath = None
+    imaging_releases_filepath = None
 
 
 # ----------------------------------------------------------------------------
@@ -171,6 +201,16 @@ def api_tester():
         return jsonify(local_data_path)
     else:
         return jsonify('local_data_path not found')
+
+@app.route("/api/imaging_release")
+def api_imaging_releases():
+    global datetime_format
+    global imaging_releases
+    print(imaging_releases.keys())
+    try:               
+        return jsonify({imaging_releases})
+    except Exception as e:
+        return handle_exception(e, "error with Imaging release 1.0")
 
 @app.route("/api/imaging")
 def api_imaging():
