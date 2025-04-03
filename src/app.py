@@ -9,6 +9,7 @@ import logging
 
 # from data_processing import *
 from data_loading import *
+from imaging_processing import *
 
 
 # ----------------------------------------------------------------------------
@@ -26,17 +27,12 @@ local_data_path=DATA_PATH
 # local_data_path = os.environ.get("LOCAL_DATA_PATH","")
 local_data_date = os.environ.get("LOCAL_DATA_DATE","")
 
-def get_imaging_releases(imaging_release_folder, release_files_list):
-    ''' Load imaging release data from release files.  Files stored as json, Use list without the .json at end'''
+def get_imaging_releases(imaging_release_filepath):
+    ''' Load imaging release data from release files. '''
     try:
-        imaging_releases = {}
-
-        for f in release_files_list:
-            f_filename = f + '.json'
-            imaging_filepath = os.path.join(imaging_release_folder, f_filename)
-
-            with open(imaging_filepath) as imaging_file:
-                imaging_releases[f] = json.load(imaging_file)
+        with open(imaging_release_filepath) as imaging_file:
+            imaging_releases = json.load(imaging_release_filepath)
+        print("Type:", type(imaging_releases))
 
         return imaging_releases
 
@@ -44,12 +40,9 @@ def get_imaging_releases(imaging_release_folder, release_files_list):
         traceback.print_exc()
         return {'Stats': 'Error obtaining Imaging release data'}
 
-
-
-
-imaging_release_folder = os.path.join(DATA_PATH,'data-products')
-release_files_list=['imaging_1_0','imaging_1_1','imaging_2_0']
-imaging_releases = get_imaging_releases(imaging_release_folder, release_files_list)
+imaging_release_filepath = os.path.join(DATA_PATH,'data-products','imaging_releases.json')
+with open(imaging_release_filepath) as f:
+    imaging_releases = json.load(f)
 print(imaging_releases.keys())
 
 
@@ -208,7 +201,7 @@ def api_imaging_releases():
     global imaging_releases
     print(imaging_releases.keys())
     try:               
-        return jsonify({imaging_releases})
+        return jsonify(imaging_releases)
     except Exception as e:
         return handle_exception(e, "error with Imaging release 1.0")
 
@@ -233,6 +226,8 @@ def api_imaging():
                 api_data_index['imaging'] = data_date
 
                 api_data_cache['imaging'] = imaging_data
+        
+
                 
         return jsonify({'date': api_data_index['imaging'], 'data': api_data_cache['imaging']})
     except Exception as e:

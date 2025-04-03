@@ -181,7 +181,8 @@ def load_display_terms(display_terms_location):
 
 
 # ----------------------------------------------------------------------------
-# LOAD DATA FROM LOCAL FILES, Return *JSON*
+# LOAD DATA FROM LOCAL FILES, Return *JSON* 
+# TO DO: MOVE SECTION TO APPROpriate locations. Imaging already moveld.
 # ----------------------------------------------------------------------------
 
 
@@ -320,130 +321,13 @@ def get_api_consort_data(tapis_token,
         traceback.print_exc()
         return None
 
-## Function to rebuild dataset from apis
-
-# rename subset_imaging_data to clean_imaging
-def subset_imaging_data(imaging_full):
-    imaging_columns_used = ['site', 'subject_id', 'visit','acquisition_week','Surgery Week','bids', 'dicom', 
-    'T1 Indicated','DWI Indicated', '1st Resting State Indicated','fMRI Individualized Pressure Indicated', 
-    'fMRI Standard Pressure Indicated','2nd Resting State Indicated',
-    'T1 Received', 'DWI Received', 'fMRI Individualized Pressure Received', 'fMRI Standard Pressure Received',
-    '1st Resting State Received', '2nd Resting State Received','Cuff1 Applied Pressure']
-
-    imaging = imaging_full[imaging_columns_used].copy() # Select subset of columns
-    imaging = imaging.replace('na', np.nan) # Clean up data
-    imaging['completions_id'] = imaging.apply(lambda x: str(x['subject_id']) + x['visit'],axis=1) # Add completions id value from combination of subject ID and visit
-
-    return imaging
-
-def clean_imaging(imaging_full):
-    ''' Clean up the incoming imaging dataframe'''
-    # Imaging columns actually used.  Subset to just these portion of the data. 
-    # Dictionary keys = columns used, dictionary value = new column name
-    imaging_columns_dict = {
-        'site': 'site',
-        'subject_id': 'subject_id',
-        'visit': 'visit',
-        'acquisition_week': 'acquisition_week',
-        'Surgery Week':'Surgery Week',
-        'bids':'bids',
-        'dicom':'dicom', 
-        'T1 Indicated':'T1',
-        'DWI Indicated':'DWI',
-        '1st Resting State Indicated':'REST1',
-        'fMRI Individualized Pressure Indicated':'CUFF1',
-        'fMRI Standard Pressure Indicated':'CUFF2',
-        '2nd Resting State Indicated':'REST2',
-        'T1 Received':'T1 Received',
-        'DWI Received':'DWI Received',
-        '1st Resting State Received':'REST1 Received',
-        'fMRI Individualized Pressure Received':'CUFF1 Received',
-        'fMRI Standard Pressure Received':'CUFF2 Received',
-        '2nd Resting State Received':'REST2 Received',
-        'Cuff1 Applied Pressure':'Cuff1 Applied Pressure'
-}
-    
-    imaging_cols = list(imaging_columns_dict.keys()) # Get list of columns to keep
-    imaging = imaging_full[imaging_cols].copy() # Copy subset of imaging dataframe
-    imaging.rename(columns=imaging_columns_dict, inplace=True) # Rename columns
-    imaging = imaging.replace('na', np.nan) # Replace 'na' string with actual null value
-    imaging['completions_id'] = imaging.apply(lambda x: str(x['subject_id']) + x['visit'],axis=1) # Add completions id value from combination of subject ID and visit
-    
-    return imaging
-
-# rename subset_qc_data to clean_qc
-def subset_qc_data(qc_full):
-    qc_cols_used = ['site', 'sub', 'ses', 'scan','rating']
-    qc = qc_full[qc_cols_used].copy() # Select subset of columns    
-    # Set columns to categorical values
-    ignore = ['sub']
-    qc = (qc.set_index(ignore, append=True)
-            .astype("category")
-            .reset_index(ignore)
-           )
-    
-    return qc
-
-def clean_qc(qc_full):
-    ''' Clean up the incoming qc dataframe. Rename downstream as it breaks too many things here'''
-    qc_columns_dict = {
-            'site':'site', 
-            'sub': 'subject_id',
-            'ses': 'ses',
-            'scan':'scan',
-            'rating': 'rating'
-        }
-    qc_cols = list(qc_columns_dict.keys()) # Get list of columns to keep
-    qc = qc_full[qc_cols].copy() # Copy subset of imaging dataframe
-    # qc.rename(columns=qc_columns_dict, inplace=True) # Rename columns
-
-    # Set columns to categorical values
-    ignore = ['subject_id']
-    qc = (qc.set_index(ignore, append=True)
-            .astype("category")
-            .reset_index(ignore)
-           )
-    
-    return qc
 
 
-def get_api_imaging_data(tapis_token):
-    ''' Load data from imaging api. Return bad status notice if hits Tapis API'''
-    try:
-        if tapis_token:
-            # IMAGING
-            imaging_filepath = '/'.join([files_api_root,'imaging','imaging-log-latest.csv'])
-            imaging_request = make_report_data_request(imaging_filepath, tapis_token)
-            if imaging_request.status_code == 200:
-                imaging_full = pd.read_csv(io.StringIO(imaging_request.content.decode('utf-8')))
-                imaging = subset_imaging_data(imaging_full)
-            else:
-                return {'status':'500', 'source': 'imaging-log-latest.csv'}
 
+# ----------------------------------------------------------------------------
+# MONITORING
+# ----------------------------------------------------------------------------
 
-            qc_filepath = '/'.join([files_api_root,'imaging','qc-log-latest.csv'])
-            qc_request = make_report_data_request(qc_filepath, tapis_token)
-            if qc_request.status_code == 200:
-                qc_full = pd.read_csv(io.StringIO(qc_request.content.decode('utf-8')))
-                qc = subset_qc_data(qc_full)
-            else:
-                return {'status':'500', 'source': 'qc-log-latest.csv'}
-
-            # IF DATA LOADS SUCCESSFULLY:
-            imaging_data_json = {
-                'imaging' : imaging.to_dict('records'),
-                'qc' : qc.to_dict('records')
-            }
-
-            return imaging_data_json
-        else:
-           raise TapisTokenRetrievalException()
-
-    except Exception as e:
-        traceback.print_exc()
-        return "exception: {}".format(e)
-    
-## Monitoring data for Briha's app
 
 def get_api_monitoring_data(api_request):
     ''' Load monitoring data from api'''
