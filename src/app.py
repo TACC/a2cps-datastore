@@ -2,12 +2,14 @@ from datetime import datetime
 from flask import Flask, jsonify, request
 from os import environ
 import os
+import json
 import pandas as pd
 import csv
 import logging
 
 # from data_processing import *
 from data_loading import *
+from imaging_processing import *
 
 
 # ----------------------------------------------------------------------------
@@ -21,7 +23,8 @@ ASSETS_PATH = os.path.join(current_folder,'assets')
 # Path to Report files at TACC
 api_root = environ.get("API_ROOT") 
 
-local_data_path = os.environ.get("LOCAL_DATA_PATH","")
+local_data_path=DATA_PATH
+# local_data_path = os.environ.get("LOCAL_DATA_PATH","")
 local_data_date = os.environ.get("LOCAL_DATA_DATE","")
 
 if data_access_type == "LOCAL":
@@ -33,6 +36,7 @@ if data_access_type == "LOCAL":
     subjects1_filepath = os.path.join(local_data_path,os.environ.get("SUBJECTS1_FILE"))
     subjects2_filepath = os.path.join(local_data_path,os.environ.get("SUBJECTS2_FILE"))
     monitoring_data_filepath = os.path.join(local_data_path,os.environ.get("MONITORING_FILE"))
+    imaging_releases_filepath = os.path.join(local_data_path,os.environ.get("IMAGING_RELEASES_FILE"))
 
     print(local_data_path, local_data_date, subjects1_filepath, subjects2_filepath, monitoring_data_filepath)
 else: 
@@ -43,6 +47,7 @@ else:
     subjects1_filepath = None
     subjects2_filepath = None
     monitoring_data_filepath = None
+    imaging_releases_filepath = None
 
 
 # ----------------------------------------------------------------------------
@@ -172,6 +177,23 @@ def api_tester():
     else:
         return jsonify('local_data_path not found')
 
+@app.route("/api/imaging_release")
+def api_imaging_releases():
+    imaging_releases = {}
+
+    try:             
+        if data_access_type != 'LOCAL':
+            tapis_token = get_tapis_token(request)  
+            # TO DO API Imaging RELEASE
+            imaging_releases = get_api_imaging_releases(tapis_token)
+        else:            
+            # TO DO LOCAL Imaging RELEASE
+            imaging_releases = get_local_imaging_releases(imaging_releases_filepath)
+
+        return jsonify(imaging_releases)
+    except Exception as e:
+        return handle_exception(e, "error with Imaging release data")
+
 @app.route("/api/imaging")
 def api_imaging():
     global datetime_format
@@ -193,6 +215,8 @@ def api_imaging():
                 api_data_index['imaging'] = data_date
 
                 api_data_cache['imaging'] = imaging_data
+        
+
                 
         return jsonify({'date': api_data_index['imaging'], 'data': api_data_cache['imaging']})
     except Exception as e:
