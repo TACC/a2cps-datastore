@@ -27,25 +27,6 @@ local_data_path=DATA_PATH
 # local_data_path = os.environ.get("LOCAL_DATA_PATH","")
 local_data_date = os.environ.get("LOCAL_DATA_DATE","")
 
-def get_imaging_releases(imaging_release_filepath):
-    ''' Load imaging release data from release files. '''
-    try:
-        with open(imaging_release_filepath) as imaging_file:
-            imaging_releases = json.load(imaging_release_filepath)
-        print("Type:", type(imaging_releases))
-
-        return imaging_releases
-
-    except Exception as e:
-        traceback.print_exc()
-        return {'Stats': 'Error obtaining Imaging release data'}
-
-imaging_release_filepath = os.path.join(DATA_PATH,'data-products','imaging_releases.json')
-with open(imaging_release_filepath) as f:
-    imaging_releases = json.load(f)
-print(imaging_releases.keys())
-
-
 if data_access_type == "LOCAL":
 
     imaging_filepath = os.path.join(local_data_path,os.environ.get("IMAGING_FILE"))
@@ -55,6 +36,7 @@ if data_access_type == "LOCAL":
     subjects1_filepath = os.path.join(local_data_path,os.environ.get("SUBJECTS1_FILE"))
     subjects2_filepath = os.path.join(local_data_path,os.environ.get("SUBJECTS2_FILE"))
     monitoring_data_filepath = os.path.join(local_data_path,os.environ.get("MONITORING_FILE"))
+    imaging_releases_filepath = os.path.join(local_data_path,os.environ.get("IMAGING_RELEASES_FILE"))
 
     print(local_data_path, local_data_date, subjects1_filepath, subjects2_filepath, monitoring_data_filepath)
 else: 
@@ -197,13 +179,20 @@ def api_tester():
 
 @app.route("/api/imaging_release")
 def api_imaging_releases():
-    global datetime_format
-    global imaging_releases
-    print(imaging_releases.keys())
-    try:               
+    imaging_releases = {}
+
+    try:             
+        if data_access_type != 'LOCAL':
+            tapis_token = get_tapis_token(request)  
+            # TO DO API Imaging RELEASE
+            imaging_releases = get_api_imaging_releases(tapis_token)
+        else:            
+            # TO DO LOCAL Imaging RELEASE
+            imaging_releases = get_local_imaging_releases(imaging_releases_filepath)
+
         return jsonify(imaging_releases)
     except Exception as e:
-        return handle_exception(e, "error with Imaging release 1.0")
+        return handle_exception(e, "error with Imaging release data")
 
 @app.route("/api/imaging")
 def api_imaging():

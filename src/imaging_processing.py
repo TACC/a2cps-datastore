@@ -70,9 +70,19 @@ def generate_imaging_report_data_dictionary(data_source, version, data_date, ima
     return imaging_report_data_dictionary
 
 # ----------------------------------------------------------------------------
-# input processing
+# LOCAL DATA
 # ----------------------------------------------------------------------------
+def get_local_imaging_releases(imaging_release_filepath):
+    ''' Load imaging release data from release files. '''
+    try:
+        with open(imaging_release_filepath) as imaging_file:
+            imaging_releases = json.load(imaging_file)
 
+        return imaging_releases
+
+    except Exception as e:
+        traceback.print_exc()
+        return {'Stats': 'Error obtaining Imaging release data'}
 
 def get_local_imaging_data(imaging_filepath, qc_filepath):
     ''' Load data from local imaging files. '''
@@ -93,7 +103,30 @@ def get_local_imaging_data(imaging_filepath, qc_filepath):
     except Exception as e:
         traceback.print_exc()
         return {'status': 'Problem with local imaging files'}
-    
+
+# ----------------------------------------------------------------------------
+# CORRAL DATA WITH TAPIS
+# ----------------------------------------------------------------------------
+
+def get_api_imaging_releases(tapis_token):
+    ''' Load imaging release data from corral files. '''
+    try:
+        if tapis_token:
+            # IMAGING RELEASES FILEPATH
+            imaging_releases_filepath = '/'.join([files_api_root,'data-products','imaging_releases.json'])
+            imaging_releases_request = make_report_data_request(imaging_releases_filepath, tapis_token)
+            if imaging_releases_request.status_code == 200:
+                imaging_releases = imaging_releases_request.json()
+            else:
+                return None
+            return imaging_releases
+        else:
+           raise TapisTokenRetrievalException()
+
+    except Exception as e:
+        traceback.print_exc()
+        return "exception: {}".format(e)
+
 def get_api_imaging_data(tapis_token):
     ''' Load data from imaging api. Return bad status notice if hits Tapis API'''
     try:
