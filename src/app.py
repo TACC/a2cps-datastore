@@ -264,16 +264,26 @@ def api_subjects():
 
     try:
         tapis_token = get_tapis_token(request)
+        logger.info('***'*999)
+        logger.info(tapis_token)
         if not api_data_index['subjects'] or not check_data_current(request, datetime.strptime(api_data_index['subjects'], datetime_format)):
+            logger.info('???'*999)
+            logger.info(data_access_type)
             # api_date = datetime.now().strftime(datetime_format)
             if data_access_type != 'LOCAL':
+                logger.info('!!!'*999)
+                logger.info(data_access_type)
                 data_date = datetime.now().strftime(datetime_format)
                 latest_subjects_json = get_api_subjects_json(tapis_token)
             else:
+                logger.info('&&&'*999)
+                logger.info(data_access_type)
                 data_date = local_data_date
                 latest_subjects_json = get_local_subjects_raw(subjects1_filepath, subjects2_filepath)
                 print(latest_subjects_json.keys())
-
+  
+            logger.info('$$$$'*999)
+            logger.info(latest_subjects_json)
             # if latest_subjects_json:
             latest_data = process_subjects_data(latest_subjects_json,subjects_raw_cols_for_reports,screening_sites, display_terms_dict, display_terms_dict_multi)
             app.logger.info(f"Caching subjects api response data. Date: {data_date}")
