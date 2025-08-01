@@ -600,18 +600,34 @@ def make_request_with_retry(url, cookies):
 
 # Get Tapis token if authorized to access data files
 def get_tapis_token(api_request):
+    logger.info("@@@"*999)
+    for attr in dir(api_request):
+        try:
+            value = getattr(api_request, attr)
+            logger.info(f"{attr}: {value}")
+        except Exception as e:
+            logger.info(f"{attr}: Error accessing attribute - {e}")
+    
     if _is_local():
         logger.info("Running local, not fetching tapis token.")
         return None
 
     '''Get tapis token using the session cookie. If the session is not authenticated, this will fail.'''
     session_id  = api_request.cookies.get("coresessionid")
+    logger.info("^^^"*999)
+    logger.info(session_id)
     if session_id is None:
         raise MissingPortalSessionIdException("Missing session id")
     try:
+        logger.info("+++"*999)
         cookies = {'coresessionid':session_id}
         response = make_request_with_retry(portal_api_root + '/auth/tapis/', cookies)
-
+        for attr in dir(response):
+        try:
+            value = getattr(response, attr)
+            logger.info(f"{attr}: {value}")
+        except Exception as e:
+            logger.info(f"{attr}: Error accessing attribute - {e}")
         response.raise_for_status()
         tapis_token = response.json()['token']
         logger.info("Received tapis token.")
