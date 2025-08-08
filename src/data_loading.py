@@ -456,6 +456,7 @@ def get_tapis_token(api_request):
 
     '''Get tapis token using the session cookie. If the session is not authenticated, this will fail.'''
     logger.info(f"Request cookies: {api_request.cookies}")
+    logger.info("Request headers:\n" + "\n".join(f"{k}: {v}" for k, v in api_request.headers.items()))
     session_id  = api_request.cookies.get("coresessionid")
     if session_id is None:
         raise MissingPortalSessionIdException("Missing session id")
