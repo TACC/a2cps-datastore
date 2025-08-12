@@ -454,16 +454,17 @@ def get_tapis_token(api_request):
         logger.info("Running local, not fetching tapis token.")
         return None
 
-    '''Get tapis token using the session cookie. If the session is not authenticated, this will fail.'''
-    logger.info(f"Request cookies: {api_request.cookies}")
-    logger.info("Request headers:\n" + "\n".join(f"{k}: {v}" for k, v in api_request.headers.items()))
-    session_id  = api_request.cookies.get("coresessionid")
+    SESSION_COOKIE_NAME = "coresessionid"
+    session_id  = api_request.cookies.get(SESSION_COOKIE_NAME)
     if session_id is None:
+        logger.info(
+            f"Missing '{SESSION_COOKIE_NAME}' cookie. "
+            f"Available cookies: {list(api_request.cookies.keys())}"
+        )
         raise MissingPortalSessionIdException("Missing session id")
 
-    logger.info(f"Session ID: {session_id}")
     try:
-        cookies = {'coresessionid':session_id}
+        cookies = {SESSION_COOKIE_NAME: session_id}
         response = make_request_with_retry(portal_api_root + '/auth/tapis/', cookies)
 
         response.raise_for_status()
