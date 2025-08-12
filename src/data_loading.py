@@ -450,6 +450,19 @@ def make_request_with_retry(url, cookies):
 
 # Get Tapis token if authorized to access data files
 def get_tapis_token(api_request):
+    """
+    Retrieve a Tapis token using the session cookie.
+
+    In normal operation, requests pass through the proxy-redirect,
+    which ensures the request is same-site so the browser sends the
+    'coresessionid' cookie. If the cookie is missing, either:
+      1) The request bypassed the proxy-redirect, OR
+      2) The user is not logged in (no valid session).
+
+    Raises:
+        MissingPortalSessionIdException: No session cookie was found.
+        TapisTokenRetrievalException: Failed to obtain a Tapis token.
+    """
     if _is_local():
         logger.info("Running local, not fetching tapis token.")
         return None
