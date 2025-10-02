@@ -1,4 +1,7 @@
 from data_loading import *
+import logging
+
+logger  = logging.getLogger("datastore_app")
 
 # ----------------------------------------------------------------------------
 # input processing
@@ -115,9 +118,14 @@ def get_api_imaging_releases(tapis_token):
             # IMAGING RELEASES FILEPATH
             imaging_releases_filepath = '/'.join([files_api_root,'data-products','imaging_releases.json'])
             imaging_releases_request = make_report_data_request(imaging_releases_filepath, tapis_token)
+            logger.info('imaging_releases_request')
+            logger.info(imaging_releases_request)
             if imaging_releases_request.status_code == 200:
                 imaging_releases = imaging_releases_request.json()
+                logger.info('imaging_releases')
+                logger.info(imaging_releases)
             else:
+                logger.info('return none')
                 return None
             return imaging_releases
         else:
