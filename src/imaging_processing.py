@@ -123,7 +123,7 @@ def get_api_imaging_releases(tapis_token):
             if imaging_releases_request.status_code == 200:
                 imaging_releases = imaging_releases_request.json()
                 logger.info('imaging_releases')
-                logger.info(imaging_releases)
+                logger.info(imaging_releases[:2])
             else:
                 logger.info('return none')
                 return None
