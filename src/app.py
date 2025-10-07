@@ -23,8 +23,8 @@ ASSETS_PATH = os.path.join(current_folder,'assets')
 # Path to Report files at TACC
 api_root = environ.get("API_ROOT") 
 
-local_data_path=DATA_PATH
-# local_data_path = os.environ.get("LOCAL_DATA_PATH","")
+# local_data_path=DATA_PATH 
+local_data_path = "/app/data"
 local_data_date = os.environ.get("LOCAL_DATA_DATE","")
 
 if data_access_type == "LOCAL":
@@ -37,6 +37,7 @@ if data_access_type == "LOCAL":
     subjects2_filepath = os.path.join(local_data_path,os.environ.get("SUBJECTS2_FILE"))
     monitoring_data_filepath = os.path.join(local_data_path,os.environ.get("MONITORING_FILE"))
     imaging_releases_filepath = os.path.join(local_data_path,os.environ.get("IMAGING_RELEASES_FILE"))
+    print(imaging_releases_filepath)
 
     print(local_data_path, local_data_date, subjects1_filepath, subjects2_filepath, monitoring_data_filepath)
 else: 
@@ -57,12 +58,6 @@ else:
 
 
 # # Pointers to official files stored at github repository main branch
-# screening_sites_github_url = 'https://raw.githubusercontent.com/TACC/a2cps-datastore-weekly/main/src/assets/screening_sites.csv'
-# display_terms_github_url = 'https://raw.githubusercontent.com/TACC/a2cps-datastore-weekly/main/src/assets/A2CPS_display_terms.csv'
-
-# # load display terms and screening sites
-# screening_sites = pd.read_csv(screening_sites_github_url)
-# display_terms, display_terms_dict, display_terms_dict_multi = load_display_terms_from_github(display_terms_github_url)
 
 # For datastore: load locally from assets file to avoid issues with url library.
 screening_sites_location = os.path.join(ASSETS_PATH, 'screening_sites.csv')
