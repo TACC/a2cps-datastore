@@ -143,7 +143,7 @@ api_data_simple = {
 app = Flask(__name__)
 app.debug = True
 gunicorn_logger = logging.getLogger('gunicorn.error')
-app.logger  = logging.getLogger("datastore_app")
+app.logger = logging.getLogger("datastore_app")
 app.logger.handlers = gunicorn_logger.handlers
 app.logger.setLevel(logging.DEBUG)
 
@@ -194,23 +194,31 @@ def api_imaging():
     global datetime_format
     global api_data_index
     global api_data_cache
-    
+
+    app.logger.info("api_imaging")
     try:
         tapis_token = get_tapis_token(request)
+        app.logger.info("tapis_token")
         if not api_data_index['imaging'] or not check_data_current(request, datetime.strptime(api_data_index['imaging'], datetime_format)):
+            app.logger.info("getting imaging data")
             if data_access_type != 'LOCAL':
+                app.logger.info("not local data")
                 data_date = datetime.now().strftime(datetime_format)
                 imaging_data = get_api_imaging_data(tapis_token)
+                app.logger.info(f"imaging_data: {imaging_data}")
             else:
+                app.logger.info("local data")
                 data_date = local_data_date
                 imaging_data = get_local_imaging_data(imaging_filepath, qc_filepath)
-            
+                app.logger.info(f"imaging_data: {imaging_data}")
+
             if imaging_data:
                 app.logger.info(f"Caching imaging report data. Date: {data_date}")
                 api_data_index['imaging'] = data_date
 
                 api_data_cache['imaging'] = imaging_data
-        
+                app.logger.info("Cached imaging report data")
+
 
                 
         return jsonify({'date': api_data_index['imaging'], 'data': api_data_cache['imaging']})
