@@ -205,12 +205,12 @@ def api_imaging():
                 app.logger.info("not local data")
                 data_date = datetime.now().strftime(datetime_format)
                 imaging_data = get_api_imaging_data(tapis_token)
-                app.logger.info(f"imaging_data: {imaging_data}")
+                app.logger.info("not local data imaging_data exists")
             else:
                 app.logger.info("local data")
                 data_date = local_data_date
                 imaging_data = get_local_imaging_data(imaging_filepath, qc_filepath)
-                app.logger.info(f"imaging_data: {imaging_data}")
+                app.logger.info("local imaging_data exists")
 
             if imaging_data:
                 app.logger.info(f"Caching imaging report data. Date: {data_date}")
