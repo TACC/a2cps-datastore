@@ -31,23 +31,23 @@ if data_access_type == "LOCAL":
 
     imaging_filepath = os.path.join(local_data_path,os.environ.get("IMAGING_FILE"))
     qc_filepath = os.path.join(local_data_path,os.environ.get("QC_FILE"))
-    blood1_filepath = os.path.join(local_data_path,os.environ.get("BLOOD1_FILE"))
-    blood2_filepath = os.path.join(local_data_path,os.environ.get("BLOOD2_FILE"))
+    # blood1_filepath = os.path.join(local_data_path,os.environ.get("BLOOD1_FILE"))
+    # blood2_filepath = os.path.join(local_data_path,os.environ.get("BLOOD2_FILE"))
     subjects1_filepath = os.path.join(local_data_path,os.environ.get("SUBJECTS1_FILE"))
     subjects2_filepath = os.path.join(local_data_path,os.environ.get("SUBJECTS2_FILE"))
-    monitoring_data_filepath = os.path.join(local_data_path,os.environ.get("MONITORING_FILE"))
+    # monitoring_data_filepath = os.path.join(local_data_path,os.environ.get("MONITORING_FILE"))
     imaging_releases_filepath = os.path.join(local_data_path,os.environ.get("IMAGING_RELEASES_FILE"))
-    print(imaging_releases_filepath)
+    # print(imaging_releases_filepath)
 
-    print(local_data_path, local_data_date, subjects1_filepath, subjects2_filepath, monitoring_data_filepath)
+    # print(local_data_path, local_data_date, subjects1_filepath, subjects2_filepath)
 else: 
     imaging_filepath = None
     qc_filepath = None
-    blood1_filepath = None
-    blood2_filepath = None
+    # blood1_filepath = None
+    # blood2_filepath = None
     subjects1_filepath = None
     subjects2_filepath = None
-    monitoring_data_filepath = None
+    # monitoring_data_filepath = None
     imaging_releases_filepath = None
 
 
@@ -250,36 +250,36 @@ def api_consort():
 # get_api_consort_data
 
 
-@app.route("/api/blood")
-def api_blood():
-    global datetime_format
-    global api_data_index
-    global api_data_cache
-    try:
-        tapis_token = get_tapis_token(request)
-        if not api_data_index['blood'] or not check_data_current(request, datetime.strptime(api_data_index['blood'], datetime_format)):
+# @app.route("/api/blood")
+# def api_blood():
+#     global datetime_format
+#     global api_data_index
+#     global api_data_cache
+#     try:
+#         tapis_token = get_tapis_token(request)
+#         if not api_data_index['blood'] or not check_data_current(request, datetime.strptime(api_data_index['blood'], datetime_format)):
 
-            if data_access_type != 'LOCAL':
-                data_date = datetime.now().strftime(datetime_format)
-                blood_data, blood_data_request_status = get_api_blood_data(tapis_token)
-            else:
-                data_date = local_data_date
-                blood_data, blood_data_request_status = get_local_blood_data(blood1_filepath, blood2_filepath)
+#             if data_access_type != 'LOCAL':
+#                 data_date = datetime.now().strftime(datetime_format)
+#                 blood_data, blood_data_request_status = get_api_blood_data(tapis_token)
+#             else:
+#                 data_date = local_data_date
+#                 blood_data, blood_data_request_status = get_local_blood_data(blood1_filepath, blood2_filepath)
                 
-            if blood_data:
-                app.logger.info(f"Caching blood api response data. Date: {data_date}")
-                api_data_index['blood'] = data_date
-                api_data_cache['blood'] = blood_data
+#             if blood_data:
+#                 app.logger.info(f"Caching blood api response data. Date: {data_date}")
+#                 api_data_index['blood'] = data_date
+#                 api_data_cache['blood'] = blood_data
 
-            with open('requests.csv', 'a', newline='') as f:
-                writer = csv.writer(f)
-                for i in blood_data_request_status:
-                    writer.writerow(i)
-                f.close()
+#             with open('requests.csv', 'a', newline='') as f:
+#                 writer = csv.writer(f)
+#                 for i in blood_data_request_status:
+#                     writer.writerow(i)
+#                 f.close()
 
-        return jsonify({'date': api_data_index['blood'], 'data': api_data_cache['blood']})
-    except Exception as e:
-        return handle_exception(e, "Blood API")
+#         return jsonify({'date': api_data_index['blood'], 'data': api_data_cache['blood']})
+#     except Exception as e:
+#         return handle_exception(e, "Blood API")
 
 
 @app.route("/api/subjects")
@@ -312,41 +312,41 @@ def api_subjects():
     except Exception as e:
         return handle_exception(e, "Subjects API")
 
-@app.route("/api/monitoring")
-def api_monitoring():
-    global datetime_format
-    global api_data_index
-    global api_data_cache
+# @app.route("/api/monitoring")
+# def api_monitoring():
+#     global datetime_format
+#     global api_data_index
+#     global api_data_cache
 
-    try:
-        tapis_token = get_tapis_token(request)
-        if not api_data_index['monitoring'] or not check_data_current(request, datetime.strptime(api_data_index['monitoring'], datetime_format)):
-            # api_date = datetime.now().strftime(datetime_format)
-            print(data_access_type)
-            if data_access_type != 'LOCAL':
-                latest_monitoring_json_tuple = get_api_monitoring_data(tapis_token)
-            else:
-                latest_monitoring_json_tuple = get_local_monitoring_data(monitoring_data_filepath)
+#     try:
+#         tapis_token = get_tapis_token(request)
+#         if not api_data_index['monitoring'] or not check_data_current(request, datetime.strptime(api_data_index['monitoring'], datetime_format)):
+#             # api_date = datetime.now().strftime(datetime_format)
+#             print(data_access_type)
+#             if data_access_type != 'LOCAL':
+#                 latest_monitoring_json_tuple = get_api_monitoring_data(tapis_token)
+#             else:
+#                 latest_monitoring_json_tuple = get_local_monitoring_data(monitoring_data_filepath)
 
-            latest_monitoring_json = latest_monitoring_json_tuple[0]
-            print((latest_monitoring_json.keys()))
-            app.logger.info(latest_monitoring_json.keys())     
+#             latest_monitoring_json = latest_monitoring_json_tuple[0]
+#             print((latest_monitoring_json.keys()))
+#             app.logger.info(latest_monitoring_json.keys())     
 
-            #Convert filename timestamp format "%Y%m%dT%H%M%SZ" to "%m/%d/%Y, %H:%M:%S"
-            date_format = "%Y%m%dT%H%M%SZ"
-            data_date = latest_monitoring_json['date']
-            formatted_date = datetime.strptime(data_date, date_format).strftime("%m/%d/%Y, %H:%M:%S")
-            app.logger.info(f"Caching monitoring api response data. Date: {formatted_date}")
-            api_data_index['monitoring'] = formatted_date
+#             #Convert filename timestamp format "%Y%m%dT%H%M%SZ" to "%m/%d/%Y, %H:%M:%S"
+#             date_format = "%Y%m%dT%H%M%SZ"
+#             data_date = latest_monitoring_json['date']
+#             formatted_date = datetime.strptime(data_date, date_format).strftime("%m/%d/%Y, %H:%M:%S")
+#             app.logger.info(f"Caching monitoring api response data. Date: {formatted_date}")
+#             api_data_index['monitoring'] = formatted_date
 
-            api_data_cache['monitoring'] = latest_monitoring_json['data']            
+#             api_data_cache['monitoring'] = latest_monitoring_json['data']            
 
-        return jsonify({'date': api_data_index['monitoring'], 'data': api_data_cache['monitoring']})
+#         return jsonify({'date': api_data_index['monitoring'], 'data': api_data_cache['monitoring']})
 
     
-    except Exception as e:
-        app.logger.error(("Error in monitoring API request: {0}").format(str(e)))
-        return handle_exception(e, "Data Monitoring API")
+#     except Exception as e:
+#         app.logger.error(("Error in monitoring API request: {0}").format(str(e)))
+#         return handle_exception(e, "Data Monitoring API")
 
 @app.route("/api/subjects_debug")
 def api_subjects_debug():
