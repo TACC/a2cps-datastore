@@ -146,7 +146,16 @@ def get_display_dictionary(display_terms, api_field, api_value, display_col):
             term_df = display_terms[display_terms.api_field == i]
             term_df = term_df[[api_value,display_col]]
             term_df = term_df.rename(columns={api_value: i, display_col: i + '_display'})
-            term_df = term_df.apply(pd.to_numeric, errors='ignore')
+            ##
+            # term_df = term_df.apply(pd.to_numeric, errors='ignore') # old deprecated line
+            # new replacement (per Claude suggestion)
+            term_df = term_df.infer_objects()
+            for col in term_df.select_dtypes(include='object').columns:
+                try:
+                    term_df[col] = pd.to_numeric(term_df[col])
+                except (ValueError, TypeError):
+                    pass
+            ##
             display_terms_dict[i] = term_df
         return display_terms_dict
 
