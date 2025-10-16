@@ -15,7 +15,7 @@ from retrying import retry
 from flask import jsonify
 
 import logging
-files_api_root = os.environ.get('FILES_API_ROOT') 
+files_api_root = os.environ.get('FILES_API_ROOT')
 portal_api_root = os.environ.get('PORTAL_API_ROOT')
 logger  = logging.getLogger("datastore_app")
 
@@ -24,7 +24,7 @@ logger  = logging.getLogger("datastore_app")
 # ENV Variables
 # ----------------------------------------------------------------------------
 data_access_type = os.environ.get('DATA_ACCESS_TYPE')
-files_api_root = os.environ.get('FILES_API_ROOT') 
+files_api_root = os.environ.get('FILES_API_ROOT')
 portal_api_root = os.environ.get('PORTAL_API_ROOT')
 
 # LOCAL DATA SETTINGS
@@ -38,7 +38,6 @@ ASSETS_PATH = os.path.join(current_folder,'assets')
 # ----------------------------------------------------------------------------
 # Common utils
 # ----------------------------------------------------------------------------
-
 class MissingPortalSessionIdException(Exception):
     '''Custom Exception for Misisng Session Id'''
 
@@ -61,7 +60,6 @@ def handle_exception(ex, api_message):
 
 def _is_local():
     return data_access_type == "LOCAL"
-
 
 # ----------------------------------------------------------------------------
 # Updating data checks
@@ -129,6 +127,12 @@ def move_column_inplace(df, col, pos):
 # ----------------------------------------------------------------------------
 # DATA DISPLAY DICTIONARIES
 # ----------------------------------------------------------------------------
+def parse_numbers(x):
+    ''' Function to handle pandas deprecation of errors="ignore" in pd.to_numeric'''
+    try:
+        return pd.to_numeric(x)
+    except:
+        return x
 
 def get_display_dictionary(display_terms, api_field, api_value, display_col):
     '''from a dataframe with the table display information, create a dictionary by field to match the database
@@ -142,7 +146,16 @@ def get_display_dictionary(display_terms, api_field, api_value, display_col):
             term_df = display_terms[display_terms.api_field == i]
             term_df = term_df[[api_value,display_col]]
             term_df = term_df.rename(columns={api_value: i, display_col: i + '_display'})
-            term_df = term_df.apply(pd.to_numeric, errors='ignore')
+            ##
+            # term_df = term_df.apply(pd.to_numeric, errors='ignore') # old deprecated line
+            # new replacement (per Claude suggestion)
+            term_df = term_df.infer_objects()
+            for col in term_df.select_dtypes(include='object').columns:
+                try:
+                    term_df[col] = pd.to_numeric(term_df[col])
+                except (ValueError, TypeError):
+                    pass
+            ##
             display_terms_dict[i] = term_df
         return display_terms_dict
 
@@ -170,9 +183,17 @@ def load_display_terms(display_terms_location):
         traceback.print_exc()
         return None
 
+
+# ----------------------------------------------------------------------------
+# LOAD *RELEASE* DATA FROM LOCAL FILES
+# ----------------------------------------------------------------------------
+
+
 # ----------------------------------------------------------------------------
 # LOAD DATA FROM LOCAL FILES, Return *JSON*
+# TO DO: MOVE SECTION TO APPROpriate locations. Imaging already moveld.
 # ----------------------------------------------------------------------------
+
 
 def get_local_imaging_data(imaging_filepath, qc_filepath):
     ''' Load data from local imaging files. '''
@@ -263,9 +284,8 @@ def get_local_monitoring_data(monitoring_data_filepath):
 # ----------------------------------------------------------------------------
 # LOAD DATA FROM API
 # ----------------------------------------------------------------------------
-
 def get_api_consort_data(tapis_token,
-                        report='consort', 
+                        report='consort',
                         report_suffix = 'consort-data-[mcc]-latest.csv'):
     '''Load data for a specified consort file. Handle 500 server errors'''
     try:
@@ -278,7 +298,7 @@ def get_api_consort_data(tapis_token,
             # filename2 = report_suffix.replace('[mcc]',str(2))
             # files_list = [filename1, filename2]
 
-       
+
             mcc_list = [1,2]
             for mcc in mcc_list:
                 filename = report_suffix.replace('[mcc]',str(mcc))
@@ -301,188 +321,31 @@ def get_api_consort_data(tapis_token,
                 'consort' : consort_df.to_dict('records')
             }
             return consort_data_json
-        
+
         else:
             logger.warning("Unauthorized attempt to access Consort data")
             return None
 
-
-        if tapis_token:
-            cosort_columns = ['source','target','value', 'mcc']
-            consort_df = pd.DataFrame(columns=cosort_columns)
-
-            # # get list of mcc files
-            # filename1 = report_suffix.replace('[mcc]',str(1))
-            # filename2 = report_suffix.replace('[mcc]',str(2))
-            # files_list = [filename1, filename2]
-
-       
-            mcc_list = [1,2]
-            for mcc in mcc_list:
-                filename = report_suffix.replace('[mcc]',str(mcc))
-                csv_url = '/'.join([files_api_root, report, filename])
-                csv_request = make_report_data_request(csv_url, tapis_token)
-                csv_content = csv_request.content
-                try:
-                    csv_df = pd.read_csv(io.StringIO(csv_content.decode('utf-8')), usecols=[0,1,2], header=None)
-                    csv_df['mcc'] = mcc
-                    csv_df.columns = cosort_columns
-                except:
-                    csv_df = pd.DataFrame(columns=cosort_columns)
-                consort_df = pd.concat([consort_df,csv_df])
-
-            consort_dict = consort_df.to_dict('records')
-            if not consort_dict:
-                consort_dict = ['No data found']
-            # IF DATA LOADS SUCCESSFULLY:
-            consort_data_json = {
-                'consort' : consort_df.to_dict('records')
-            }
-            return consort_data_json
-        
-        else:
-            raise TapisTokenRetrievalException()
-
-## Function to rebuild dataset from apis
-
-# rename subset_imaging_data to clean_imaging
-def subset_imaging_data(imaging_full):
-    imaging_columns_used = ['site', 'subject_id', 'visit','acquisition_week','Surgery Week','bids', 'dicom', 
-    'T1 Indicated','DWI Indicated', '1st Resting State Indicated','fMRI Individualized Pressure Indicated', 
-    'fMRI Standard Pressure Indicated','2nd Resting State Indicated',
-    'T1 Received', 'DWI Received', 'fMRI Individualized Pressure Received', 'fMRI Standard Pressure Received',
-    '1st Resting State Received', '2nd Resting State Received','Cuff1 Applied Pressure']
-
-    imaging = imaging_full[imaging_columns_used].copy() # Select subset of columns
-    imaging = imaging.replace('na', np.nan) # Clean up data
-    imaging['completions_id'] = imaging.apply(lambda x: str(x['subject_id']) + x['visit'],axis=1) # Add completions id value from combination of subject ID and visit
-
-    return imaging
-
-def clean_imaging(imaging_full):
-    ''' Clean up the incoming imaging dataframe'''
-    # Imaging columns actually used.  Subset to just these portion of the data. 
-    # Dictionary keys = columns used, dictionary value = new column name
-    imaging_columns_dict = {
-        'site': 'site',
-        'subject_id': 'subject_id',
-        'visit': 'visit',
-        'acquisition_week': 'acquisition_week',
-        'Surgery Week':'Surgery Week',
-        'bids':'bids',
-        'dicom':'dicom', 
-        'T1 Indicated':'T1',
-        'DWI Indicated':'DWI',
-        '1st Resting State Indicated':'REST1',
-        'fMRI Individualized Pressure Indicated':'CUFF1',
-        'fMRI Standard Pressure Indicated':'CUFF2',
-        '2nd Resting State Indicated':'REST2',
-        'T1 Received':'T1 Received',
-        'DWI Received':'DWI Received',
-        '1st Resting State Received':'REST1 Received',
-        'fMRI Individualized Pressure Received':'CUFF1 Received',
-        'fMRI Standard Pressure Received':'CUFF2 Received',
-        '2nd Resting State Received':'REST2 Received',
-        'Cuff1 Applied Pressure':'Cuff1 Applied Pressure'
-}
-    
-    imaging_cols = list(imaging_columns_dict.keys()) # Get list of columns to keep
-    imaging = imaging_full[imaging_cols].copy() # Copy subset of imaging dataframe
-    imaging.rename(columns=imaging_columns_dict, inplace=True) # Rename columns
-    imaging = imaging.replace('na', np.nan) # Replace 'na' string with actual null value
-    imaging['completions_id'] = imaging.apply(lambda x: str(x['subject_id']) + x['visit'],axis=1) # Add completions id value from combination of subject ID and visit
-    
-    return imaging
-
-# rename subset_qc_data to clean_qc
-def subset_qc_data(qc_full):
-    qc_cols_used = ['site', 'sub', 'ses', 'scan','rating']
-    qc = qc_full[qc_cols_used].copy() # Select subset of columns    
-    # Set columns to categorical values
-    ignore = ['sub']
-    qc = (qc.set_index(ignore, append=True)
-            .astype("category")
-            .reset_index(ignore)
-           )
-    
-    return qc
-
-def clean_qc(qc_full):
-    ''' Clean up the incoming qc dataframe. Rename downstream as it breaks too many things here'''
-    qc_columns_dict = {
-            'site':'site', 
-            'sub': 'subject_id',
-            'ses': 'ses',
-            'scan':'scan',
-            'rating': 'rating'
-        }
-    qc_cols = list(qc_columns_dict.keys()) # Get list of columns to keep
-    qc = qc_full[qc_cols].copy() # Copy subset of imaging dataframe
-    # qc.rename(columns=qc_columns_dict, inplace=True) # Rename columns
-
-    # Set columns to categorical values
-    ignore = ['subject_id']
-    qc = (qc.set_index(ignore, append=True)
-            .astype("category")
-            .reset_index(ignore)
-           )
-    
-    return qc
-
-
-def get_api_imaging_data(tapis_token):
-    ''' Load data from imaging api. Return bad status notice if hits Tapis API'''
-    try:
-        if tapis_token:
-            # IMAGING
-            imaging_filepath = '/'.join([files_api_root,'imaging','imaging-log-latest.csv'])
-            imaging_request = make_report_data_request(imaging_filepath, tapis_token)
-            if imaging_request.status_code == 200:
-                imaging_full = pd.read_csv(io.StringIO(imaging_request.content.decode('utf-8')))
-                imaging = subset_imaging_data(imaging_full)
-            else:
-                return {'status':'500', 'source': 'imaging-log-latest.csv'}
-
-
-            # IF DATA LOADS SUCCESSFULLY:
-            imaging_data_json = {
-                'imaging' : imaging.to_dict('records'),
-                'qc' : qc.to_dict('records')
-            }
-
-            qc_filepath = '/'.join([files_api_root,'imaging','qc-log-latest.csv'])
-            qc_request = make_report_data_request(qc_filepath, tapis_token)
-            if qc_request.status_code == 200:
-                qc_full = pd.read_csv(io.StringIO(qc_request.content.decode('utf-8')))
-                qc = subset_qc_data(qc_full)
-            else:
-                return {'status':'500', 'source': 'qc-log-latest.csv'}
-
-            # IF DATA LOADS SUCCESSFULLY:
-            imaging_data_json = {
-                'imaging' : imaging.to_dict('records'),
-                'qc' : qc.to_dict('records')
-            }
-
-            return imaging_data_json
-        else:
-           raise TapisTokenRetrievalException()
-
-
-    except Exception:
+    except Exception as e:
         traceback.print_exc()
-        return "exception: {}".format(e)
-    
-## Monitoring data for Briha's app
+        return None
+
+
+
+
+# ----------------------------------------------------------------------------
+# MONITORING
+# ----------------------------------------------------------------------------
+
 
 def get_api_monitoring_data(api_request):
     ''' Load monitoring data from api'''
 
-    try:      
+    try:
         current_datetime = datetime.now()
         tapis_token = get_tapis_token(api_request)
-        
-        if tapis_token:    
+
+        if tapis_token:
             # Monitoring
             monitoring_filepath = '/'.join([files_api_root,'data-monitoring','aggregated.json'])
             monitoring_request = requests.get(monitoring_filepath, headers={'X-Tapis-Token': tapis_token})
@@ -502,16 +365,16 @@ def get_api_monitoring_data(api_request):
 
     except Exception as e:
         traceback.print_exc()
-        return None    
+        return None
 
 ## Function to rebuild dataset from apis
 def get_api_blood_data(api_request):
     ''' Load blood data from api'''
-    try:      
+    try:
         current_datetime = datetime.now()
         tapis_token = get_tapis_token(api_request)
-        
-        if tapis_token:    
+
+        if tapis_token:
             # BLOOD
             blood1_filepath = '/'.join([files_api_root,'blood','blood-1-latest.json'])
             blood1_request = make_report_data_request(blood1_filepath, tapis_token)
@@ -584,14 +447,10 @@ def get_api_subjects_json(tapis_token):
         else:
             raise TapisTokenRetrievalException()
 
-        response.raise_for_status()
-        tapis_token = response.json()['token']
-        logger.info("Received tapis token.")
-        return tapis_token
     except Exception as e:
         traceback.print_exc()
         return None
-    
+
 # Retry handler for requests
 @retry(wait_exponential_multiplier=500, wait_exponential_max=5000, stop_max_attempt_number=3)
 def make_request_with_retry(url, cookies):
@@ -600,27 +459,34 @@ def make_request_with_retry(url, cookies):
 
 # Get Tapis token if authorized to access data files
 def get_tapis_token(api_request):
-    logger.info("@@@"*999)
-    for attr in dir(api_request):
-        try:
-            value = getattr(api_request, attr)
-            logger.info(f"{attr}: {value}")
-        except Exception as e:
-            logger.info(f"{attr}: Error accessing attribute - {e}")
-    
+    """
+    Retrieve a Tapis token using the session cookie.
+
+    In normal operation, requests pass through the proxy-redirect,
+    which ensures the request is same-site so the browser sends the
+    'coresessionid' cookie. If the cookie is missing, either:
+      1) The request bypassed the proxy-redirect, OR
+      2) The user is not logged in (no valid session).
+
+    Raises:
+        MissingPortalSessionIdException: No session cookie was found.
+        TapisTokenRetrievalException: Failed to obtain a Tapis token.
+    """
     if _is_local():
         logger.info("Running local, not fetching tapis token.")
         return None
 
-    '''Get tapis token using the session cookie. If the session is not authenticated, this will fail.'''
-    session_id  = api_request.cookies.get("coresessionid")
-    logger.info("^^^"*999)
-    logger.info(session_id)
+    SESSION_COOKIE_NAME = "coresessionid"
+    session_id  = api_request.cookies.get(SESSION_COOKIE_NAME)
     if session_id is None:
+        logger.info(
+            f"Missing '{SESSION_COOKIE_NAME}' cookie. "
+            f"Available cookies: {list(api_request.cookies.keys())}"
+        )
         raise MissingPortalSessionIdException("Missing session id")
+
     try:
-        logger.info("+++"*999)
-        cookies = {'coresessionid':session_id}
+        cookies = {SESSION_COOKIE_NAME: session_id}
         response = make_request_with_retry(portal_api_root + '/auth/tapis/', cookies)
         for attr in dir(response):
         try:
@@ -642,11 +508,7 @@ def make_report_data_request(url, tapis_token):
     return response
 
 
-def make_report_data_request(url, tapis_token):
-    logger.info(f"Sending request to {url}")
-    response = requests.get(url, headers={'X-Tapis-Token': tapis_token})
-    logger.info(f'Response status code: {response.status_code}')
-    return response
+
 
 # ----------------------------------------------------------------------------
 # PROCESS SUBJECTS DATA
@@ -667,7 +529,7 @@ def combine_mcc_json(mcc_json):
         else:
             print('df len: '+ str(len(df)))
             df = pd.concat([df, mcc_data],axis=0)
-            
+
             print('df len post concat: '+ str(len(df)))
     return df
 
@@ -943,7 +805,7 @@ def clean_blooddata(blood_df):
 
 def clean_imaging(imaging_full):
     ''' Clean up the incoming imaging dataframe'''
-    # Imaging columns actually used.  Subset to just these portion of the data. 
+    # Imaging columns actually used.  Subset to just these portion of the data.
     # Dictionary keys = columns used, dictionary value = new column name
     imaging_columns_dict = {
         'site': 'site',
@@ -952,7 +814,7 @@ def clean_imaging(imaging_full):
         'acquisition_week': 'acquisition_week',
         'Surgery Week':'Surgery Week',
         'bids':'bids',
-        'dicom':'dicom', 
+        'dicom':'dicom',
         'T1 Indicated':'T1',
         'DWI Indicated':'DWI',
         '1st Resting State Indicated':'REST1',
@@ -967,19 +829,19 @@ def clean_imaging(imaging_full):
         '2nd Resting State Received':'REST2 Received',
         'Cuff1 Applied Pressure':'Cuff1 Applied Pressure'
         }
-    
+
     imaging_cols = list(imaging_columns_dict.keys()) # Get list of columns to keep
     imaging = imaging_full[imaging_cols].copy() # Copy subset of imaging dataframe
     imaging.rename(columns=imaging_columns_dict, inplace=True) # Rename columns
     imaging = imaging.replace('na', np.nan) # Replace 'na' string with actual null value
     imaging['completions_id'] = imaging.apply(lambda x: str(x['subject_id']) + x['visit'],axis=1) # Add completions id value from combination of subject ID and visit
-    
+
     return imaging
 
 def clean_qc(qc_full):
     ''' Clean up the incoming qc dataframe. rename downstreamt to avoid causing issues. '''
     qc_columns_dict = {
-            'site':'site', 
+            'site':'site',
             'sub': 'subject_id',
             'ses': 'ses',
             'scan':'scan',
@@ -995,7 +857,7 @@ def clean_qc(qc_full):
             .astype("category")
             .reset_index(ignore)
            )
-    
+
     return qc
 
 # ----------------------------------------------------------------------------
